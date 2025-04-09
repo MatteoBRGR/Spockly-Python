@@ -1,13 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as Blockly from "blockly";
 import { pythonGenerator } from "blockly/python";
 import GenerateButton from "./GenerateButton";
-import CodeDisplay from "./CodeDisplay";
 
-const BlocklyComponent = () => {
+const BlocklyComponent = ({ setCode }) => {
   const blocklyDiv = useRef(null);
   const workspaceRef = useRef(null);
-  const [code, setCode] = useState("");
 
   useEffect(() => {
     if (!blocklyDiv.current) {
@@ -23,12 +21,11 @@ const BlocklyComponent = () => {
           <block type="logic_compare"></block>
           <block type="math_number"></block>
           <block type="math_arithmetic"></block>
+          <block type="text"></block>
           <block type="text_print"></block>
         </xml>
       `,
     });
-
-    console.log("Blockly workspace initialized:", workspaceRef.current);
 
     return () => {
       workspaceRef.current?.dispose();
@@ -43,18 +40,21 @@ const BlocklyComponent = () => {
 
     const pythonCode = pythonGenerator.workspaceToCode(workspaceRef.current);
     setCode(pythonCode);
-    console.log("Generated Python Code:\n", pythonCode);
   };
 
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
-      <div ref={blocklyDiv} style={{ height: "400px", width: "100%" }} />
-
-      {/* Generate Code Button */}
-      <GenerateButton onClick={generateCode} />
-
-      {/* Code Display Box */}
-      <CodeDisplay code={code} />
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <div ref={blocklyDiv} style={{ flex: 1, width: "100%" }} />
+      <div style={{ marginTop: "0.5rem", textAlign: "center" }}>
+        <GenerateButton onClick={generateCode} />
+      </div>
     </div>
   );
 };

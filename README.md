@@ -1,12 +1,56 @@
 # React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🧪 Spockly Demo — Blockly + React Starter
 
-Currently, two official plugins are available:
+A minimal React app that integrates [Google Blockly](https://developers.google.com/blockly/) with Python code generation. This is the starting point for building your own Blockly-based data science environment — you’ll even be able to add your own blocks and languages like R!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🚀 Features
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Blockly in a modern React app
+- Generates Python code from blocks
+
+---
+
+## 🛠️ Requirements
+
+Make sure you have the following installed:
+
+- [Node.js (LTS version)](https://nodejs.org/) — includes npm
+- A code editor [Visual Studio Code](https://code.visualstudio.com/))
+- A terminal (PowerShell, bash, etc.)
+
+---
+
+## 📦 Setup Instructions
+
+1. **Clone the repo**:
+
+   ```bash
+   git clone https://github.com/mariopesch/spockly-demo.git
+   cd spockly-demo
+   ```
+
+````
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+3. **Run the app**:
+
+   ```bash
+   npm run dev
+   ```
+4. **Open your browser**:
+   Open [http://localhost:5173](http://localhost:5173) in your browser to see the app in action.
+5. **Edit the code**:
+    Open `src/App.jsx` in your code editor and start modifying the code. The app will automatically reload with your changes.
+6. **Explore the Blockly editor**:
+
+    - Drag and drop blocks to create your own workflows.
+    - Click the "Generate Python Code" button to see the generated code.
+    - Modify the blocks and see how the generated code changes.
+
+````
