@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import * as Blockly from "blockly";
 import { pythonGenerator } from "blockly/python";
 import GenerateButton from "./GenerateButton";
+import "./blockly/customBlocks"; // Import custom blocks
 
 const BlocklyComponent = ({ setCode }) => {
   const blocklyDiv = useRef(null);
@@ -17,12 +18,21 @@ const BlocklyComponent = ({ setCode }) => {
     workspaceRef.current = Blockly.inject(blocklyDiv.current, {
       toolbox: `
         <xml>
+          <category name="Examples" colour="#5C81A6">
           <block type="controls_if"></block>
           <block type="logic_compare"></block>
           <block type="math_number"></block>
           <block type="math_arithmetic"></block>
           <block type="text"></block>
           <block type="text_print"></block>
+          </category>
+          <category name="Custom Blocks" colour="#5C81A6">
+            <block type="print_hello"></block>
+            <block type="math_square"></block>
+            <block type="text_greeting"></block>
+            <block type="repeat_times"></block>
+            <block type="dropdown_color"></block>
+          </category>
         </xml>
       `,
     });
