@@ -47,3 +47,49 @@ Blockly.Generator.R.forBlock["plot_vector"] = function (block, generator) {
     "c()";
   return `plot(${vector})\n`;
 };
+
+Blockly.defineBlocksWithJsonArray([
+  {
+    type: "rnorm_block",
+    message0: "rnorm %1 values with mean %2 and standard deviation %3",
+    args0: [
+      {
+        type: "input_value",
+        name: "N",
+        check: "Number",
+      },
+      {
+        type: "input_value",
+        name: "MEAN",
+        check: "Number",
+      },
+      {
+        type: "input_value",
+        name: "SD",
+        check: "Number",
+      },
+    ],
+    output: "Array",
+    colour: 160,
+    tooltip: "Generate random numbers from a normal distribution",
+    helpUrl: "",
+  },
+]);
+
+Blockly.Generator.R.forBlock["rnorm_block"] = function (block, generator) {
+  const n =
+    generator.valueToCode(block, "N", Blockly.Generator.R.ORDER_ATOMIC) || "20";
+  const mean =
+    generator.valueToCode(block, "MEAN", Blockly.Generator.R.ORDER_ATOMIC) ||
+    "10";
+  const sd =
+    generator.valueToCode(block, "SD", Blockly.Generator.R.ORDER_ATOMIC) ||
+    "10";
+
+  return `rnorm(${n}, ${mean}, ${sd})`;
+};
+
+Blockly.Generator.R.forBlock["math_number"] = function (block) {
+  const code = Number(block.getFieldValue("NUM"));
+  return [code, Blockly.Generator.R.ORDER_ATOMIC];
+};

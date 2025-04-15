@@ -5,6 +5,7 @@ import GenerateButton from "./GenerateButton";
 import "./blockly/customBlocks"; // Import custom blocks
 import "./blockly/customGenerator"; // Import custom generator
 import "./blockly/rBlocks"; // Import R blocks
+import WebRRunner from "./WebRRunner";
 
 const BlocklyComponent = ({ setCode }) => {
   const blocklyDiv = useRef(null);
@@ -38,6 +39,7 @@ const BlocklyComponent = ({ setCode }) => {
           <Category name="R-Example" colour="#5CA65C">
             <block type="create_vector"></block>
             <block type="plot_vector"></block>
+            <block type="rnorm_block"></block>
           </Category>
           <category name="Variables" colour="#A65E2E" custom="VARIABLE"></category>
 
