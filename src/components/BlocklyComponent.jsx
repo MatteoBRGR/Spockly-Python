@@ -32,6 +32,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="text_greeting"></block>
             <block type="repeat_times"></block>
             <block type="dropdown_color"></block>
+            <block type="length_of_str"></block>
           </category>
         </xml>
       `,
