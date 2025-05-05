@@ -95,3 +95,17 @@ pythonGenerator.forBlock["dropdown_color"] = function (block) {
   const color = block.getFieldValue("COLOR");
   return [`"${color.toLowerCase()}"`, pythonGenerator.ORDER_ATOMIC];
 };
+
+/**
+ * 6. length of str
+ */
+Blockly.Blocks["length_of_str"] = {
+  init: function(){
+    this.appendValueInput()
+    .setCheck('String')
+    .appendField('length of:');
+    this.setOutput(true, 'Number');
+    this.setColour(90);
+    this.setTooltip('Returns the length of a given string')
+  }
+}
