@@ -97,7 +97,7 @@ pythonGenerator.forBlock["dropdown_color"] = function (block) {
 };
 
 /**
- * 6. length of str
+ * 6. Length of str (returns int)
  */
 Blockly.Blocks["length_of_str"] = {
   init: function(){
@@ -108,10 +108,10 @@ Blockly.Blocks["length_of_str"] = {
     this.appendEndRowInput();
     this.setOutput(true, 'Number');
     this.setColour(90);
-    this.setTooltip('Returns the length of a given string')
+    this.setTooltip('Returns the length of a given string');
   },
 };
 pythonGenerator.forBlock["length_of_str"] = function(block, generator) {
-  const length = generator.valueToCode(block, 'STR', pythonGenerator.ORDER_NONE)
-  return `len(${length})`;
+  const length = generator.valueToCode(block, 'STR', pythonGenerator.ORDER_NONE) || '0';
+  return [`len(${length})`, pythonGenerator.ORDER_ATOMIC];
 };
