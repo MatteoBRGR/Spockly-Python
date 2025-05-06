@@ -140,18 +140,14 @@ pythonGenerator.forBlock['modulo'] = function(block, generator) {
 /**
  * Loading block
  */
+//TBD
 Blockly.Blocks["loading"] = {
   init: function(){
     this.appendDummyInput()
-    // .appendValueInput('NAME')
     .appendField('Load data from dataset:')
-    // .setCheck('String');
-    // this.appendDummyInput();
-    // this.appendEndRowInput();
-    // this.setOutput(true, 'Number');
-    // this.setColour(90);
-    // this.setTooltip('Returns the length of a given string');
     .appendField(new Blockly.FieldTextInput('iris'), 'DATASET');
+    // this.setCheck('String')
+    this.setTooltip('Loads a given dataset');
     this.appendEndRowInput();
     this.setColour(200);
     this.setPreviousStatement(true, null);
