@@ -140,19 +140,28 @@ pythonGenerator.forBlock['modulo'] = function(block, generator) {
 /**
  * Loading block
  */
-
-Blockly.Blocks['loading'] = {
-  init: () => {
-    this.appendValueInput('VAL')
+Blockly.Blocks["loading"] = {
+  init: function(){
+    this.appendDummyInput()
+    // .appendValueInput('NAME')
     .appendField('Load data from dataset:')
-    .setAlign(Blockly.inputs.Align.CENTRE);
-    this.appendField(new Blockly.FieldTextInput('iris'), 'DATASET');
+    // .setCheck('String');
+    // this.appendDummyInput();
+    // this.appendEndRowInput();
+    // this.setOutput(true, 'Number');
+    // this.setColour(90);
+    // this.setTooltip('Returns the length of a given string');
+    .appendField(new Blockly.FieldTextInput('iris'), 'DATASET');
     this.appendEndRowInput();
+    this.setColour(200);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
-
-  }
-}
+  },
+};
+pythonGenerator.forBlock["loading"] = function(block, generator) {
+  const dataset = generator.valueToCode(block, 'DATASET', pythonGenerator.ORDER_NONE) || '0';
+  return [`data(${dataset})`, pythonGenerator.ORDER_ATOMIC];
+};
 
 /**
  * Operators block
