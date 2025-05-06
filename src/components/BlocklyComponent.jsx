@@ -33,6 +33,9 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="repeat_times"></block>
             <block type="dropdown_color"></block>
             <block type="length_of_str"></block>
+            <block type="modulo"></block>
+            <block type="load"></block>
+            <block type="operators"></block>
           </category>
         </xml>
       `,
