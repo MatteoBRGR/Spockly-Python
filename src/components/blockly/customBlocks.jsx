@@ -115,3 +115,83 @@ pythonGenerator.forBlock["length_of_str"] = function(block, generator) {
   const length = generator.valueToCode(block, 'STR', pythonGenerator.ORDER_NONE) || '0';
   return [`len(${length})`, pythonGenerator.ORDER_ATOMIC];
 };
+
+/**Block modulo**/
+
+const modulo = {
+  init: function() {
+    this.appendValueInput('VALUE')
+    .setAlign(Blockly.inputs.Align.CENTRE)
+    .setCheck('Number')
+      .appendField(new Blockly.FieldLabelSerializable('modulo'), 'NAME');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('Returns modulo 10 of a number');
+    this.setHelpUrl('');
+    this.setColour(105);
+  }
+};
+Blockly.common.defineBlocks({modulo: modulo});
+pythonGenerator.forBlock['modulo'] = function(block, generator) {
+  const value = generator.valueToCode(block, 'VALUE', pythonGenerator.ORDER_ATOMIC);
+  return `(${value}%10)`;
+}
+                    
+/**
+ * Loading block
+ */
+
+Blockly.Blocks['loading'] = {
+  init: () => {
+    this.appendValueInput('VAL')
+    .appendField('Load data from dataset:')
+    .setAlign(Blockly.inputs.Align.CENTRE);
+    this.appendField(new Blockly.FieldTextInput('iris'), 'DATASET');
+    this.appendEndRowInput();
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+
+  }
+}
+
+/**
+ * Operators block
+ */
+
+const operators = {
+  init: function() {
+    this.appendValueInput('VALUE')
+    .setAlign(Blockly.inputs.Align.RIGHT)
+    .setCheck('Boolean');
+    this.appendValueInput('VALUE')
+    .setCheck('Boolean')
+      .appendField(new Blockly.FieldDropdown([
+          ['XOR', 'XOR'],
+          ['AND', 'AND'],
+          ['OR', 'OR'],
+          ['NOT', 'NOT']
+        ]), 'NAME');
+    this.setInputsInline(true)
+    this.setOutput(true, null);
+    this.setTooltip('and');
+    this.setHelpUrl('');
+    this.setColour(0);
+  }
+};
+Blockly.common.defineBlocks({operators: operators});
+
+pythonGenerator.forBlock['operators'] = function(block,generator) {
+  // TODO: change Order.ATOMIC to the correct operator precedence strength
+  const nor = generator.valueToCode(block, 'VALUE', Order.ATOMIC);
+  
+  const dropdown_name = block.getFieldValue('NAME');
+  // TODO: change Order.ATOMIC to the correct operator precedence strength
+  const and = generator.valueToCode(block, 'VALUE', Order.ATOMIC);
+
+  const or = generator.valueToCode(block, 'VALUE', Order.ATOMIC);
+
+  const not = generator.valueToCode(block, 'VALUE', Order.ATOMIC);
+
+  // TODO: Change Order.NONE to the correct operator precedence strength
+  return [code, Order.NONE];
+}
