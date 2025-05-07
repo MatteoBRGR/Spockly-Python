@@ -35,6 +35,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="length_of_str"></block>
             <block type="modulo"></block>
             <block type="loading"></block>
+            <block type="operators"></block>
           </category>
         </xml>
       `,
