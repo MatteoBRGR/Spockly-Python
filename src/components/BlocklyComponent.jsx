@@ -28,7 +28,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="log_of"></block>              
             <block type="modulo"></block>          
           </category>
-          <category name="Load data" colour="#FA2">
+          <category name="Data" colour="#FA2">
             <block type="loading"></block>
             <block type="load_csv"></block>
             <block type="load_csv_from_url"></block>
