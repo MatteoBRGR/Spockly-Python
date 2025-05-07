@@ -34,6 +34,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="dropdown_color"></block>
             <block type="length_of_str"></block>
             <block type="modulo"></block>
+            <block type="operators"></block>
           </category>
           <category name="Load data" colour="#FA2">
             <block type="loading"></block>
