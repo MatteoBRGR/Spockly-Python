@@ -20,21 +20,21 @@ const BlocklyComponent = ({ setCode }) => {
         <xml>
           <category name="Examples" colour="#5C81A6">
             <block type="controls_if"></block>
-            <block type="logic_compare"></block>
-            <block type="math_number"></block>
-            <block type="math_arithmetic"></block>
+             <block type="repeat_times"></block> 
             <block type="text"></block>
             <block type="text_print"></block>
-          </category>
-          <category name="Custom Blocks" colour="#5C81A6">
-            <block type="print_hello"></block>
-            <block type="math_square"></block>
-            <block type="text_greeting"></block>
-            <block type="repeat_times"></block>
-            <block type="dropdown_color"></block>
             <block type="length_of_str"></block>
-            <block type="modulo"></block>
             <block type="operators"></block>
+          </category>
+          <category name="Math" colour="#A9A9A9">
+            <block type="math_number"></block>
+            <block type="math_arithmetic"></block>
+            <block type="logic_compare"></block>
+            <block type="math_square"></block>
+            <block type="sqrt_of"></block>
+            <block type="exp_of"></block>
+            <block type="log_of"></block>              
+            <block type="modulo"></block>          
           </category>
           <category name="Load data" colour="#FA2">
             <block type="loading"></block>

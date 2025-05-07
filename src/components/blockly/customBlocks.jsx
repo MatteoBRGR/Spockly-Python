@@ -127,7 +127,7 @@ const modulo = {
     this.setOutput(true, null);
     this.setTooltip('');
     this.setHelpUrl('');
-    this.setColour(120);
+    this.setColour(230);
   }
 };
 Blockly.common.defineBlocks({modulo: modulo});
@@ -137,7 +137,6 @@ pythonGenerator.forBlock['modulo'] = function(block) {
   const number_b = block.getFieldValue('b');
   return [`${number_a}%${number_b}`, pythonGenerator.ORDER_MULTIPLICATIVE];
 }
-
 
 /**
  * Operators block
@@ -231,7 +230,7 @@ Blockly.Blocks['load_csv'] = {
 };
 pythonGenerator.forBlock['load_csv'] = function(block, generator) {
   const dataset = block.getFieldValue('CSV') || '0';
-  return `import pandas as pd\npd.read_csv('${dataset}')\n`;
+  return `pd.read_csv('${dataset}')\n`;
 };
 
 /**
@@ -254,5 +253,50 @@ Blockly.Blocks['load_csv_from_url'] = {
 };
 pythonGenerator.forBlock['load_csv_from_url'] = function(block, generator) {
   const dataset = block.getFieldValue('CSV') || '0';
-  return `import pandas as pd\npd.read_csv('${dataset}')\n`;
+  return `pd.read_csv('${dataset}')\n`;
+};
+      
+/** sqrt block**/
+Blockly.Blocks["sqrt_of"] = {
+  init: function () {
+    this.appendValueInput("NUM").setCheck("Number").appendField("sqrt of");
+    this.setOutput(true, "Number");
+    this.setColour(230);
+    this.setTooltip("Returns the sqrt of a number");
+  },
+};
+pythonGenerator.forBlock["sqrt_of"] = function (block, generator) {
+  const num =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`m.sqrt(${num})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** exponentiel block**/
+Blockly.Blocks["exp_of"] = {
+  init: function () {
+    this.appendValueInput("NUM").setCheck("Number").appendField("exp of");
+    this.setOutput(true, "Number");
+    this.setColour(230);
+    this.setTooltip("Returns the exponential of a number");
+  },
+};
+pythonGenerator.forBlock["exp_of"] = function (block, generator) {
+  const num =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`m.exp(${num})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** logarithm block**/
+Blockly.Blocks["log_of"] = {
+  init: function () {
+    this.appendValueInput("NUM").setCheck("Number").appendField("log of");
+    this.setOutput(true, "Number");
+    this.setColour(230);
+    this.setTooltip("Returns the exponential of a number");
+  },
+};
+pythonGenerator.forBlock["log_of"] = function (block, generator) {
+  const num =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`m.log(${num})`, pythonGenerator.ORDER_ATOMIC];
 };

@@ -14,7 +14,7 @@ const CodeDisplay = ({ code }) => {
         minHeight: "50px",
       }}
     >
-      {code || "Generated Python code will appear here..."}
+      {"import pandas as pd\n"+"import math as m\n"+code || "Generated Python code will appear here..."}
     </pre>
   );
 };
