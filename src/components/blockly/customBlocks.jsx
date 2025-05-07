@@ -3,12 +3,6 @@ import { pythonGenerator } from "blockly/python";
 
 
 /**
- * 
- * KULDEEP MADE CHANGES
- * 
- */
-
-/**
  * 1. Statement Block (no input)
  */
 Blockly.Blocks["print_hello"] = {
