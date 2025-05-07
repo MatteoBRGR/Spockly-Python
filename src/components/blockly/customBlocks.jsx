@@ -124,7 +124,7 @@ const modulo = {
       .appendField(new Blockly.FieldNumber(0), 'a')
       .appendField(new Blockly.FieldLabelSerializable('modulo'), 'NAME')
       .appendField(new Blockly.FieldNumber(0), 'b');
-    this.setOutput(true, null);
+    this.setOutput(true, 'Number');
     this.setTooltip('');
     this.setHelpUrl('');
     this.setColour(230);
@@ -300,6 +300,37 @@ pythonGenerator.forBlock["log_of"] = function (block, generator) {
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
   return [`np.log(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
+
+//** boolean blocks*/
+const bool1 = {
+  init: function() {
+    this.appendDummyInput('')
+      .appendField('True');
+    this.setOutput(true, 'Boolean');
+    this.setTooltip('');
+    this.setHelpUrl('');
+    this.setColour(230);
+  }
+};
+Blockly.common.defineBlocks({bool1: bool1});
+pythonGenerator.forBlock['bool1'] = function() {
+  return 'True';
+}
+
+const bool2 = {
+  init: function() {
+    this.appendDummyInput('')
+      .appendField('False');
+    this.setOutput(true, 'Boolean');
+    this.setTooltip('');
+    this.setHelpUrl('');
+    this.setColour(230);
+  }
+};
+Blockly.common.defineBlocks({bool2: bool2});
+pythonGenerator.forBlock['bool2'] = function() {
+  return 'False';
+}
 
 /** 
  * Mean of array of numbers

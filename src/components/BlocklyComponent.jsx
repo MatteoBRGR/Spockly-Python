@@ -22,6 +22,8 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="math_number"></block>
             <block type="math_arithmetic"></block>
             <block type="logic_compare"></block>
+            <block type="bool1"></block>
+            <block type="bool2"></block>
             <block type="math_square"></block>
             <block type="sqrt_of"></block>
             <block type="exp_of"></block>
