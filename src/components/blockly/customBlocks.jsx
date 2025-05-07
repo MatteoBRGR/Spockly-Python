@@ -357,6 +357,7 @@ Blockly.Blocks['variables_get'] = {
     this.appendDummyInput()
       .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD_NAME");
     this.setOutput(true, null);
+    this.setColour(95);
   }
 };
 pythonGenerator.forBlock["variables_get"] = function(block, generator) {
@@ -377,6 +378,7 @@ Blockly.Blocks['variables_set'] = {
         .appendField("to");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
+    this.setColour(95);
     this.setOutput(true, null);
   }
 };
