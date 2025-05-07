@@ -135,7 +135,7 @@ Blockly.common.defineBlocks({modulo: modulo});
 pythonGenerator.forBlock['modulo'] = function(block) {
   const number_a = block.getFieldValue('a');
   const number_b = block.getFieldValue('b');
-  return [`${number_a}%${number_b}`, pythonGenerator.ORDER_NONE];
+  return [`${number_a}%${number_b}`, pythonGenerator.ORDER_MULTIPLICATIVE];
 }
 
 
@@ -173,13 +173,13 @@ pythonGenerator.forBlock['operators'] = function(block,generator) {
 
   switch (dropdown_name) {
     case 'AND':
-      return [`${valu}&${valu2}`, pythonGenerator.ORDER_NONE];
+      return [`(${valu} & ${valu2})`, pythonGenerator.ORDER_LOGICAL_AND];
     case 'OR':
-      return [`${valu}|${valu2}`, pythonGenerator.ORDER_NONE];
+      return [`(${valu} | ${valu2})`, pythonGenerator.ORDER_LOGICAL_OR];
     case 'XOR':
-      return [`${valu}^${valu2}`, pythonGenerator.ORDER_NONE];
+      return [`(${valu} ^ ${valu2})`, pythonGenerator.ORDER_BITWISE_XOR];
     case 'NOT':
-      return [`not ${valu2}`, pythonGenerator.ORDER_NONE];
+      return [`(not ${valu2})`, pythonGenerator.ORDER_LOGICAL_NOT];
   }
 }
 
@@ -230,7 +230,6 @@ Blockly.Blocks['load_csv'] = {
   },
 };
 pythonGenerator.forBlock['load_csv'] = function(block, generator) {
-  // const dataset = generator.valueToCode(block, 'DATASET', pythonGenerator.ORDER_NONE) || '0';
   const dataset = block.getFieldValue('CSV') || '0';
   return `import pandas as pd\npd.read_csv('${dataset}')\n`;
 };
@@ -254,7 +253,6 @@ Blockly.Blocks['load_csv_from_url'] = {
   },
 };
 pythonGenerator.forBlock['load_csv_from_url'] = function(block, generator) {
-  // const dataset = generator.valueToCode(block, 'DATASET', pythonGenerator.ORDER_NONE) || '0';
   const dataset = block.getFieldValue('CSV') || '0';
   return `import pandas as pd\npd.read_csv('${dataset}')\n`;
 };
