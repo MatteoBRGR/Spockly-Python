@@ -19,12 +19,12 @@ const BlocklyComponent = ({ setCode }) => {
       toolbox: `
         <xml>
           <category name="Examples" colour="#5C81A6">
-          <block type="controls_if"></block>
-          <block type="logic_compare"></block>
-          <block type="math_number"></block>
-          <block type="math_arithmetic"></block>
-          <block type="text"></block>
-          <block type="text_print"></block>
+            <block type="controls_if"></block>
+            <block type="logic_compare"></block>
+            <block type="math_number"></block>
+            <block type="math_arithmetic"></block>
+            <block type="text"></block>
+            <block type="text_print"></block>
           </category>
           <category name="Custom Blocks" colour="#5C81A6">
             <block type="print_hello"></block>
@@ -34,7 +34,11 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="dropdown_color"></block>
             <block type="length_of_str"></block>
             <block type="modulo"></block>
+          </category>
+          <category name="Load data" colour="#FA2">
             <block type="loading"></block>
+            <block type="load_csv"></block>
+            <block type="load_csv_from_url"></block>
           </category>
         </xml>
       `,
