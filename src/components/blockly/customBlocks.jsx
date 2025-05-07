@@ -137,28 +137,7 @@ pythonGenerator.forBlock['modulo'] = function(block) {
   const number_b = block.getFieldValue('b');
   return [`${number_a}%${number_b}`, pythonGenerator.ORDER_NONE];
 }
-                    
-/**
- * Loading block
- */
-//TBD
-Blockly.Blocks["loading"] = {
-  init: function(){
-    this.appendDummyInput()
-    .appendField('Load data from dataset:')
-    .appendField(new Blockly.FieldTextInput('iris'), 'DATASET');
-    // this.setCheck('String')
-    this.setTooltip('Loads a given dataset');
-    this.appendEndRowInput();
-    this.setColour(200);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-  },
-};
-pythonGenerator.forBlock["loading"] = function(block, generator) {
-  const dataset = generator.valueToCode(block, 'DATASET', pythonGenerator.ORDER_NONE) || '0';
-  return [`data(${dataset})`, pythonGenerator.ORDER_ATOMIC];
-};
+
 
 /**
  * Operators block
@@ -203,3 +182,79 @@ pythonGenerator.forBlock['operators'] = function(block,generator) {
       return [`not ${valu2}`, pythonGenerator.ORDER_NONE];
   }
 }
+
+/************************
+ * 
+ * LOADING BLOCKS
+ * 
+ ************************/
+
+/**
+ * Basic loading block
+ */
+
+Blockly.Blocks["loading"] = {
+  init: function(){
+    this.appendDummyInput()
+    .appendField('Load data from dataset:')
+    .appendField(new Blockly.FieldTextInput('iris'), 'DATASET');
+    this.setTooltip('Loads a given dataset');
+    this.appendEndRowInput();
+    this.setColour(200);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+  },
+};
+pythonGenerator.forBlock["loading"] = function(block, generator) {
+  // const dataset = generator.valueToCode(block, 'DATASET', pythonGenerator.ORDER_NONE) || '0';
+  const dataset = block.getFieldValue('DATASET') || '0';
+  return `data(${dataset})\n`;
+};
+
+/**
+ * Load csv file (using pandas)
+ */
+Blockly.Blocks['load_csv'] = {
+  init: function(){
+    this.appendDummyInput()
+    .appendField('Load data from CSV:')
+    .appendField(new Blockly.FieldTextInput('iris.csv', (txt) => {
+      if(!~txt.indexOf('.csv')) txt = txt + '.csv';
+      return txt
+    }), 'CSV');
+    this.setTooltip('Loads a given CSV dataset');
+    this.appendEndRowInput();
+    this.setColour(200);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+  },
+};
+pythonGenerator.forBlock['load_csv'] = function(block, generator) {
+  // const dataset = generator.valueToCode(block, 'DATASET', pythonGenerator.ORDER_NONE) || '0';
+  const dataset = block.getFieldValue('CSV') || '0';
+  return `import pandas as pd\npd.read_csv('${dataset}')\n`;
+};
+
+/**
+ * Load CSV file from URL (using pandas)
+ */
+
+Blockly.Blocks['load_csv_from_url'] = {
+  init: function(){
+    this.appendDummyInput()
+    .appendField('Load CSV file from URL')
+    .appendField(new Blockly.FieldTextInput('http://example.com/iris.csv', (url) => {
+      if(url.match(/^[a-z]{4,5}:\/\/[A-Za-zÀ-ÖØ-öø-ÿ0-9.\/:_-]*?\.[a-z]{2,6}/)) { return url } else { return 'ERROR!' }
+    }), 'CSV');
+    this.setTooltip('Loads a given CSV dataset from an URL. Local files can be used by porepending "file://".');
+    this.appendEndRowInput();
+    this.setColour(200);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+  },
+};
+pythonGenerator.forBlock['load_csv_from_url'] = function(block, generator) {
+  // const dataset = generator.valueToCode(block, 'DATASET', pythonGenerator.ORDER_NONE) || '0';
+  const dataset = block.getFieldValue('CSV') || '0';
+  return `import pandas as pd\npd.read_csv('${dataset}')\n`;
+};
