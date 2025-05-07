@@ -268,7 +268,7 @@ Blockly.Blocks["sqrt_of"] = {
 pythonGenerator.forBlock["sqrt_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`m.sqrt(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return [`np.sqrt(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** exponentiel block**/
@@ -283,7 +283,7 @@ Blockly.Blocks["exp_of"] = {
 pythonGenerator.forBlock["exp_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`m.exp(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return [`np.exp(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** logarithm block**/
@@ -298,5 +298,90 @@ Blockly.Blocks["log_of"] = {
 pythonGenerator.forBlock["log_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`m.log(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return [`np.log(${num})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** 
+ * Mean of array of numbers
+ */
+Blockly.Blocks["mean"] = {
+  init: function () {
+    this.appendValueInput("NUM")
+    .setCheck("Array")
+    .appendField("Mean of");
+    this.setOutput(true, "Number");
+    this.setColour(150);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip("Returns the mean of an array of numbers");
+  },
+};
+pythonGenerator.forBlock["mean"] = function(block, generator) {
+  const mean =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.mean(${mean})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** 
+ * Median of array of numbers
+ */
+Blockly.Blocks["median"] = {
+  init: function () {
+    this.appendValueInput("NUM")
+    .setCheck("Array")
+    .appendField("Median of");
+    this.setOutput(true, "Number");
+    this.setColour(150);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip("Returns the median of an array of numbers");
+  },
+};
+pythonGenerator.forBlock["median"] = function(block, generator) {
+  const median =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.mean(${median})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/************************
+ * 
+ * VARIABLE BLOCKS
+ * 
+ ************************/
+
+/** 
+ *  Block for variable getter.
+ */
+Blockly.Blocks['variables_get'] = {
+  init: function() {
+    this.appendDummyInput()
+      .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD_NAME");
+    this.setOutput(true, null);
+  }
+};
+pythonGenerator.forBlock["variables_get"] = function(block, generator) {
+  const Var =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`${Var} = `, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** 
+ * Block for variable setter.
+ */
+Blockly.Blocks['variables_set'] = {
+  init: function() {
+    this.appendValueInput("NAME")
+        .setCheck(null)
+        .appendField("set")
+        .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD_NAME")
+        .appendField("to");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setOutput(true, null);
+  }
+};
+pythonGenerator.forBlock["variables_set"] = function(block, generator) {
+  const VarS =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`${VarS}\n`, pythonGenerator.ORDER_ATOMIC];
 };

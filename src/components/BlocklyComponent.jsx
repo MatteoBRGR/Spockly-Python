@@ -18,14 +18,6 @@ const BlocklyComponent = ({ setCode }) => {
     workspaceRef.current = Blockly.inject(blocklyDiv.current, {
       toolbox: `
         <xml>
-          <category name="Examples" colour="#5C81A6">
-            <block type="controls_if"></block>
-             <block type="repeat_times"></block> 
-            <block type="text"></block>
-            <block type="text_print"></block>
-            <block type="length_of_str"></block>
-            <block type="operators"></block>
-          </category>
           <category name="Math" colour="#A9A9A9">
             <block type="math_number"></block>
             <block type="math_arithmetic"></block>
@@ -40,6 +32,22 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="loading"></block>
             <block type="load_csv"></block>
             <block type="load_csv_from_url"></block>
+          </category>
+          <category name="Statistics" colour="#B6C">
+            <block type="mean"></block>
+            <block type="median"></block>
+          </category>
+          <category name="Variables" colour="#B52">
+            <block type="variables_get"></block>
+            <block type="variables_set"></block>
+          </category>
+          <category name="Other" colour="#5C81A6">
+            <block type="controls_if"></block>
+            <block type="repeat_times"></block> 
+            <block type="text"></block>
+            <block type="text_print"></block>
+            <block type="length_of_str"></block>
+            <block type="operators"></block>
           </category>
         </xml>
       `,
