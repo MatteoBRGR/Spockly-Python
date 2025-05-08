@@ -34,10 +34,15 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="loading"></block>
             <block type="load_csv"></block>
             <block type="load_csv_from_url"></block>
+            <block type="Data_shape"></block>
+            <block type="stacking"></block>
+            <block type="delete_object"></block>
+            <block type="create_array"></block>
           </category>
           <category name="Statistics" colour="#B6C">
             <block type="mean"></block>
             <block type="median"></block>
+            <block type="max"></block>
           </category>
           <category name="Variables" colour="#B52">
             <block type="variables_get"></block>
