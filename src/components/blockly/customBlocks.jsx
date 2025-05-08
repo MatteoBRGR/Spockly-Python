@@ -374,6 +374,31 @@ pythonGenerator.forBlock["median"] = function(block, generator) {
   return [`np.mean(${median})`, pythonGenerator.ORDER_ATOMIC];
 };
 
+/** 
+ * Maximum of array of numbers
+ */
+const max = {
+  init: function() {
+    this.appendValueInput('maximum')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('Maximum of'), 'MAXIMUM');
+    this.setOutput(true, 'Number');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('"Returns the maximum of an array of numbers"');
+    this.setHelpUrl('');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({max: max});
+
+pythonGenerator.forBlock["max"] = function(block, generator) {
+  const maxi =
+    generator.valueToCode(block, "maximum", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.max(${maxi})`, pythonGenerator.ORDER_ATOMIC];
+};
+                    
+
 /************************
  * 
  * VARIABLE BLOCKS
@@ -419,3 +444,102 @@ pythonGenerator.forBlock["variables_set"] = function(block, generator) {
   const value = generator.valueToCode(block, "NAME", pythonGenerator.ORDER_ATOMIC) || 'None';
   return [`\n${varName} = ${value}`, pythonGenerator.ORDER_ATOMIC];
 };
+
+
+//**Shape of data */
+const Data_shape = {
+  init: function() {
+    this.appendValueInput('data')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('Data shape'), 'DATA SHAPE');
+    this.setInputsInline(true)
+    this.setOutput(true, 'tuple');
+    this.setTooltip('');
+    this.setHelpUrl('');
+    this.setColour(200);
+  }
+};
+Blockly.common.defineBlocks({Data_shape: Data_shape});
+
+pythonGenerator.forBlock['Data_shape'] = function(block,generator) {
+  const data = generator.valueToCode(block, 'data', pythonGenerator.ORDER_ATOMIC);
+  return [`np.shape(${data})`, pythonGenerator.ORDER_COLLECTION];
+}
+
+//**stacking data */
+const stacking = {
+  init: function() {
+    this.appendValueInput('db1')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('stacking by'), 'NAME')
+      .appendField(new Blockly.FieldDropdown([
+          ['columns', 'COLUMNS'],
+          ['rows', 'ROWS']
+        ]), 'type');
+    this.appendValueInput('db2')
+    .setCheck('Array');
+    this.setInputsInline(true)
+    this.setOutput(true, 'Array');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('');
+    this.setColour(200);
+  }
+};
+Blockly.common.defineBlocks({stacking: stacking});
+
+pythonGenerator.forBlock['stacking'] = function(block, generator) {
+  const dropdown_type = block.getFieldValue('type');
+  const db1 = generator.valueToCode(block, 'db1', pythonGenerator.ORDER_COLLECTION);
+  const db2 = generator.valueToCode(block, 'db2', pythonGenerator.ORDER_COLLECTION);
+  switch (dropdown_type) {
+    case 'COLUMNS':
+      return [`np.hstack((${db1},${db2}))`, pythonGenerator.ORDER_COLLECTION];
+    case 'ROWS':
+      return [`np.vstack((${db1},${db2}))`, pythonGenerator.ORDER_COLLECTION];
+  }
+}
+
+//** create an array*/
+const create_array = {
+  init: function() {
+    this.appendValueInput('array')
+    .setCheck(['Number', 'Boolean', 'String', 'List', 'Matrix'])
+      .appendField(new Blockly.FieldLabelSerializable('create array of'), 'CREATE');
+    this.setOutput(true, 'Array');
+    this.setTooltip('');
+    this.setHelpUrl('');
+    this.setColour(200);
+  }
+};
+Blockly.common.defineBlocks({create_array: create_array});
+
+pythonGenerator.forBlock['create_array'] = function(block,generator) {
+  const array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_ATOMIC);
+  return [`np.array(${array})`, pythonGenerator.ORDER_COLLECTION];
+}             
+
+//**Delete in an array */
+const delete_object = {
+  init: function() {
+    this.appendValueInput('object')
+    .setCheck(['Array', 'Number'])
+      .appendField(new Blockly.FieldLabelSerializable('delete'), 'DELETE');
+    this.appendValueInput('array')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('in'), 'IN');
+    this.setInputsInline(true)
+    this.setOutput(true, 'Array');
+    this.setTooltip('Delete an object in an array');
+    this.setHelpUrl('');
+    this.setColour(195);
+  }
+};
+Blockly.common.defineBlocks({delete_object: delete_object});
+
+pythonGenerator.forBlock['delete_object'] = function(block,generator) {
+  const value_object = generator.valueToCode(block, 'object', pythonGenerator.ORDER_ATOMIC);
+  const value_array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_COLLECTION);
+  return [`np.delete(${value_array}, ${value_object})`, pythonGenerator.ORDER_COLLECTION];
+}
