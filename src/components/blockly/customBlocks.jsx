@@ -244,7 +244,7 @@ Blockly.Blocks['load_csv_from_url'] = {
     .appendField(new Blockly.FieldTextInput('http://example.com/iris.csv', (url) => {
       if(url.match(/^[a-z]{4,5}:\/\/[A-Za-zÀ-ÖØ-öø-ÿ0-9.\/:_-]*?\.[a-z]{2,6}/)) { return url } else { return 'ERROR!' }
     }), 'CSV');
-    this.setTooltip('Loads a given CSV dataset from an URL. Local files can be used by porepending "file://".');
+    this.setTooltip('Loads a given CSV dataset from an URL. Local files can be used by prepending "file://".');
     this.appendEndRowInput();
     this.setColour(200);
     this.setPreviousStatement(true, null);
@@ -386,15 +386,13 @@ pythonGenerator.forBlock["median"] = function(block, generator) {
 Blockly.Blocks['variables_get'] = {
   init: function() {
     this.appendDummyInput()
-      .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD_NAME");
+      .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD");
     this.setOutput(true, null);
     this.setColour(95);
   }
 };
 pythonGenerator.forBlock["variables_get"] = function(block, generator) {
-  const Var =
-    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`${Var} = `, pythonGenerator.ORDER_ATOMIC];
+  return null
 };
 
 /** 
@@ -405,7 +403,7 @@ Blockly.Blocks['variables_set'] = {
     this.appendValueInput("NAME")
         .setCheck(null)
         .appendField("set")
-        .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD_NAME")
+        .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD")
         .appendField("to");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -414,7 +412,10 @@ Blockly.Blocks['variables_set'] = {
   }
 };
 pythonGenerator.forBlock["variables_set"] = function(block, generator) {
-  const VarS =
-    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`${VarS}\n`, pythonGenerator.ORDER_ATOMIC];
+  const varID = block.getFieldValue('FIELD') || '0';
+  const workspace = block.workspace;
+  const getVar = workspace.getVariableById(varID);
+  const varName = getVar ? getVar.name : 'undefined';
+  const value = generator.valueToCode(block, "NAME", pythonGenerator.ORDER_ATOMIC) || 'None';
+  return [`\n${varName} = ${value}`, pythonGenerator.ORDER_ATOMIC];
 };
