@@ -5,9 +5,10 @@ import GenerateButton from "./GenerateButton";
 import "./blockly/customBlocks"; // Import custom blocks
 import "./blockly/customGenerator"; // Import custom generator
 import "./blockly/rBlocks"; // Import R blocks
-import WebRRunner from "./WebRRunner";
+import "./assets/blocklyLight.css";
+import { Box } from "@mui/material";
 
-const BlocklyComponent = ({ setCode }) => {
+const BlocklyComponent = ({ setCode, isDarkMode }) => {
   const blocklyDiv = useRef(null);
   const workspaceRef = useRef(null);
 
@@ -15,6 +16,12 @@ const BlocklyComponent = ({ setCode }) => {
     if (!blocklyDiv.current) {
       console.error("blocklyDiv is not available.");
       return;
+    }
+
+    if (isDarkMode) {
+      import("./assets/blocklyDark.css");
+    } else {
+      import("./assets/blocklyLight.css");
     }
 
     // Initialize Blockly workspace
@@ -125,20 +132,26 @@ const BlocklyComponent = ({ setCode }) => {
   };
 
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         height: "100%",
         width: "100%",
         display: "flex",
         flexDirection: "column",
       }}
     >
-      <div ref={blocklyDiv} style={{ flex: 1, width: "100%" }} />
-      <div style={{ marginTop: "0.5rem", textAlign: "center" }}>
+      <Box
+        ref={blocklyDiv}
+        sx={{
+          flexGrow: 1,
+          width: "100%",
+          border: "1px solid lightgray",
+        }}
+      />
+      <Box sx={{ p: 1 }}>
         <GenerateButton onClick={generateCode} />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
-
 export default BlocklyComponent;
