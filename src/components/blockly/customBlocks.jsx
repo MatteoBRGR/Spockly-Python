@@ -571,113 +571,6 @@ pythonGenerator.forBlock['variables_set'] = function(block, generator) {
 }
 
 /**
- * Block for creating a list
- */
-
-Blockly.Blocks['list_create'] = {
-  init: function() {
-    this.itemCount_ = 0
-    this.appendValueInput('element_0')
-    .appendField('create list');
-    this.setInputsInline(false);
-    const appendFieldPlusIcon = new Blockly.FieldImage(
-      // eslint-disable-next-line quotes
-      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-plus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 5l0 14' /%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E",
-      16,
-      16,
-      'Add',
-      function (block) {
-        block.sourceBlock_.appendArrayElementInput()
-      }
-    )
-    this.appendDummyInput('close').appendField(appendFieldPlusIcon);
-    this.setColour(230);
-    this.setOutput(true, null);
-    this.setTooltip('Create a Python list');
-  },
-
-  saveExtraState: function() {
-    return {
-      itemCount: this.itemCount_,
-    }
-  },
-
-  loadExtraState: function(state) {
-    this.itemCount_ = state['itemCount']
-    this.updateShape()
-  },
-
-  appendArrayElementInput: function() {
-    Blockly.Events.setGroup(true)
-    const oldExtraState = getExtraBlockState(this)
-    this.itemCount_ += 1
-    const newExtraState = getExtraBlockState(this)
-    Blockly.Events.fire(new Blockly.Events.BlockChange(this, 'mutation', null, oldExtraState, newExtraState))
-    Blockly.Events.setGroup(false)
-    this.updateShape()
-  },
-
-  deleteArrayElementInput: function(inputToDelete) {
-    const oldExtraState = getExtraBlockState(this)
-    Blockly.Events.setGroup(true)
-    var inputNameToDelete = inputToDelete.name
-    var inputIndexToDelete = Number(inputNameToDelete.match(/\d+/)[0])
-    var substructure = this.getInputTargetBlock(inputNameToDelete)
-    if (substructure) substructure.dispose(true, true)
-    this.removeInput(inputNameToDelete)
-    this.itemCount_ -= 1
-    for (var i = inputIndexToDelete + 1; i <= this.itemCount_; i++) {
-      var input = this.getInput('element_' + i)
-      input.name = 'element_' + (i - 1)
-    }
-
-    const newExtraState = getExtraBlockState(this)
-    Blockly.Events.fire(new Blockly.Events.BlockChange(this, 'mutation', null, oldExtraState, newExtraState))
-    Blockly.Events.setGroup(false)
-  },
-
-  updateShape: function() {
-    for (let i = 1; i < this.itemCount_; i++) {
-      if (!this.getInput('element_' + i)) {
-        const appended_input = this.appendValueInput('element_' + i)
-
-        var deleteArrayElementIcon = new Blockly.FieldImage(
-          // eslint-disable-next-line quotes
-          `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-minus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E`,
-          16,
-          16,
-          'Remove',
-          function (block) {
-            block.sourceBlock_.deleteArrayElementInput(appended_input)
-          }
-        )
-        appended_input.appendField(deleteArrayElementIcon, 'delete_' + i)
-
-        this.moveInputBefore('element_' + i, 'close')
-      }
-    }
-  },
-}
-
-function getExtraBlockState(block) {
-  if (block.saveExtraState) {
-    const state = block.saveExtraState()
-    return state ? JSON.stringify(state) : ''
-  } else if (block.mutationToDom) {
-    const state = block.mutationToDom()
-    return state ? Blockly.Xml.domToText(state) : ''
-  }
-  return ''
-}
-pythonGenerator.forBlock['list_create'] = function(block, generator) {
-  const elements = [];
-  for (let i = 0; i < block.itemCount_; i++) {
-    elements.push(generator.valueToCode(block, 'element_' + i, pythonGenerator.ORDER_NONE) || 'None');
-  }
-  return [`[${elements.join(', ')}]`, pythonGenerator.ORDER_ATOMIC];
-};
-
-/**
  * Statistical blocks
  */
 
@@ -769,7 +662,13 @@ Blockly.Blocks['list_create'] = {
     }
   },
 }
-
+pythonGenerator.forBlock['list_create'] = function(block, generator) {
+  const elements = [];
+  for (let i = 0; i < block.itemCount_; i++) {
+    elements.push(generator.valueToCode(block, 'element_' + i, pythonGenerator.ORDER_NONE) || 'None');
+  }
+  return [`[${elements.join(', ')}]`, pythonGenerator.ORDER_ATOMIC];
+};
 function getExtraBlockState(block) {
   if (block.saveExtraState) {
     const state = block.saveExtraState()
@@ -780,14 +679,6 @@ function getExtraBlockState(block) {
   }
   return ''
 }
-pythonGenerator.forBlock['list_create'] = function(block, generator) {
-  const elements = [];
-  for (let i = 0; i < block.itemCount_; i++) {
-    elements.push(generator.valueToCode(block, 'element_' + i, pythonGenerator.ORDER_NONE) || 'None');
-  }
-  return [`[${elements.join(', ')}]`, pythonGenerator.ORDER_ATOMIC];
-};
-
 /**
  * Statistical blocks
  */
