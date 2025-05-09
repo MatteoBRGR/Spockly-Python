@@ -113,7 +113,7 @@ Blockly.Blocks["length_of_str"] = {
 };
 pythonGenerator.forBlock["length_of_str"] = function(block, generator) {
   const length = generator.valueToCode(block, 'STR', pythonGenerator.ORDER_NONE) || '0';
-  return [`len(${length})`, pythonGenerator.ORDER_ATOMIC];
+  return `len(${length})`;
 };
 
 /**Block modulo**/
@@ -243,7 +243,7 @@ Blockly.Blocks["sqrt_of"] = {
 pythonGenerator.forBlock["sqrt_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.sqrt(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.sqrt(${num})`;
 };
 
 /** exponentiel block**/
@@ -258,7 +258,7 @@ Blockly.Blocks["exp_of"] = {
 pythonGenerator.forBlock["exp_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.exp(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.exp(${num})`;
 };
 
 /** logarithm block**/
@@ -273,7 +273,7 @@ Blockly.Blocks["log_of"] = {
 pythonGenerator.forBlock["log_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.log(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.log(${num})`;
 };
 
 /** sinus block**/
@@ -288,7 +288,7 @@ Blockly.Blocks["sin"] = {
 pythonGenerator.forBlock["sin"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.sin(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.sin(${num})`;
 };
 
 /** cosinus block**/
@@ -303,7 +303,7 @@ Blockly.Blocks["cos"] = {
 pythonGenerator.forBlock["cos"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.cos(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.cos(${num})`;
 };
 
 /** tangente block**/
@@ -318,7 +318,7 @@ Blockly.Blocks["tan"] = {
 pythonGenerator.forBlock["tan"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.tan(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.tan(${num})`;
 };
 
 /** round block**/
@@ -333,7 +333,7 @@ Blockly.Blocks["round"] = {
 pythonGenerator.forBlock["round"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.round(${num})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.round(${num})`;
 };
 
 //** boolean blocks*/
@@ -386,7 +386,7 @@ Blockly.Blocks["mean"] = {
 pythonGenerator.forBlock["mean"] = function(block, generator) {
   const mean =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.mean(${mean})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.mean(${mean})`;
 };
 
 /** 
@@ -408,7 +408,7 @@ Blockly.Blocks["median"] = {
 pythonGenerator.forBlock["median"] = function(block, generator) {
   const median =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.median(${median})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.median(${median})`;
 };
 
 /** 
@@ -430,7 +430,7 @@ Blockly.Blocks["sum"] = {
 pythonGenerator.forBlock["sum"] = function(block, generator) {
   const sum =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.sum(${sum})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.sum(${sum})`;
 };
 
 /** 
@@ -452,7 +452,7 @@ Blockly.Blocks["std"] = {
 pythonGenerator.forBlock["std"] = function(block, generator) {
   const std =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.std(${std})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.std(${std})`;
 };
 
 /** 
@@ -474,8 +474,8 @@ Blockly.Blocks["mean_squared"] = {
 pythonGenerator.forBlock["mean_squared"] = function(block, generator) {
   const msq =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`(erreur_quad = 0\nfor i in range(${msq}.shape[0]) :\n  erreur_quad += (${msq}[i,0] - np.mean(${msq}))**2\n
-erreur_quad /= ${msq}.shape[0])\n`, pythonGenerator.ORDER_ATOMIC];
+  return `(quad_err = 0\nfor i in range(${msq}.shape[0]) :\n  quad_err += (${msq}[i,0] - np.mean(${msq}))**2\n
+quad_err /= ${msq}.shape[0])\n`;
 };
 
 /** 
@@ -499,7 +499,7 @@ Blockly.common.defineBlocks({max: max});
 pythonGenerator.forBlock["max"] = function(block, generator) {
   const maxi =
     generator.valueToCode(block, "maximum", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.max(${maxi})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.max(${maxi})`;
 };
 
 /** 
@@ -522,7 +522,7 @@ Blockly.common.defineBlocks({min: min});
 pythonGenerator.forBlock["min"] = function(block, generator) {
   const mini =
     generator.valueToCode(block, "minimum", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.min(${mini})`, pythonGenerator.ORDER_ATOMIC];
+  return `np.min(${mini})`;
 };
                 
 
@@ -548,8 +548,7 @@ pythonGenerator.forBlock["variables_get"] = function(block, generator) {
   const workspace = block.workspace;
   const getVar = workspace.getVariableById(varID);
   const varName = getVar ? getVar.name : 'undefined';
-  const value = generator.valueToCode(block, "FIELD1", pythonGenerator.ORDER_ATOMIC) || 'None';
-  return [varName, pythonGenerator.ORDER_ATOMIC];
+  return varName;
 };
 
 /** 
@@ -572,7 +571,7 @@ Blockly.common.defineBlocks({variables_set: variables_set});
 pythonGenerator.forBlock['variables_set'] = function(block, generator) {
   const varName = generator.getVariableName(block.getFieldValue('NAME'));
   const value = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
-  return[`\n${varName} = ${value}\n`, pythonGenerator.ORDER_ATOMIC];
+  return `\n${varName} = ${value}\n`;
 }
 
 /**
@@ -841,7 +840,7 @@ pythonGenerator.forBlock['list_filter'] = function(block, generator) {
 const to_bool = {
   init: function() {
     this.appendValueInput('NAME')
-      .appendField('value to convert');
+      .appendField('convert to boolean');
     this.setInputsInline(true)
     this.setOutput(true, 'Boolean');
     this.setTooltip('Transform a value into a boolean');
@@ -870,6 +869,6 @@ const lineBreak = {
   }
 };
 Blockly.common.defineBlocks({line_break: lineBreak});
-pythonGenerator.forBlock['line_break'] = function(block, generator) {
+pythonGenerator.forBlock['line_break'] = function() {
   return '\n'
 }
