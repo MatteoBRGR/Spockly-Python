@@ -49,6 +49,7 @@ const BlocklyComponent = ({ setCode }) => {
           <category name="Variables" colour="#B52">
             <block type="variables_get"></block>
             <block type="variables_set"></block>
+            <block type="list_create"></block>
           </category>
           <category name="Other" colour="#5C81A6">
             <block type="controls_if"></block>
@@ -60,6 +61,7 @@ const BlocklyComponent = ({ setCode }) => {
           </category>
         </xml>
       `,
+      renderer: 'zelos',
     });
 
     return () => {
