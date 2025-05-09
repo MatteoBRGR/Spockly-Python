@@ -34,22 +34,22 @@ pythonGenerator.forBlock["math_square"] = function (block, generator) {
   return [`(${num} ** 2)`, pythonGenerator.ORDER_ATOMIC];
 };
 
-/**
- * 3. Text Block (returns string)
- */
-Blockly.Blocks["text_greeting"] = {
-  init: function () {
-    this.appendValueInput("NAME").setCheck("String").appendField("greet");
-    this.setOutput(true, "String");
-    this.setColour(65);
-    this.setTooltip("Returns a greeting with a name");
-  },
-};
-pythonGenerator.forBlock["text_greeting"] = function (block, generator) {
-  const name =
-    generator.valueToCode(block, "NAME", pythonGenerator.ORDER_NONE) || "''";
-  return [`('Hello, ' + ${name})`, pythonGenerator.ORDER_ATOMIC];
-};
+// /**
+//  * 3. Text Block (returns string)
+//  */
+// Blockly.Blocks["text_greeting"] = {
+//   init: function () {
+//     this.appendValueInput("NAME").setCheck("String").appendField("greet");
+//     this.setOutput(true, "String");
+//     this.setColour(65);
+//     this.setTooltip("Returns a greeting with a name");
+//   },
+// };
+// pythonGenerator.forBlock["text_greeting"] = function (block, generator) {
+//   const name =
+//     generator.valueToCode(block, "NAME", pythonGenerator.ORDER_NONE) || "''";
+//   return [`('Hello, ' + ${name})`, pythonGenerator.ORDER_ATOMIC];
+// };
 
 /**
  * 4. Statement Input Block (loop)
@@ -71,30 +71,30 @@ pythonGenerator.forBlock["repeat_times"] = function (block, generator) {
   return `for i in range(${times}):\n${branch}`;
 };
 
-/**
- * 5. Dropdown Field Block
- */
-Blockly.Blocks["dropdown_color"] = {
-  init: function () {
-    this.appendDummyInput()
-      .appendField("favorite color")
-      .appendField(
-        new Blockly.FieldDropdown([
-          ["Red", "RED"],
-          ["Green", "GREEN"],
-          ["Blue", "BLUE"],
-        ]),
-        "COLOR"
-      );
-    this.setOutput(true, "String");
-    this.setColour(20);
-    this.setTooltip("Returns selected color");
-  },
-};
-pythonGenerator.forBlock["dropdown_color"] = function (block) {
-  const color = block.getFieldValue("COLOR");
-  return [`"${color.toLowerCase()}"`, pythonGenerator.ORDER_ATOMIC];
-};
+// /**
+//  * 5. Dropdown Field Block
+//  */
+// Blockly.Blocks["dropdown_color"] = {
+//   init: function () {
+//     this.appendDummyInput()
+//       .appendField("favorite color")
+//       .appendField(
+//         new Blockly.FieldDropdown([
+//           ["Red", "RED"],
+//           ["Green", "GREEN"],
+//           ["Blue", "BLUE"],
+//         ]),
+//         "COLOR"
+//       );
+//     this.setOutput(true, "String");
+//     this.setColour(20);
+//     this.setTooltip("Returns selected color");
+//   },
+// };
+// pythonGenerator.forBlock["dropdown_color"] = function (block) {
+//   const color = block.getFieldValue("COLOR");
+//   return [`"${color.toLowerCase()}"`, pythonGenerator.ORDER_ATOMIC];
+// };
 
 /**
  * 6. Length of str (returns int)
@@ -342,7 +342,7 @@ const bool1 = {
     this.appendDummyInput('')
       .appendField('True');
     this.setOutput(true, 'Boolean');
-    this.setTooltip('');
+    this.setTooltip('Boolean value True');
     this.setHelpUrl('');
     this.setColour(230);
   }
@@ -357,7 +357,7 @@ const bool2 = {
     this.appendDummyInput('')
       .appendField('False');
     this.setOutput(true, 'Boolean');
-    this.setTooltip('');
+    this.setTooltip('Boolean value False');
     this.setHelpUrl('');
     this.setColour(230);
   }
@@ -377,6 +377,7 @@ Blockly.Blocks["mean"] = {
     .appendField("Mean of");
     this.setOutput(true, "Number");
     this.setColour(150);
+    this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip("Returns the mean of an array of numbers");
@@ -398,6 +399,7 @@ Blockly.Blocks["median"] = {
     .appendField("Median of");
     this.setOutput(true, "Number");
     this.setColour(150);
+    this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setTooltip("Returns the median of an array of numbers");
@@ -420,6 +422,7 @@ Blockly.Blocks["sum"] = {
     this.setOutput(true, "Number");
     this.setColour(150);
     this.setPreviousStatement(true, null);
+    this.setInputsInline(true);
     this.setNextStatement(true, null);
     this.setTooltip("Returns the sum of an array of numbers");
   },
@@ -440,6 +443,7 @@ Blockly.Blocks["std"] = {
     .appendField("Standard deviation of");
     this.setOutput(true, "Number");
     this.setColour(150);
+    this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip("Returns the standard deviation of an array of numbers");
@@ -461,6 +465,7 @@ Blockly.Blocks["mean_squared"] = {
     .appendField("Mean squared error of");
     this.setOutput(true, "Number");
     this.setColour(150);
+    this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setTooltip("Returns the mean squared error of an array of numbers");
@@ -508,7 +513,7 @@ const min = {
     this.setOutput(true, 'Number');
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
-    this.setTooltip('"Returns the minimum of an array of numbers"');
+    this.setTooltip('Returns the minimum of an array of numbers');
     this.setColour(150);
   }
 };
@@ -569,10 +574,6 @@ pythonGenerator.forBlock['variables_set'] = function(block, generator) {
   const value = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
   return[`\n${varName} = ${value}\n`, pythonGenerator.ORDER_ATOMIC];
 }
-
-/**
- * Statistical blocks
- */
 
 /**
  * Block for creating a list
@@ -679,6 +680,7 @@ function getExtraBlockState(block) {
   }
   return ''
 }
+
 /**
  * Statistical blocks
  */
@@ -800,4 +802,74 @@ pythonGenerator.forBlock['add_object'] = function(block,generator) {
   const value_object = generator.valueToCode(block, 'object', pythonGenerator.ORDER_ATOMIC);
   const value_array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_COLLECTION);
   return [`np.append(${value_array}, ${value_object})`, pythonGenerator.ORDER_COLLECTION];
+}
+
+/**
+ * Nunmpy: filter list
+ */
+const list_filter = {
+  init: function() {
+    this.appendValueInput('CNAME')
+      .appendField('array to filter')
+      .appendField(new Blockly.FieldTextInput('LIST_NAME'), 'CNAME');
+    this.appendValueInput('DNAME')
+      .appendField('according to')
+      .appendField(new Blockly.FieldTextInput('LIST_NAME2'), 'DNAME');
+    this.appendDummyInput('ENAME')
+      .appendField('store array in')
+      .appendField(new Blockly.FieldTextInput('VAR_NAME'), 'ENAME');
+    this.setInputsInline(false)
+    this.setOutput(true, null);
+    this.setTooltip('Filter a list according to a list of booleans');
+    this.setHelpUrl('');
+    this.setColour(315);
+  }
+};
+Blockly.common.defineBlocks({list_filter: list_filter});
+pythonGenerator.forBlock['list_filter'] = function(block, generator) {
+  const text_cname = block.getFieldValue('CNAME');
+  const text_dname = block.getFieldValue('DNAME');
+  const text_ename = block.getFieldValue('ENAME');
+  const value_cname = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
+  const value_dname = generator.valueToCode(block, 'DNAME', pythonGenerator.ORDER_ATOMIC);
+  return [`${text_cname} = ${value_cname}\n${text_dname} = ${value_dname}\n${text_ename} = ${text_cname}[${text_dname}]\n`, pythonGenerator.ORDER_ATOMIC];
+}
+
+/**
+ * Value to boolean
+ */
+const to_bool = {
+  init: function() {
+    this.appendValueInput('NAME')
+      .appendField('value to convert');
+    this.setInputsInline(true)
+    this.setOutput(true, 'Boolean');
+    this.setTooltip('Transform a value into a boolean');
+    this.setHelpUrl('');
+    this.setColour(95);
+  }
+};
+Blockly.common.defineBlocks({to_bool: to_bool});
+pythonGenerator.forBlock['to_bool'] = function(block, generator) {
+  const value_name = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
+  return [`bool(${value_name})`, pythonGenerator.ORDER_ATOMIC];
+}
+
+/**
+ * Line-break
+ */
+
+const lineBreak = {
+  init: function() {
+    this.appendDummyInput('')
+        .appendField('Line-break');
+    this.setTooltip('Enter a line-break in code');
+    this.setNextStatement(true, null);
+    this.setPreviousStatement(true, null);
+    this.setColour('#888');
+  }
+};
+Blockly.common.defineBlocks({line_break: lineBreak});
+pythonGenerator.forBlock['line_break'] = function(block, generator) {
+  return '\n'
 }

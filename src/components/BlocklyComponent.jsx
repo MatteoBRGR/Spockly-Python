@@ -28,11 +28,12 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="sqrt_of"></block>
             <block type="exp_of"></block>
             <block type="log_of"></block>
-            <block type="sin"></block> 
-            <block type="cos"></block> 
+            <block type="sin"></block>
+            <block type="cos"></block>
             <block type="tan"></block>
-            <block type="round"></block>              
-            <block type="modulo"></block>          
+            <block type="round"></block>
+            <block type="modulo"></block>
+            <block type="to_bool"></block>
           </category>
           <category name="Data" colour="#FA2">
             <block type="load_csv"></block>
@@ -42,6 +43,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="add_object"></block>
             <block type="delete_object"></block>
             <block type="create_array"></block>
+            <block type="list_filter"></block>
           </category>
           <category name="Statistics" colour="#B6C">
             <block type="mean"></block>
@@ -59,11 +61,12 @@ const BlocklyComponent = ({ setCode }) => {
           </category>
           <category name="Other" colour="#5C81A6">
             <block type="controls_if"></block>
-            <block type="repeat_times"></block> 
+            <block type="repeat_times"></block>
             <block type="text"></block>
             <block type="text_print"></block>
             <block type="length_of_str"></block>
             <block type="operators"></block>
+            <block type="line_break"></block>
           </category>
         </xml>
       `,
