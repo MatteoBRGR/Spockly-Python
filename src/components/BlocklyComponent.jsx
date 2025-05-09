@@ -27,7 +27,11 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="math_square"></block>
             <block type="sqrt_of"></block>
             <block type="exp_of"></block>
-            <block type="log_of"></block>              
+            <block type="log_of"></block>
+            <block type="sin"></block> 
+            <block type="cos"></block> 
+            <block type="tan"></block>
+            <block type="round"></block>              
             <block type="modulo"></block>          
           </category>
           <category name="Data" colour="#FA2">
@@ -35,6 +39,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="load_csv_from_url"></block>
             <block type="Data_shape"></block>
             <block type="stacking"></block>
+            <block type="add_object"></block>
             <block type="delete_object"></block>
             <block type="create_array"></block>
           </category>
@@ -45,6 +50,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="mean_squared"></block>
             <block type="max"></block>
             <block type="min"></block>
+            <block type="sum"></block>
           </category>
           <category name="Variables" colour="#B52">
             <block type="variables_get"></block>
