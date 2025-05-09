@@ -31,7 +31,6 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="modulo"></block>          
           </category>
           <category name="Data" colour="#FA2">
-            <block type="loading"></block>
             <block type="load_csv"></block>
             <block type="load_csv_from_url"></block>
             <block type="Data_shape"></block>
@@ -43,6 +42,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="mean"></block>
             <block type="median"></block>
             <block type="max"></block>
+            <block type="min"></block>
           </category>
           <category name="Variables" colour="#B52">
             <block type="variables_get"></block>

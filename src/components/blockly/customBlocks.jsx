@@ -125,8 +125,7 @@ const modulo = {
       .appendField(new Blockly.FieldLabelSerializable('modulo'), 'NAME')
       .appendField(new Blockly.FieldNumber(0), 'b');
     this.setOutput(true, 'Number');
-    this.setTooltip('');
-    this.setHelpUrl('');
+    this.setTooltip('Module: returns the remainder of a division');
     this.setColour(230);
   }
 };
@@ -157,8 +156,7 @@ const operators = {
         ]), 'NAME');
     this.setInputsInline(true)
     this.setOutput(true, null);
-    this.setTooltip('');
-    this.setHelpUrl('');
+    this.setTooltip('All the basic logical operators');
     this.setColour(0);
   }
 };
@@ -187,29 +185,6 @@ pythonGenerator.forBlock['operators'] = function(block,generator) {
  * LOADING BLOCKS
  * 
  ************************/
-
-/**
- * Basic loading block
- */
-
-Blockly.Blocks["loading"] = {
-  init: function(){
-    this.appendDummyInput()
-    .appendField('Load data from dataset:')
-    .appendField(new Blockly.FieldTextInput('iris'), 'DATASET');
-    this.setTooltip('Loads a given dataset');
-    this.appendEndRowInput();
-    this.setColour(200);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-  },
-};
-pythonGenerator.forBlock["loading"] = function(block, generator) {
-  // const dataset = generator.valueToCode(block, 'DATASET', pythonGenerator.ORDER_NONE) || '0';
-  const dataset = block.getFieldValue('DATASET') || '0';
-  return `data(${dataset})\n`;
-};
-
 /**
  * Load csv file (using pandas)
  */
@@ -397,7 +372,31 @@ pythonGenerator.forBlock["max"] = function(block, generator) {
     generator.valueToCode(block, "maximum", pythonGenerator.ORDER_NONE) || "0";
   return [`np.max(${maxi})`, pythonGenerator.ORDER_ATOMIC];
 };
-                    
+
+/** 
+ * Minimum of array of numbers
+ */
+const min = {
+  init: function() {
+    this.appendValueInput('minimum')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('Minimum of'), 'MINIMUM');
+    this.setOutput(true, 'Number');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('"Returns the minimum of an array of numbers"');
+    this.setHelpUrl('');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({min: min});
+
+pythonGenerator.forBlock["min"] = function(block, generator) {
+  const mini =
+    generator.valueToCode(block, "minimum", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.min(${mini})`, pythonGenerator.ORDER_ATOMIC];
+};
+                
 
 /************************
  * 
@@ -410,41 +409,44 @@ pythonGenerator.forBlock["max"] = function(block, generator) {
  */
 Blockly.Blocks['variables_get'] = {
   init: function() {
-    this.appendDummyInput()
-      .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD");
+    this.appendDummyInput('FIELD1')
+      .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD1");
     this.setOutput(true, null);
     this.setColour(95);
   }
 };
 pythonGenerator.forBlock["variables_get"] = function(block, generator) {
-  return null
+  const varID = block.getFieldValue('FIELD1') || '0';
+  const workspace = block.workspace;
+  const getVar = workspace.getVariableById(varID);
+  console.info(getVar);
+  const varName = getVar ? getVar.name : 'undefined';
+  const value = generator.valueToCode(block, "FIELD1", pythonGenerator.ORDER_ATOMIC) || 'None';
+  return [varName, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 
  * Block for variable setter.
  */
-Blockly.Blocks['variables_set'] = {
+const variables_set = {
   init: function() {
-    this.appendValueInput("NAME")
-        .setCheck(null)
-        .appendField("set")
-        .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD")
-        .appendField("to");
+    this.appendValueInput('NAME')
+      .appendField('Set')
+      .appendField(new Blockly.FieldVariable('VAR_NAME'), 'NAME')
+      .appendField('to');
+    this.setOutput(true, null);
+    this.setTooltip('Set a variable to a value');
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(95);
-    this.setOutput(true, null);
   }
 };
-pythonGenerator.forBlock["variables_set"] = function(block, generator) {
-  const varID = block.getFieldValue('FIELD') || '0';
-  const workspace = block.workspace;
-  const getVar = workspace.getVariableById(varID);
-  const varName = getVar ? getVar.name : 'undefined';
-  const value = generator.valueToCode(block, "NAME", pythonGenerator.ORDER_ATOMIC) || 'None';
-  return [`\n${varName} = ${value}`, pythonGenerator.ORDER_ATOMIC];
-};
-
+Blockly.common.defineBlocks({variables_set: variables_set});
+pythonGenerator.forBlock['variables_set'] = function(block, generator) {
+  const varName = generator.getVariableName(block.getFieldValue('NAME'));
+  const value = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
+  return[`\n${varName} = ${value}`, pythonGenerator.ORDER_ATOMIC];
+}
 
 //**Shape of data */
 const Data_shape = {
