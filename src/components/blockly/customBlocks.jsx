@@ -831,7 +831,7 @@ pythonGenerator.forBlock['list_filter'] = function(block, generator) {
   const text_ename = block.getFieldValue('ENAME');
   const value_cname = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
   const value_dname = generator.valueToCode(block, 'DNAME', pythonGenerator.ORDER_ATOMIC);
-  return [`${text_cname} = ${value_cname}\n${text_dname} = ${value_dname}\n${text_ename} = ${text_cname}[${text_dname}]\n`, pythonGenerator.ORDER_ATOMIC];
+  return [`${text_cname} = np.array(${value_cname})\n${text_dname} = ${value_dname}\n${text_ename} = ${text_cname}[${text_dname}]\n`, pythonGenerator.ORDER_ATOMIC];
 }
 
 /**
@@ -871,4 +871,25 @@ const lineBreak = {
 Blockly.common.defineBlocks({line_break: lineBreak});
 pythonGenerator.forBlock['line_break'] = function() {
   return '\n'
+}
+
+/**
+ * Sort a list
+ */
+
+const sort = {
+  init: function() {
+    this.appendValueInput('CNAME')
+      .appendField('list to sort');
+    this.setInputsInline(true)
+    this.setOutput(true, null);
+    this.setTooltip('Sort an array (one- or multidimensionl)');
+    this.setHelpUrl('');
+    this.setColour(95);
+  }
+};
+Blockly.common.defineBlocks({sort: sort});
+pythonGenerator.forBlock['sort'] = function(block, generator) {
+  const value_name = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
+  return `np.sort(np.array(${value_name}))`;
 }

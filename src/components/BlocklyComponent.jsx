@@ -44,6 +44,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="delete_object"></block>
             <block type="create_array"></block>
             <block type="list_filter"></block>
+            <block type="sort"></block>
           </category>
           <category name="Statistics" colour="#B6C">
             <block type="mean"></block>
