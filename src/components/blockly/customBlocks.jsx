@@ -267,13 +267,73 @@ Blockly.Blocks["log_of"] = {
     this.appendValueInput("NUM").setCheck("Number").appendField("log of");
     this.setOutput(true, "Number");
     this.setColour(230);
-    this.setTooltip("Returns the exponential of a number");
+    this.setTooltip("Returns the logarithm of a number");
   },
 };
 pythonGenerator.forBlock["log_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
   return [`np.log(${num})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** sinus block**/
+Blockly.Blocks["sin"] = {
+  init: function () {
+    this.appendValueInput("NUM").setCheck("Number").appendField("sin");
+    this.setOutput(true, "Number");
+    this.setColour(230);
+    this.setTooltip("Returns the sinus of a number");
+  },
+};
+pythonGenerator.forBlock["sin"] = function (block, generator) {
+  const num =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.sin(${num})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** cosinus block**/
+Blockly.Blocks["cos"] = {
+  init: function () {
+    this.appendValueInput("NUM").setCheck("Number").appendField("cos");
+    this.setOutput(true, "Number");
+    this.setColour(230);
+    this.setTooltip("Returns the cosinus of a number");
+  },
+};
+pythonGenerator.forBlock["cos"] = function (block, generator) {
+  const num =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.cos(${num})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** tangente block**/
+Blockly.Blocks["tan"] = {
+  init: function () {
+    this.appendValueInput("NUM").setCheck("Number").appendField("tan");
+    this.setOutput(true, "Number");
+    this.setColour(230);
+    this.setTooltip("Returns the tangente of a number");
+  },
+};
+pythonGenerator.forBlock["tan"] = function (block, generator) {
+  const num =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.tan(${num})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** round block**/
+Blockly.Blocks["round"] = {
+  init: function () {
+    this.appendValueInput("NUM").setCheck("Number").appendField("round");
+    this.setOutput(true, "Number");
+    this.setColour(230);
+    this.setTooltip("Returns the unit round of a number");
+  },
+};
+pythonGenerator.forBlock["round"] = function (block, generator) {
+  const num =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.round(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 //** boolean blocks*/
@@ -347,6 +407,27 @@ pythonGenerator.forBlock["median"] = function(block, generator) {
   const median =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
   return [`np.median(${median})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** 
+ * Sum of array of numbers
+ */
+Blockly.Blocks["sum"] = {
+  init: function () {
+    this.appendValueInput("NUM")
+    .setCheck("Array")
+    .appendField("Sum of");
+    this.setOutput(true, "Number");
+    this.setColour(150);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip("Returns the sum of an array of numbers");
+  },
+};
+pythonGenerator.forBlock["sum"] = function(block, generator) {
+  const sum =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.sum(${sum})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 
@@ -488,7 +569,7 @@ Blockly.common.defineBlocks({variables_set: variables_set});
 pythonGenerator.forBlock['variables_set'] = function(block, generator) {
   const varName = generator.getVariableName(block.getFieldValue('NAME'));
   const value = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
-  return[`\n${varName} = ${value}`, pythonGenerator.ORDER_ATOMIC];
+  return[`\n${varName} = ${value}\n`, pythonGenerator.ORDER_ATOMIC];
 }
 
 //**Shape of data */
@@ -540,9 +621,9 @@ pythonGenerator.forBlock['stacking'] = function(block, generator) {
   const db2 = generator.valueToCode(block, 'db2', pythonGenerator.ORDER_COLLECTION);
   switch (dropdown_type) {
     case 'COLUMNS':
-      return [`np.hstack((${db1},${db2}))`, pythonGenerator.ORDER_COLLECTION];
+      return [`np.hstack((${db1},${db2}))\n`, pythonGenerator.ORDER_COLLECTION];
     case 'ROWS':
-      return [`np.vstack((${db1},${db2}))`, pythonGenerator.ORDER_COLLECTION];
+      return [`np.vstack((${db1},${db2}))\n`, pythonGenerator.ORDER_COLLECTION];
   }
 }
 
@@ -578,7 +659,7 @@ const delete_object = {
     this.setOutput(true, 'Array');
     this.setTooltip('Delete an object in an array');
     this.setHelpUrl('');
-    this.setColour(195);
+    this.setColour(200);
   }
 };
 Blockly.common.defineBlocks({delete_object: delete_object});
@@ -587,4 +668,28 @@ pythonGenerator.forBlock['delete_object'] = function(block,generator) {
   const value_object = generator.valueToCode(block, 'object', pythonGenerator.ORDER_ATOMIC);
   const value_array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_COLLECTION);
   return [`np.delete(${value_array}, ${value_object})`, pythonGenerator.ORDER_COLLECTION];
+}
+
+//**Add in an array */
+const add_object = {
+  init: function() {
+    this.appendValueInput('object')
+    .setCheck(['Array', 'Number'])
+      .appendField(new Blockly.FieldLabelSerializable('add'), 'ADD');
+    this.appendValueInput('array')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('in'), 'IN');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Array');
+    this.setTooltip('Add an object in an array');
+    this.setHelpUrl('');
+    this.setColour(200);
+  }
+};
+Blockly.common.defineBlocks({add_object: add_object});
+
+pythonGenerator.forBlock['add_object'] = function(block,generator) {
+  const value_object = generator.valueToCode(block, 'object', pythonGenerator.ORDER_ATOMIC);
+  const value_array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_COLLECTION);
+  return [`np.append(${value_array}, ${value_object})`, pythonGenerator.ORDER_COLLECTION];
 }
