@@ -371,7 +371,50 @@ Blockly.Blocks["median"] = {
 pythonGenerator.forBlock["median"] = function(block, generator) {
   const median =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.mean(${median})`, pythonGenerator.ORDER_ATOMIC];
+  return [`np.median(${median})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** 
+ * Standard deviation of array of numbers
+ */
+Blockly.Blocks["std"] = {
+  init: function () {
+    this.appendValueInput("NUM")
+    .setCheck("Array")
+    .appendField("Standard deviation of");
+    this.setOutput(true, "Number");
+    this.setColour(150);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip("Returns the standard deviation of an array of numbers");
+  },
+};
+pythonGenerator.forBlock["std"] = function(block, generator) {
+  const std =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.std(${std})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** 
+ * mean squared error of array of numbers
+ */
+Blockly.Blocks["mean_squared"] = {
+  init: function () {
+    this.appendValueInput("NUM")
+    .setCheck("Array")
+    .appendField("Mean squared error of");
+    this.setOutput(true, "Number");
+    this.setColour(150);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setTooltip("Returns the mean squared error of an array of numbers");
+  },
+};
+pythonGenerator.forBlock["mean_squared"] = function(block, generator) {
+  const msq =
+    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  return [`(erreur_quad = 0\nfor i in range(${msq}.shape[0]) :\n  erreur_quad += (${msq}[i,0] - np.mean(${msq}))**2\n
+erreur_quad /= ${msq}.shape[0])\n`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 

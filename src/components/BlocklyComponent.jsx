@@ -42,6 +42,8 @@ const BlocklyComponent = ({ setCode }) => {
           <category name="Statistics" colour="#B6C">
             <block type="mean"></block>
             <block type="median"></block>
+            <block type="std"></block>
+            <block type="mean_squared"></block>
             <block type="max"></block>
           </category>
           <category name="Variables" colour="#B52">
