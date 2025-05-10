@@ -554,7 +554,7 @@ pythonGenerator.forBlock["variables_get"] = function(block, generator) {
 /** 
  * Block for variable setter.
  */
-const variables_set = {
+const variables_sett = {
   init: function() {
     this.appendValueInput('NAME')
       .appendField('Set')
@@ -567,8 +567,8 @@ const variables_set = {
     this.setColour(95);
   }
 };
-Blockly.common.defineBlocks({variables_set: variables_set});
-pythonGenerator.forBlock['variables_set'] = function(block, generator) {
+Blockly.common.defineBlocks({variables_setting: variables_sett});
+pythonGenerator.forBlock['variables_setting'] = function(block, generator) {
   const varName = generator.getVariableName(block.getFieldValue('NAME'));
   const value = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
   return `\n${varName} = ${value}\n`;
@@ -893,3 +893,45 @@ pythonGenerator.forBlock['sort'] = function(block, generator) {
   const value_name = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
   return `np.sort(np.array(${value_name}))`;
 }
+
+/**
+ * Input block
+ */
+
+const input = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('input')
+        .appendField(new Blockly.FieldTextInput('question', (txt) => { 
+          return txt
+        }), 'CSV');
+    this.setTooltip('Make user input a value');
+    this.appendEndRowInput();
+    this.setColour(95);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+  }
+};
+Blockly.common.defineBlocks({input: input});
+pythonGenerator.forBlock['input'] = function(block, generator) {
+  const question = block.getFieldValue('CSV') || '0';
+  return `input('${question}')\n`;
+}
+
+  // init: function(){
+  //   this.appendDummyInput()
+  //   .appendField('Load data from CSV:')
+  //   .appendField(new Blockly.FieldTextInput('iris.csv', (txt) => {
+  //     return txt
+  //   }), 'CSV');
+//     this.setTooltip('Loads a given CSV dataset');
+//     this.appendEndRowInput();
+//     this.setColour(200);
+//     this.setPreviousStatement(true, null);
+//     this.setNextStatement(true, null);
+//   },
+// };
+// pythonGenerator.forBlock['load_csv'] = function(block, generator) {
+//   const dataset = block.getFieldValue('CSV') || '0';
+//   return `pd.read_csv('${dataset}')\n`;
+// };
