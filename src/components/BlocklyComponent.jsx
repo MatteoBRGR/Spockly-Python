@@ -57,7 +57,7 @@ const BlocklyComponent = ({ setCode }) => {
           </category>
           <category name="Variables" colour="#B52">
             <block type="variables_get"></block>
-            <block type="variables_set"></block>
+            <block type="variables_setting"></block>
             <block type="list_create"></block>
           </category>
           <category name="Other" colour="#5C81A6">
@@ -68,6 +68,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="length_of_str"></block>
             <block type="operators"></block>
             <block type="line_break"></block>
+            <!--<block type="input"></block>-->
           </category>
         </xml>
       `,
