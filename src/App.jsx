@@ -11,8 +11,9 @@ import TutorialWho from "./pages/tutorials/TutorialWho";
 import TutorialHow from "./pages/tutorials/TutorialHow";
 import TutorialExample from "./pages/tutorials/TutorialExample";
 import Impressum from "./pages/Impressum";
-import { GlobalStyles, ThemeProvider } from "@mui/material";
 import {
+  GlobalStyles,
+  ThemeProvider,
   AppBar,
   Card,
   Toolbar,
@@ -21,10 +22,10 @@ import {
   Fab,
   Grid,
 } from "@mui/material";
-import { useState } from "react";
 import SpocklyLogo from "./assets/spockly_logo.png";
-import BlocklyComponent from "./components/BlocklyComponent";
-import CodeDisplay from "./components/CodeDisplay";
+import { darkTheme, lightTheme } from "./appTheme";
+import { Brightness3, LightMode } from "@mui/icons-material";
+import WebRRunner from "./components/WebRRunner";
 
 function SPOCKLY() {
   const [code, setCode] = useState("");
@@ -62,62 +63,6 @@ function SPOCKLY() {
         }}
       />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <AppBar
-          position="static"
-          sx={{
-            boxShadow: "none",
-            height: "60px",
-            bgcolor: theme.palette.primary.main,
-            color: theme.palette.primary.contrastText,
-          }}
-        >
-          <Toolbar
-            sx={{
-              minHeight: "50px",
-              height: "50px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              px: 2,
-            }}
-          >
-            <Box display="flex" alignItems="center">
-              <img
-                src={SpocklyLogo}
-                alt="Spockly Logo"
-                style={{ height: "40px", width: "40px", marginRight: 10 }}
-              />
-              <Typography variant="h6" fontWeight="bold">
-                SPOCKLY
-              </Typography>
-            </Box>
-            <Fab
-              variant="extended"
-              size="small"
-              sx={{
-                width: "90px",
-                bgcolor: theme.palette.primary.contrastText,
-                color: theme.palette.primary.main,
-                "&:hover": {
-                  bgcolor: theme.palette.primary.dark,
-                  color: theme.palette.primary.contrastText,
-                },
-                boxShadow: "none",
-              }}
-              onClick={toggleTheme}
-            >
-              <Box display="flex" alignItems="center" gap={0.5}>
-                {isDarkMode ? (
-                  <LightMode fontSize="small" />
-                ) : (
-                  <Brightness3 fontSize="small" />
-                )}
-                {isDarkMode ? "Light" : "Dark"}
-              </Box>
-            </Fab>
-          </Toolbar>
-        </AppBar>
-
         <Grid
           container
           sx={{
@@ -173,24 +118,35 @@ function SPOCKLY() {
 }
 
 function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const toggleTheme = () => setIsDarkMode((prev) => !prev);
+  const theme = isDarkMode ? darkTheme : lightTheme;
+  
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="spockly" element={<SPOCKLY />} />
-          <Route path="/tutorials/*" element={<Tutorials />}>
-            <Route index element={<TutorialIntroduction />} />
-            <Route path="introduction" element={<TutorialIntroduction />} />
-            <Route path="why" element={<TutorialWhy />} />
-            <Route path="who" element={<TutorialWho />} />
-            <Route path="how" element={<TutorialHow />} />
-            <Route path="example" element={<TutorialExample />} />
+    <ThemeProvider theme={theme}>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Layout isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+            }
+          >
+            <Route index element={<Home />} />
+            <Route path="spockly" element={<SPOCKLY />} />
+            <Route path="/tutorials/*" element={<Tutorials />}>
+              <Route index element={<TutorialIntroduction />} />
+              <Route path="introduction" element={<TutorialIntroduction />} />
+              <Route path="why" element={<TutorialWhy />} />
+              <Route path="who" element={<TutorialWho />} />
+              <Route path="how" element={<TutorialHow />} />
+              <Route path="example" element={<TutorialExample />} />
+            </Route>
+            <Route path="impressum" element={<Impressum />} />
           </Route>
-          <Route path="impressum" element={<Impressum />} />
-        </Route>
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 
