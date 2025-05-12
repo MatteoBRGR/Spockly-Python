@@ -113,7 +113,7 @@ Blockly.Blocks["length_of_str"] = {
 };
 pythonGenerator.forBlock["length_of_str"] = function(block, generator) {
   const length = generator.valueToCode(block, 'STR', pythonGenerator.ORDER_NONE) || '0';
-  return [`len(${length})`, pythonGenerator.ORDER_NONE];
+  return [`len(${length})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /**Block modulo**/
@@ -206,7 +206,7 @@ Blockly.Blocks['load_csv'] = {
 };
 pythonGenerator.forBlock['load_csv'] = function(block, generator) {
   const dataset = block.getFieldValue('CSV') || '0';
-  return [`pd.read_csv('${dataset}')`, pythonGenerator.ORDER_NONE];
+  return [`pd.read_csv('${dataset}')`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /**
@@ -230,7 +230,7 @@ Blockly.Blocks['load_csv_from_url'] = {
 };
 pythonGenerator.forBlock['load_csv_from_url'] = function(block, generator) {
   const dataset = block.getFieldValue('CSV') || '0';
-  return [`pd.read_csv('${dataset}')\n`, pythonGenerator.ORDER_NONE];
+  return [`pd.read_csv('${dataset}')\n`, pythonGenerator.ORDER_ATOMIC];
 };
       
 /** sqrt block**/
@@ -245,7 +245,7 @@ Blockly.Blocks["sqrt_of"] = {
 pythonGenerator.forBlock["sqrt_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.sqrt(${num})`, pythonGenerator.ORDER_NONE];
+  return [`np.sqrt(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** exponentiel block**/
@@ -260,7 +260,7 @@ Blockly.Blocks["exp_of"] = {
 pythonGenerator.forBlock["exp_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.exp(${num})`, pythonGenerator.ORDER_NONE];
+  return [`np.exp(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** logarithm block**/
@@ -275,7 +275,7 @@ Blockly.Blocks["log_of"] = {
 pythonGenerator.forBlock["log_of"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.log(${num})`, pythonGenerator.ORDER_NONE];
+  return [`np.log(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** sinus block**/
@@ -290,7 +290,7 @@ Blockly.Blocks["sin"] = {
 pythonGenerator.forBlock["sin"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.sin(${num})`, pythonGenerator.ORDER_NONE];
+  return [`np.sin(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** cosinus block**/
@@ -305,7 +305,7 @@ Blockly.Blocks["cos"] = {
 pythonGenerator.forBlock["cos"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.cos(${num})`, pythonGenerator.ORDER_NONE];
+  return [`np.cos(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** tangente block**/
@@ -320,7 +320,7 @@ Blockly.Blocks["tan"] = {
 pythonGenerator.forBlock["tan"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.tan(${num})`, pythonGenerator.ORDER_NONE];
+  return [`np.tan(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** round block**/
@@ -335,7 +335,7 @@ Blockly.Blocks["round"] = {
 pythonGenerator.forBlock["round"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.round(${num})`, pythonGenerator.ORDER_NONE];
+  return [`np.round(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 //** boolean blocks*/
@@ -351,7 +351,7 @@ const bool1 = {
 };
 Blockly.common.defineBlocks({bool1: bool1});
 pythonGenerator.forBlock['bool1'] = function() {
-  return ['True', pythonGenerator.ORDER_NONE];
+  return ['True', pythonGenerator.ORDER_ATOMIC];
 }
 
 const bool2 = {
@@ -366,7 +366,7 @@ const bool2 = {
 };
 Blockly.common.defineBlocks({bool2: bool2});
 pythonGenerator.forBlock['bool2'] = function() {
-  return ['False', pythonGenerator.ORDER_NONE];
+  return ['False', pythonGenerator.ORDER_ATOMIC];
 }
 
 /** 
@@ -388,7 +388,7 @@ Blockly.Blocks["mean"] = {
 pythonGenerator.forBlock["mean"] = function(block, generator) {
   const mean =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.mean(${mean})`, pythonGenerator.ORDER_NONE];
+  return [`np.mean(${mean})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 
@@ -410,7 +410,7 @@ Blockly.Blocks["median"] = {
 pythonGenerator.forBlock["median"] = function(block, generator) {
   const median =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.median(${median})`, pythonGenerator.ORDER_NONE];
+  return [`np.median(${median})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 
@@ -432,7 +432,7 @@ Blockly.Blocks["sum"] = {
 pythonGenerator.forBlock["sum"] = function(block, generator) {
   const sum =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.sum(${sum})`, pythonGenerator.ORDER_NONE];
+  return [`np.sum(${sum})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 
@@ -454,7 +454,7 @@ Blockly.Blocks["std"] = {
 pythonGenerator.forBlock["std"] = function(block, generator) {
   const std =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.std(${std})`, pythonGenerator.ORDER_NONE];
+  return [`np.std(${std})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 
@@ -477,7 +477,7 @@ pythonGenerator.forBlock["mean_squared"] = function(block, generator) {
   const msq =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
   return [`(quad_err = 0\nfor i in range(${msq}.shape[0]) :\n  quad_err += (${msq}[i,0] - np.mean(${msq}))**2\n
-quad_err /= ${msq}.shape[0])\n`, pythonGenerator.ORDER_NONE];
+quad_err /= ${msq}.shape[0])\n`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 
@@ -501,7 +501,7 @@ Blockly.common.defineBlocks({max: max});
 pythonGenerator.forBlock["max"] = function(block, generator) {
   const maxi =
     generator.valueToCode(block, "maximum", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.max(${maxi})`, pythonGenerator.ORDER_NONE];
+  return [`np.max(${maxi})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 
@@ -524,7 +524,7 @@ Blockly.common.defineBlocks({min: min});
 pythonGenerator.forBlock["min"] = function(block, generator) {
   const mini =
     generator.valueToCode(block, "minimum", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.min(${mini})`, pythonGenerator.ORDER_NONE];
+  return [`np.min(${mini})`, pythonGenerator.ORDER_ATOMIC];
 };
                 
 
@@ -550,7 +550,7 @@ pythonGenerator.forBlock["variables_get"] = function(block, generator) {
   const workspace = block.workspace;
   const getVar = workspace.getVariableById(varID);
   const varName = getVar ? getVar.name : 'undefined';
-  return [varName, pythonGenerator.ORDER_NONE];
+  return [varName, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** 
@@ -834,7 +834,7 @@ pythonGenerator.forBlock['list_filter'] = function(block, generator) {
   const text_ename = block.getFieldValue('ENAME');
   const value_cname = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
   const value_dname = generator.valueToCode(block, 'DNAME', pythonGenerator.ORDER_ATOMIC);
-  return [`${text_cname} = np.array(${value_cname})\n${text_dname} = ${value_dname}\n${text_ename} = ${text_cname}[${text_dname}]\n`, pythonGenerator.ORDER_NONE];
+  return [`${text_cname} = np.array(${value_cname})\n${text_dname} = ${value_dname}\n${text_ename} = ${text_cname}[${text_dname}]\n`, pythonGenerator.ORDER_ATOMIC];
 }
 
 /**
@@ -894,7 +894,7 @@ const sort = {
 Blockly.common.defineBlocks({sort: sort});
 pythonGenerator.forBlock['sort'] = function(block, generator) {
   const value_name = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
-  return [`np.sort(np.array(${value_name}))`, pythonGenerator.ORDER_NONE];
+  return [`np.sort(np.array(${value_name}))`, pythonGenerator.ORDER_ATOMIC];
 }
 
 /**
@@ -919,7 +919,7 @@ const input = {
 Blockly.common.defineBlocks({input: input});
 pythonGenerator.forBlock['input'] = function(block, generator) {
   const question = block.getFieldValue('CSV') || '0';
-  return [`input('${question}')`, pythonGenerator.ORDER_NONE];
+  return [`input('${question}')`, pythonGenerator.ORDER_ATOMIC];
 }
 
 /** Import blocks */
@@ -1081,5 +1081,5 @@ Blockly.Blocks['read_file'] = {
 };
 pythonGenerator.forBlock['read_file'] = function(block, generator) {
   const fileName = block.getFieldValue('NAME');
-  return  [`gpd.read_file(os.path.join(data_folder, ${fileName}))`, pythonGenerator.ORDER_NONE]
+  return  [`gpd.read_file(os.path.join(data_folder, ${fileName}))`, pythonGenerator.ORDER_ATOMIC]
 }
