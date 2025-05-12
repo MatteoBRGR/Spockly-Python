@@ -551,6 +551,7 @@ pythonGenerator.forBlock["variables_get"] = function(block, generator) {
   const getVar = workspace.getVariableById(varID);
   const varName = getVar ? getVar.name : 'undefined';
   return [varName, pythonGenerator.ORDER_NONE];
+  return [varName, pythonGenerator.ORDER_NONE];
 };
 
 /** 
@@ -873,6 +874,7 @@ const lineBreak = {
 };
 Blockly.common.defineBlocks({line_break: lineBreak});
 pythonGenerator.forBlock['line_break'] = function() {
+  return '\n'
   return '\n'
 }
 
