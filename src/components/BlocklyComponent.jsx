@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import * as Blockly from "blockly";
 import { pythonGenerator } from "blockly/python";
-import GenerateButton from "./GenerateButton";
 import "./blockly/customBlocks"; // Import custom blocks
 import "./blockly/customGenerator"; // Import custom generator
 import "./blockly/rBlocks"; // Import R blocks
@@ -111,8 +110,8 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
     `,
       theme: isDarkMode ? darkTheme : lightTheme,
       grid: {
-        spacing: 20,
-        length: 3,
+        spacing: 40,
+        length:4,
         colour: "#fff",
         snap: true,
       },

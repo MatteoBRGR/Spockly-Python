@@ -21,6 +21,7 @@ export const lightTheme = Blockly.Theme.defineTheme('lightTheme', {
     scrollbarColour: "#fff",
     insertionMarkerColour: "#000000",
     insertionMarkerOpacity: 0.3,
+    trashcanColour: "#ffffff",
   },
 });
 

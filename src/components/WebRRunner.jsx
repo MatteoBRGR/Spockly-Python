@@ -61,7 +61,7 @@ const WebRRunner = ({ code, isDarkMode }) => {
           fontWeight="bold"
           sx={{
             color: theme.palette.primary.contrastText,
-            paddingBottom: "10px",
+            paddingBottom: "15px",
           }}
         >
           Output
@@ -102,7 +102,7 @@ const WebRRunner = ({ code, isDarkMode }) => {
         <Typography
           fontWeight="bold"
           sx={{
-            color: theme.palette.primary.dark,
+            color: isDarkMode ? theme.palette.primary.contrastText : theme.palette.primary.dark,
             paddingBottom: "10px",
             padding: "20px",
           }}

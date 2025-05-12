@@ -1,4 +1,4 @@
-import { GlobalStyles, Stack, ThemeProvider } from "@mui/material";
+import { GlobalStyles, ThemeProvider } from "@mui/material";
 import {
   AppBar,
   Card,
@@ -8,7 +8,7 @@ import {
   Fab,
   Grid,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import SpocklyLogo from "./assets/spockly_logo.png";
 import BlocklyComponent from "./components/BlocklyComponent";
 import CodeDisplay from "./components/CodeDisplay";
@@ -43,6 +43,12 @@ function App() {
           h5: { textTransform: "none" },
           h6: { textTransform: "none" },
           p: { textTransform: "none" },
+          ".blocklyTrash": {
+            opacity: "1 !important",
+          },
+          image: {
+            opacity: "1 !important",
+          },
         }}
       />
       <Box sx={{ display: "flex", flexDirection: "column" }}>
