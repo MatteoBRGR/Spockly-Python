@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import BlocklyComponent from "./components/BlocklyComponent";
 import CodeDisplay from "./components/CodeDisplay";
+import Home from "./pages/Home";
+import Tutorials from "./pages/Tutorials";
 
-function App() {
+
+function SPOCKLY() {
   const [code, setCode] = useState("");
 
   return (
@@ -30,6 +34,23 @@ function App() {
         </div>
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <nav style={{ padding: "1rem", background: "#ddd" }}>
+        <Link to="/" style={{ marginRight: "1rem" }}>Home</Link>
+        <Link to="/spockly" style={{ marginRight: "1rem" }}>SPOCKLY</Link>
+        <Link to="/tutorials">Tutorials</Link>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/spockly" element={<SPOCKLY />} />
+        <Route path="/tutorials" element={<Tutorials />} />
+      </Routes>
+    </Router>
   );
 }
 
