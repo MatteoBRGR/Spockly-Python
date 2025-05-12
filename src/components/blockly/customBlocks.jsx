@@ -560,7 +560,7 @@ const variables_sett = {
   init: function() {
     this.appendValueInput('NAME')
       .appendField('Set')
-      .appendField(new Blockly.FieldVariable('VAR_NAME'), 'NAME2')
+      .appendField(new Blockly.FieldVariable('VAR_NAME'), 'NAME')
       .appendField('to');
     this.setOutput(true, null);
     this.setTooltip('Set a variable to a value');
@@ -574,7 +574,7 @@ pythonGenerator.forBlock['variables_setting'] = function(block, generator) {
   const varName = generator.getVariableName(block.getFieldValue('NAME'));
   console.info(block);
   const value = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC) || '0';
-  return [`\n${varName} = ${value}\n`, pythonGenerator.ORDER_NONE];
+  return [`\n${varName} = ${value}\n`, pythonGenerator.ORDER_ATOMIC];
 }
 
 /**
@@ -903,13 +903,14 @@ pythonGenerator.forBlock['sort'] = function(block, generator) {
 
 const input = {
   init: function() {
-    this.appendValueInput('CNAME')
+    this.appendDummyInput('CNAME')
         .appendField('input')
         .appendField(new Blockly.FieldTextInput('question', (txt) => { 
           return txt
         }), 'CSV');
     this.setTooltip('Make user input a value');
     this.setOutput(true, null);
+    this.appendEndRowInput();
     this.setColour(95);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -918,5 +919,5 @@ const input = {
 Blockly.common.defineBlocks({input: input});
 pythonGenerator.forBlock['input'] = function(block, generator) {
   const question = block.getFieldValue('CSV') || '0';
-  return [`input('${question}')\n`, pythonGenerator.ORDER_NONE];
+  return [`input('${question}')`, pythonGenerator.ORDER_NONE];
 }
