@@ -5,6 +5,11 @@ import CodeDisplay from "./components/CodeDisplay";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Tutorials from "./pages/Tutorials";
+import TutorialIntroduction from "./pages/tutorials/TutorialIntroduction";
+import TutorialWhy from "./pages/tutorials/TutorialWhy";
+import TutorialWho from "./pages/tutorials/TutorialWho";
+import TutorialHow from "./pages/tutorials/TutorialHow";
+import TutorialExample from "./pages/tutorials/TutorialExample";
 import Impressum from "./pages/Impressum";
 
 
@@ -46,7 +51,14 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
         <Route path="spockly" element={<SPOCKLY />} />
-        <Route path="tutorials/*" element={<Tutorials />} />
+        <Route path="/tutorials/*" element={<Tutorials />}>
+          <Route index element={<TutorialIntroduction />} />
+          <Route path="introduction" element={<TutorialIntroduction />} />
+          <Route path="why" element={<TutorialWhy />} />
+          <Route path="who" element={<TutorialWho />} />
+          <Route path="how" element={<TutorialHow />} />
+          <Route path="example" element={<TutorialExample />} />
+        </Route>
         <Route path="impressum" element={<Impressum />} />
       </Route>
     </Routes>

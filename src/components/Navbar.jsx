@@ -40,7 +40,7 @@ const Navbar = () => {
           width: isMobile ? "100%" : "auto",
           marginTop: isMobile ? "1rem" : 0
         }}>
-          <NavLink to="/spockly" onClick={() => setIsOpen(false)} style={getLinkStyle}>Editor</NavLink>
+          <NavLink to="/spockly" onClick={() => setIsOpen(false)} style={getLinkStyle}>SPOCKLY</NavLink>
           <NavLink to="/tutorials" onClick={() => setIsOpen(false)} style={getLinkStyle}>Tutorials</NavLink>
         </div>
       ) : null}

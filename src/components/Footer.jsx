@@ -7,7 +7,7 @@ const Footer = () => {
     <footer style={styles.footer}>
       <div style={styles.linksContainer}>
         <Link to="/" style={styles.link}>Home</Link>
-        <Link to="/spockly" style={styles.link}>Editor</Link>
+        <Link to="/spockly" style={styles.link}>SPOCKLY</Link>
         <Link to="/tutorials" style={styles.link}>Tutorials</Link>
         <Link to="/impressum" style={styles.link}>Legal Notice</Link>
         <a href="https://github.com/ifgi/spockly-demo/" target="_blank" rel="noreferrer" style={styles.iconLink}>
