@@ -550,7 +550,7 @@ pythonGenerator.forBlock["variables_get"] = function(block, generator) {
   const workspace = block.workspace;
   const getVar = workspace.getVariableById(varID);
   const varName = getVar ? getVar.name : 'undefined';
-  return varName;
+  return [varName, pythonGenerator.ORDER_NONE];
 };
 
 /** 
@@ -873,7 +873,7 @@ const lineBreak = {
 };
 Blockly.common.defineBlocks({line_break: lineBreak});
 pythonGenerator.forBlock['line_break'] = function() {
-  return ['\n', pythonGenerator.ORDER_NONE]
+  return '\n'
 }
 
 /**
@@ -920,4 +920,149 @@ Blockly.common.defineBlocks({input: input});
 pythonGenerator.forBlock['input'] = function(block, generator) {
   const question = block.getFieldValue('CSV') || '0';
   return [`input('${question}')`, pythonGenerator.ORDER_NONE];
+}
+
+/** Import blocks */
+
+const import0 = {
+  init: function() {
+    this.appendDummyInput('CNAME')
+        .appendField('import')
+        .appendField(new Blockly.FieldTextInput('module'), 'IMPORT');
+    this.setTooltip('Import module to code');
+    this.setColour('#888');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true, null);
+  }
+};
+Blockly.common.defineBlocks({import0: import0});
+pythonGenerator.forBlock['import0'] = function(block, generator) {
+  const module = block.getFieldValue('IMPORT') || '0';
+  return `import ${module}\n`;
+}
+
+const import1 = {
+  init: function() {
+    this.appendDummyInput('CNAME')
+        .appendField('import')
+        .appendField(new Blockly.FieldTextInput('module'), 'IMPORT')
+        .appendField('as')
+        .appendField(new Blockly.FieldTextInput('alias'), 'ALIAS')
+    this.setTooltip('Import library to code, with alias');
+    this.setColour('#888');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+Blockly.common.defineBlocks({import1: import1});
+pythonGenerator.forBlock['import1'] = function(block, generator) {
+  const module = block.getFieldValue('IMPORT') || '0';
+  const alias = block.getFieldValue('ALIAS') || '0';
+  return `import ${module} as ${alias}\n`;
+}
+
+const import2 = {
+  init: function() {
+    this.appendDummyInput('CNAME')
+        .appendField('from')
+        .appendField(new Blockly.FieldTextInput('module'), 'IMPORT')
+        .appendField('import')
+        .appendField(new Blockly.FieldTextInput('function'), 'FUNCTION');
+    this.setTooltip('Import functions from library to code. You can also use \'*\' and specify more functions separating them with commas.');
+    this.setColour('#888');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+Blockly.common.defineBlocks({import2: import2});
+pythonGenerator.forBlock['import2'] = function(block, generator) {
+  const module = block.getFieldValue('IMPORT') || '0';
+  const func = block.getFieldValue('FUNCTION') || '0';
+  return `from ${module} import ${func}\n`;
+}
+
+const import3 = {
+  init: function() {
+    this.appendDummyInput('CNAME')
+        .appendField('from')
+        .appendField(new Blockly.FieldTextInput('module'), 'IMPORT')
+        .appendField('import')
+        .appendField(new Blockly.FieldTextInput('function'), 'FUNCTION')
+        .appendField('as')
+        .appendField(new Blockly.FieldTextInput('alias'), 'ALIAS');
+    this.setTooltip('Import library to code.');
+    this.setColour('#888');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+Blockly.common.defineBlocks({import3: import3});
+pythonGenerator.forBlock['import3'] = function(block, generator) {
+  const module = block.getFieldValue('IMPORT') || '0';
+  const func = block.getFieldValue('FUNCTION') || '0';
+  const alias = block.getFieldValue('ALIAS') || '0';
+  return `from ${module} import ${func} as ${alias}\n`;
+}
+
+/*****************
+ * DATA VIZ BLOCKS
+ *****************/
+
+Blockly.Blocks['create_data_and_output'] = {
+  init: function() {
+    this.appendDummyInput('')
+        .appendField('Create data and output folders');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setColour(200);
+    this.setTooltip('Create data and output folders for data visualisation');
+  }
+};
+pythonGenerator.forBlock['create_data_and_output'] = function() {
+  return '' + 
+  'import os\n\n' +
+    'data_folder = "data"\n' +
+    'output_folder = "output"\n\n' +
+    'if not os.path.exists(data_folder):\n' +
+        '\tos.mkdir(data_folder)\n' +
+    'if not os.path.exists(output_folder):\n' +
+        '\tos.mkdir(output_folder)\n'
+};
+
+Blockly.Blocks['def_download'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Definition: download (from URL)');
+    this.setTooltip('Define function to download file from URL into previously created \'data\' file.');
+    this.setNextStatement(true);
+    this.setPreviousStatement(true);
+    this.setColour('#888');
+  }
+};
+pythonGenerator.forBlock['def_download'] = function() {
+  return '' +
+  'import requests\n' +
+  'filename = os.path.join(data_folder, os.path.basename(url))\n' +
+  'if not os.path.exists(filename):\n' + 
+    '\twith requests.get(url, stream=True, allow_redirects=True) as r:\n' +
+        '\t\twith open(filename, "wb") as f:\n' + 
+            '\t\t\tfor chunk in r.iter_content(chunk_size=8192):\n' +
+                '\t\t\t\tf.write(chunk)\n' + 
+    '\tprint("Downloaded", filename)\n\n'
+}
+
+Blockly.Blocks['func_download'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Download (from URL)')
+        .appendField(new Blockly.FieldTextInput('http://file.zip'), 'NAME');
+    this.setTooltip('Use function to download file from URL into previously created \'data\' file.');
+    this.setNextStatement(true);
+    this.setPreviousStatement(true);
+    this.setColour(200);
+  }
+};
+pythonGenerator.forBlock['func_download'] = function(block, generator) {
+  const url = block.getFieldValue('NAME');
+  return `download('${url}')`
 }
