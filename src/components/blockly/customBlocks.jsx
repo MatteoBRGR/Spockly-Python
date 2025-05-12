@@ -910,7 +910,6 @@ const input = {
         }), 'CSV');
     this.setTooltip('Make user input a value');
     this.setOutput(true, null);
-    this.appendEndRowInput();
     this.setColour(95);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
