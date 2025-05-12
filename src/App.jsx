@@ -1,20 +1,20 @@
-import { ThemeProvider } from "@emotion/react";
+import { GlobalStyles, Stack, ThemeProvider } from "@mui/material";
 import {
   AppBar,
+  Card,
   Toolbar,
   Box,
   Typography,
   Fab,
   Grid,
-  Card,
 } from "@mui/material";
 import React, { useState } from "react";
 import SpocklyLogo from "./assets/spockly_logo.png";
 import BlocklyComponent from "./components/BlocklyComponent";
 import CodeDisplay from "./components/CodeDisplay";
 import WebRRunner from "./components/WebRRunner";
-import { darkTheme, lightTheme } from "./theme";
-import { Brightness3, Home, LightMode } from "@mui/icons-material";
+import { darkTheme, lightTheme } from "./appTheme";
+import { Brightness3, LightMode } from "@mui/icons-material";
 
 function App() {
   const [code, setCode] = useState("");
@@ -24,88 +24,134 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{ height: "100vh", width: "100vw", margin: 0, padding: 0 }}>
-        {/* Appbar */}
+      <GlobalStyles
+        styles={{
+          html: { height: "100%" },
+          body: {
+            margin: 0,
+            padding: 0,
+            height: "100%",
+            backgroundColor: theme.palette.background.default,
+          },
+          "#root": {
+            height: "100%",
+          },
+          h1: { textTransform: "none" },
+          h2: { textTransform: "none" },
+          h3: { textTransform: "none" },
+          h4: { textTransform: "none" },
+          h5: { textTransform: "none" },
+          h6: { textTransform: "none" },
+          p: { textTransform: "none" },
+        }}
+      />
+      <Box sx={{ display: "flex", flexDirection: "column" }}>
         <AppBar
           position="static"
           sx={{
+            boxShadow: "none",
+            height: "60px",
             bgcolor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
           }}
         >
-          <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
+          <Toolbar
+            sx={{
+              minHeight: "50px",
+              height: "50px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              px: 2,
+            }}
+          >
             <Box display="flex" alignItems="center">
               <img
                 src={SpocklyLogo}
                 alt="Spockly Logo"
                 style={{ height: "40px", width: "40px", marginRight: 10 }}
               />
-              <Typography variant="h4" style={{ fontWeight: "bold" }}>
+              <Typography variant="h6" fontWeight="bold">
                 SPOCKLY
               </Typography>
             </Box>
             <Fab
               variant="extended"
+              size="small"
               sx={{
-                bgcolor: theme.palette.primary.main,
-                color: theme.palette.primary.contrastText,
+                width: "90px",
+                bgcolor: theme.palette.primary.contrastText,
+                color: theme.palette.primary.main,
                 "&:hover": {
                   bgcolor: theme.palette.primary.dark,
+                  color: theme.palette.primary.contrastText,
                 },
+                boxShadow: "none",
               }}
               onClick={toggleTheme}
             >
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                width="120px"
-              >
-                {isDarkMode ? <LightMode /> : <Brightness3 />}
-                {isDarkMode ? "Light Mode" : "Dark Mode"}
+              <Box display="flex" alignItems="center" gap={0.5}>
+                {isDarkMode ? (
+                  <LightMode fontSize="small" />
+                ) : (
+                  <Brightness3 fontSize="small" />
+                )}
+                {isDarkMode ? "Light" : "Dark"}
               </Box>
             </Fab>
           </Toolbar>
         </AppBar>
-        <Grid container sx={{ height: "100vh" }}>
-          <Grid item size={6}>
-            <BlocklyComponent setCode={setCode} isDarkMode={isDarkMode} />
-          </Grid>
-          <Grid item size={6}>
-            <Box
+
+        <Grid
+          container
+          sx={{
+            flexGrow: 1,
+            height: "100vh",
+          }}
+        >
+          <Grid size={6} sx={{ height: "100%" }}>
+            <Card
               sx={{
-                backgroundColor: "#e0e0e0",
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
+                m: 2,
+                p: 2,
+                borderRadius: "16px",
+                backgroundColor: theme.palette.primary.main,
+                height: "85%",
+                boxShadow: 3,
               }}
             >
-              <Typography variant="h4">Right Side</Typography>
-            </Box>
+              <BlocklyComponent setCode={setCode} isDarkMode={isDarkMode} />
+            </Card>
           </Grid>
-        </Grid>
 
-        <div style={{ display: "flex", height: "90vh" }}>
-          {/* Blockly Editor */}
-          <div style={{ flex: 1 }}></div>
-
-          {/* Code Output */}
-          <div
-            style={{
-              flex: 1,
-              padding: "1rem",
-              overflow: "auto",
-              background: "prima",
+          <Grid
+            size={6}
+            sx={{
+              height: "100%",
+              overflowY: "auto",
             }}
           >
-            <h2>Generated Python Code</h2>
-            <CodeDisplay code={code} />
-            <WebRRunner code={code} />
-          </div>
-        </div>
-      </div>
+            <Card
+              sx={{
+                m: 2,
+                p: 2,
+                borderRadius: "16px",
+                backgroundColor: theme.palette.primary.main,
+                height: "85%",
+                boxShadow: 3,
+                position: "relative",
+              }}
+            >
+              <Box sx={{ height: "50%", p: 2 }}>
+                <CodeDisplay code={code} isDarkMode={isDarkMode} />
+              </Box>
+              <Box sx={{ height: "50%", p: 2 }}>
+                <WebRRunner code={code} isDarkMode={isDarkMode} />
+              </Box>
+            </Card>
+          </Grid>
+        </Grid>
+      </Box>
     </ThemeProvider>
   );
 }

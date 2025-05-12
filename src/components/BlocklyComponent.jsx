@@ -5,12 +5,13 @@ import GenerateButton from "./GenerateButton";
 import "./blockly/customBlocks"; // Import custom blocks
 import "./blockly/customGenerator"; // Import custom generator
 import "./blockly/rBlocks"; // Import R blocks
-import "./assets/blocklyLight.css";
 import { Box } from "@mui/material";
+import { lightTheme, darkTheme } from "./blockly/blocklyThemes";
 
 const BlocklyComponent = ({ setCode, isDarkMode }) => {
   const blocklyDiv = useRef(null);
   const workspaceRef = useRef(null);
+  const linkRef = useRef(null);
 
   useEffect(() => {
     if (!blocklyDiv.current) {
@@ -18,14 +19,8 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
       return;
     }
 
-    if (isDarkMode) {
-      import("./assets/blocklyDark.css");
-    } else {
-      import("./assets/blocklyLight.css");
-    }
-
-    // Initialize Blockly workspace
     workspaceRef.current = Blockly.inject(blocklyDiv.current, {
+      renderer: "zelos",
       toolbox: `
       <xml>
         <category name="Examples" colour="#5C81A6">
@@ -114,12 +109,35 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
         </category>
       </xml>
     `,
+      theme: isDarkMode ? darkTheme : lightTheme,
+      grid: {
+        spacing: 20,
+        length: 3,
+        colour: "#fff",
+        snap: true,
+      },
+      zoom: {
+        controls: true,
+        wheel: true,
+      },
+      move: {
+        scrollbars: true,
+        drag: true,
+        wheel: true,
+      },
+      trashcan: {
+
+      }
     });
 
     return () => {
+      if (linkRef.current) {
+        linkRef.current.remove();
+        linkRef.current = null;
+      }
       workspaceRef.current?.dispose();
     };
-  }, []);
+  }, [isDarkMode]);
 
   const generateCode = () => {
     if (!workspaceRef.current) {
@@ -133,25 +151,14 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
 
   return (
     <Box
+      ref={blocklyDiv}
       sx={{
         height: "100%",
         width: "100%",
-        display: "flex",
-        flexDirection: "column",
+        margin: 0,
+        padding: 0,
       }}
-    >
-      <Box
-        ref={blocklyDiv}
-        sx={{
-          flexGrow: 1,
-          width: "100%",
-          border: "1px solid lightgray",
-        }}
-      />
-      <Box sx={{ p: 1 }}>
-        <GenerateButton onClick={generateCode} />
-      </Box>
-    </Box>
+    />
   );
 };
 export default BlocklyComponent;
