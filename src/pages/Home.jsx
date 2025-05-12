@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import logo from "../assets/spockly.jpeg";
+import logo from "../assets/spockly_logo.jpeg";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 50 },
