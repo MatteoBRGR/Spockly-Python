@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import BlocklyComponent from "./components/BlocklyComponent";
-import CodeDisplay from "./components/CodeDisplay";
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Tutorials from "./pages/Tutorials";
@@ -11,24 +9,11 @@ import TutorialWho from "./pages/tutorials/TutorialWho";
 import TutorialHow from "./pages/tutorials/TutorialHow";
 import TutorialExample from "./pages/tutorials/TutorialExample";
 import Impressum from "./pages/Impressum";
-import {
-  GlobalStyles,
-  ThemeProvider,
-  AppBar,
-  Card,
-  Toolbar,
-  Box,
-  Typography,
-  Fab,
-  Grid,
-} from "@mui/material";
-import SpocklyLogo from "./assets/spockly_logo.png";
+import { GlobalStyles, ThemeProvider } from "@mui/material";
 import { darkTheme, lightTheme } from "./appTheme";
-import { Brightness3, LightMode } from "@mui/icons-material";
-import WebRRunner from "./components/WebRRunner";
+import SPOCKLY from "./components/Spockly";
 
-function SPOCKLY() {
-  const [code, setCode] = useState("");
+function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
   const theme = isDarkMode ? darkTheme : lightTheme;
@@ -62,68 +47,6 @@ function SPOCKLY() {
           },
         }}
       />
-      <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <Grid
-          container
-          sx={{
-            flexGrow: 1,
-            height: "100vh",
-          }}
-        >
-          <Grid size={6} sx={{ height: "100%" }}>
-            <Card
-              sx={{
-                m: 2,
-                p: 2,
-                borderRadius: "16px",
-                backgroundColor: theme.palette.primary.main,
-                height: "85%",
-                boxShadow: 3,
-              }}
-            >
-              <BlocklyComponent setCode={setCode} isDarkMode={isDarkMode} />
-            </Card>
-          </Grid>
-
-          <Grid
-            size={6}
-            sx={{
-              height: "100%",
-              overflowY: "auto",
-            }}
-          >
-            <Card
-              sx={{
-                m: 2,
-                p: 2,
-                borderRadius: "16px",
-                backgroundColor: theme.palette.primary.main,
-                height: "85%",
-                boxShadow: 3,
-                position: "relative",
-              }}
-            >
-              <Box sx={{ height: "50%", p: 2 }}>
-                <CodeDisplay code={code} isDarkMode={isDarkMode} />
-              </Box>
-              <Box sx={{ height: "50%", p: 2 }}>
-                <WebRRunner code={code} isDarkMode={isDarkMode} />
-              </Box>
-            </Card>
-          </Grid>
-        </Grid>
-      </Box>
-    </ThemeProvider>
-  );
-}
-
-function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  const toggleTheme = () => setIsDarkMode((prev) => !prev);
-  const theme = isDarkMode ? darkTheme : lightTheme;
-  
-  return (
-    <ThemeProvider theme={theme}>
       <Router>
         <Routes>
           <Route
@@ -133,7 +56,7 @@ function App() {
             }
           >
             <Route index element={<Home />} />
-            <Route path="spockly" element={<SPOCKLY />} />
+            <Route path="spockly" element={<SPOCKLY isDarkMode={isDarkMode}/>} />
             <Route path="/tutorials/*" element={<Tutorials />}>
               <Route index element={<TutorialIntroduction />} />
               <Route path="introduction" element={<TutorialIntroduction />} />

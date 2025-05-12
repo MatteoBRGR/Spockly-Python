@@ -9,6 +9,10 @@ export const lightTheme = createTheme({
       main: lightBlue[700],
       contrastText: "#fff",
     },
+    secondary: {
+      main: lightBlue[900],
+      contrastText: "#fff",
+    },
     background: {
       default: "#f5f5f5",
       paper:"#EEEAEA",

@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
 import SpocklyLogo from "../assets/spockly_logo.png";
-import { AppBar, Box, Fab, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Fab,
+  Grid,
+  Stack,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { Brightness3, LightMode } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Navbar = ({ isDarkMode, toggleTheme }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -39,126 +47,94 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
           px: 2,
         }}
       >
-        <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-          <Box display="flex" alignItems="center">
-            <img
-              src={SpocklyLogo}
-              alt="Spockly Logo"
-              style={{ height: "40px", width: "40px", marginRight: 10 }}
-            />
-            <Typography variant="h6" fontWeight="bold">
-              SPOCKLY
-            </Typography>
-          </Box>
-        </Link>
-        <Fab
-          variant="extended"
-          size="small"
+        <Grid
+          container
           sx={{
-            width: "90px",
-            bgcolor: theme.palette.primary.contrastText,
-            color: theme.palette.primary.main,
-            "&:hover": {
-              bgcolor: theme.palette.primary.dark,
-              color: theme.palette.primary.contrastText,
-            },
-            boxShadow: "none",
+            flexGrow: 1,
           }}
-          onClick={toggleTheme}
         >
-          <Box display="flex" alignItems="center" gap={0.5}>
-            {isDarkMode ? (
-              <LightMode fontSize="small" />
-            ) : (
-              <Brightness3 fontSize="small" />
-            )}
-            {isDarkMode ? "Light" : "Dark"}
-          </Box>
-        </Fab>
+          <Grid size={8}>
+            <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+              <Box display="flex" alignItems="center">
+                <img
+                  src={SpocklyLogo}
+                  alt="Spockly Logo"
+                  style={{ height: "40px", width: "40px", marginRight: 10 }}
+                />
+                <Typography variant="h6" fontWeight="bold">
+                  SPOCKLY
+                </Typography>
+              </Box>
+            </Link>
+          </Grid>
+          <Grid size={4}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <NavLink
+                to="/spockly"
+                onClick={() => setIsOpen(false)}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <Box
+                  sx={{
+                    color: "inherit",
+                    "&:hover": {
+                      color: theme.palette.secondary.main,
+                    },
+                  }}
+                >
+                  <Typography fontWeight="bold">SPOCKLY</Typography>
+                </Box>
+              </NavLink>
+              <NavLink
+                to="/tutorials"
+                onClick={() => setIsOpen(false)}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <Box
+                  sx={{
+                    color: "inherit",
+                    "&:hover": {
+                      color: theme.palette.secondary.main,
+                    },
+                  }}
+                >
+                  <Typography fontWeight="bold">Tutorials</Typography>
+                </Box>
+              </NavLink>
+              <Fab
+                variant="extended"
+                size="small"
+                sx={{
+                  width: "90px",
+                  bgcolor: theme.palette.primary.contrastText,
+                  color: theme.palette.primary.main,
+                  "&:hover": {
+                    bgcolor: theme.palette.primary.dark,
+                    color: theme.palette.primary.contrastText,
+                  },
+                  boxShadow: "none",
+                }}
+                onClick={toggleTheme}
+              >
+                <Box display="flex" alignItems="center" gap={0.5}>
+                  {isDarkMode ? (
+                    <LightMode fontSize="small" />
+                  ) : (
+                    <Brightness3 fontSize="small" />
+                  )}
+                  {isDarkMode ? "Light" : "Dark"}
+                </Box>
+              </Fab>
+            </Stack>
+          </Grid>
+        </Grid>
       </Toolbar>
     </AppBar>
   );
 };
 
-const styles = {
-  navbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "1rem 2rem",
-    backgroundColor: "var(--color-secondary)",
-    borderBottom: "1px solid #e0e0e0",
-    position: "sticky",
-    top: 0,
-    zIndex: 1000,
-    flexWrap: "wrap",
-  },
-  logoContainer: {
-    display: "flex",
-    alignItems: "center",
-    textDecoration: "none",
-  },
-  logo: {
-    height: "36px",
-    marginRight: "0.5rem",
-  },
-  brand: {
-    fontSize: "1.3rem",
-    fontWeight: "bold",
-    color: "white",
-  },
-  hamburger: {
-    display: "flex",
-    flexDirection: "column",
-    cursor: "pointer",
-    gap: "4px",
-    marginLeft: "auto",
-  },
-  bar: {
-    width: "25px",
-    height: "3px",
-    backgroundColor: "white",
-    borderRadius: "2px",
-  },
-  links: {
-    display: "flex",
-    gap: "1.5rem",
-  },
-};
-
-const getLinkStyle = ({ isActive }) => ({
-  color: isActive ? "#ffffff" : "#e0f7fa",
-  fontWeight: isActive ? "bold" : "normal",
-  textDecoration: "none",
-});
-
 export default Navbar;
-
-{
-  /*
-
-        <Link to="/" style={styles.logoContainer}>
-        <img src={logo} alt="SPOCKLY Logo" style={styles.logo} />
-        <span style={styles.brand}>SPOCKLY</span>
-      </Link>
-      {isMobile && (
-        <div style={styles.hamburger} onClick={toggleMenu}>
-          <div style={styles.bar}></div>
-          <div style={styles.bar}></div>
-          <div style={styles.bar}></div>
-        </div>
-      )}
-      {(isMobile && isOpen) || !isMobile ? (
-        <div style={{
-          ...styles.links,
-          flexDirection: isMobile ? "column" : "row",
-          width: isMobile ? "100%" : "auto",
-          marginTop: isMobile ? "1rem" : 0
-        }}>
-          <NavLink to="/spockly" onClick={() => setIsOpen(false)} style={getLinkStyle}>SPOCKLY</NavLink>
-          <NavLink to="/tutorials" onClick={() => setIsOpen(false)} style={getLinkStyle}>Tutorials</NavLink>
-        </div>
-      ) : null}
-    </nav>
-  */
-}
