@@ -126,22 +126,6 @@ const Home = () => (
       </div>
     </motion.section>
 
-    {/* Footer */}
-    <footer style={{
-      backgroundColor: "var(--color-bg-light)",
-      color: "var(--color-text-muted)",
-      padding: "2rem",
-      fontSize: "0.9rem",
-      textAlign: "center"
-    }}>
-      <div style={{ marginBottom: "1rem" }}>
-        Made for education.
-      </div>
-      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: "1rem", marginBottom: "0.5rem" }}>
-        <a href="/tutorials">Tutorials</a>
-        <a href="https://github.com/ifgi/spockly-demo" target="_blank" rel="noreferrer">GitHub</a>
-      </div>
-    </footer>
   </div>
 );
 

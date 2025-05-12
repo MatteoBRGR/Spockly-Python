@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import BlocklyComponent from "./components/BlocklyComponent";
 import CodeDisplay from "./components/CodeDisplay";
-import Navbar from "./components/Navbar";
+import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Tutorials from "./pages/Tutorials";
+import Impressum from "./pages/Impressum";
 
 
 function SPOCKLY() {
@@ -40,14 +41,16 @@ function SPOCKLY() {
 
 function App() {
   return (
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/spockly" element={<SPOCKLY />} />
-        <Route path="/tutorials" element={<Tutorials />} />
-      </Routes>
-    </Router>
+  <Router>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="spockly" element={<SPOCKLY />} />
+        <Route path="tutorials/*" element={<Tutorials />} />
+        <Route path="impressum" element={<Impressum />} />
+      </Route>
+    </Routes>
+  </Router>
   );
 }
 
