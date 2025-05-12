@@ -1,9 +1,19 @@
 import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import BlocklyComponent from "./components/BlocklyComponent";
 import CodeDisplay from "./components/CodeDisplay";
-import WebRRunner from "./components/WebRRunner";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import Tutorials from "./pages/Tutorials";
+import TutorialIntroduction from "./pages/tutorials/TutorialIntroduction";
+import TutorialWhy from "./pages/tutorials/TutorialWhy";
+import TutorialWho from "./pages/tutorials/TutorialWho";
+import TutorialHow from "./pages/tutorials/TutorialHow";
+import TutorialExample from "./pages/tutorials/TutorialExample";
+import Impressum from "./pages/Impressum";
 
-function App() {
+
+function SPOCKLY() {
   const [code, setCode] = useState("");
 
   return (
@@ -28,10 +38,31 @@ function App() {
         >
           <h2>Generated Python Code</h2>
           <CodeDisplay code={code} />
-          <WebRRunner code={code} />
         </div>
       </div>
     </div>
+  );
+}
+
+function App() {
+  return (
+  <Router>
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route index element={<Home />} />
+        <Route path="spockly" element={<SPOCKLY />} />
+        <Route path="/tutorials/*" element={<Tutorials />}>
+          <Route index element={<TutorialIntroduction />} />
+          <Route path="introduction" element={<TutorialIntroduction />} />
+          <Route path="why" element={<TutorialWhy />} />
+          <Route path="who" element={<TutorialWho />} />
+          <Route path="how" element={<TutorialHow />} />
+          <Route path="example" element={<TutorialExample />} />
+        </Route>
+        <Route path="impressum" element={<Impressum />} />
+      </Route>
+    </Routes>
+  </Router>
   );
 }
 
