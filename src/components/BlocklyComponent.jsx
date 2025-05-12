@@ -7,7 +7,7 @@ import "./blockly/rBlocks"; // Import R blocks
 import { Box } from "@mui/material";
 import { lightTheme, darkTheme } from "./blockly/blocklyThemes";
 
-const BlocklyComponent = ({ setCode, isDarkMode }) => {
+const BlocklyComponent = ({ setCode }) => {
   const blocklyDiv = useRef(null);
   const workspaceRef = useRef(null);
   const linkRef = useRef(null);
@@ -160,4 +160,5 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
     />
   );
 };
+
 export default BlocklyComponent;
