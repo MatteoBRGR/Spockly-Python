@@ -68,7 +68,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="length_of_str"></block>
             <block type="operators"></block>
             <block type="line_break"></block>
-            <!--<block type="input"></block>-->
+            <block type="input"></block>
           </category>
         </xml>
       `,
