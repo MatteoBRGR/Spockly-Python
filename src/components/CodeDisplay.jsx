@@ -14,7 +14,7 @@ const CodeDisplay = ({ code }) => {
         minHeight: "50px",
       }}
     >
-      {"import pandas as pd\n" + "import numpy as np\n" + code || "Generated Python code will appear here..."}
+      {"import pandas as pd\n" + "import numpy as np\n" + "import geopandas as gpd\n\n" + code || "Generated Python code will appear here..."}
     </pre>
   );
 };

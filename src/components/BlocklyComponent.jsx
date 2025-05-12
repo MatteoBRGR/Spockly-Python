@@ -45,6 +45,10 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="create_array"></block>
             <block type="list_filter"></block>
             <block type="sort"></block>
+            <block type="create_data_and_output"></block>
+            <block type="def_download"></block>
+            <block type="func_download"></block>
+            <block type="read_file"></block>
           </category>
           <category name="Statistics" colour="#B6C">
             <block type="mean"></block>
@@ -69,6 +73,10 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="operators"></block>
             <block type="line_break"></block>
             <block type="input"></block>
+            <block type="import0"></block>
+            <block type="import1"></block>
+            <block type="import2"></block>
+            <block type="import3"></block>
           </category>
         </xml>
       `,
