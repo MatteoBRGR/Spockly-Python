@@ -23,16 +23,16 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="consts"></block>
             <block type="math_arithmetic">
               <field name="OP">ADD</field>
-                <value name="A">
-                  <shadow type="math_number">
-                    <field name="NUM">1</field>
-                  </shadow>
-                </value>
-                <value name="B">
-                  <shadow type="math_number">
-                    <field name="NUM">1</field>
-                  </shadow>
-                </value>
+              <value name="A">
+                <shadow type="math_number">
+                  <field name="NUM">1</field>
+                </shadow>
+              </value>
+              <value name="B">
+                <shadow type="math_number">
+                  <field name="NUM">1</field>
+                </shadow>
+              </value>
             </block>
             <block type="logic_compare"></block>
             <block type="math_square"></block>
@@ -69,8 +69,50 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="func_download"></block>
             <block type="read_file"></block>
             <block type="write_file"></block>
-            <block type="plot"></block>
-            <block type="scatter"></block>
+            <block type="plot">
+              <value name="title">
+                <shadow type="text">
+                  <field name="TEXT">Title</field>
+                </shadow>
+              </value>
+              <value name="XLabel">
+                <shadow type="text">
+                  <field name="TEXT">X-axis</field>
+                </shadow>
+              </value>
+              <value name="YLabel">
+                <shadow type="text">
+                  <field name="TEXT">Y-axis</field>
+                </shadow>
+              </value>
+              <value name="Legend">
+                <shadow type="text">
+                  <field name="TEXT">Legend</field>
+                </shadow>
+              </value>
+            </block>
+            <block type="scatter">
+              <value name="title">
+                <shadow type="text">
+                  <field name="TEXT">Title</field>
+                </shadow>
+              </value>
+              <value name="XLabel">
+                <shadow type="text">
+                  <field name="TEXT">X-axis</field>
+                </shadow>
+              </value>
+              <value name="YLabel">
+                <shadow type="text">
+                  <field name="TEXT">Y-axis</field>
+                </shadow>
+              </value>
+              <value name="Legend">
+                <shadow type="text">
+                  <field name="TEXT">Legend</field>
+                </shadow>
+              </value>
+            </block>
           </category>
           <category name="Statistics" colour="#B6C">
             <block type="mean"></block>
@@ -106,6 +148,23 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="text"></block>
             <block type="line_break"></block>
             <block type="list_create"></block>
+            <block type="arange">
+              <value name="start">
+                <shadow type="math_number">
+                  <field name="NUM">0</field>
+                </shadow>
+              </value>
+              <value name="stop">
+                <shadow type="math_number">
+                  <field name="NUM">100</field>
+                </shadow>
+              </value>
+              <value name="step">
+                <shadow type="math_number">
+                  <field name="NUM">1</field>
+                </shadow>
+              </value>
+            </block>
           </category>
         </xml>
       `,
@@ -118,7 +177,7 @@ const BlocklyComponent = ({ setCode }) => {
 
   const generateCode = () => {
     if (!workspaceRef.current) {
-      console.error("Blockly workspace is not initialized.");
+      console.error("Blockly workspace is not initialised.");
       return;
     }
 

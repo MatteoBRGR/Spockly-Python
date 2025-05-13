@@ -1081,24 +1081,20 @@ Blockly.Blocks['plot'] = {
     this.appendDummyInput('fmt')
         .appendField('format')
         .appendField(new Blockly.FieldTextInput('^k:'), 'FMT')
-    this.appendDummyInput('title')
-        .appendField('title')
-        .appendField(new Blockly.FieldTextInput('Graph of X and Y'), 'TTL')
+    this.appendValueInput('title')
+        .appendField('Title');
     this.appendDummyInput('size')
-        .appendField('size:')
+        .appendField('Size:')
         .appendField('X')
         .appendField(new Blockly.FieldNumber(''), 'XVAL')
         .appendField('Y')
-        .appendField(new Blockly.FieldNumber(''), 'YVAL')
+        .appendField(new Blockly.FieldNumber(''), 'YVAL');
     this.appendValueInput('XLabel')
-        .appendField('X-axis label')
-        .appendField(new Blockly.FieldTextInput('X label'), 'XLabel');
+        .appendField('X-axis label');
     this.appendValueInput('YLabel')
-        .appendField('Y-axis label')
-        .appendField(new Blockly.FieldTextInput('Y label'), 'YLabel');
-    this.appendDummyInput('Legend')
-        .appendField('Legend')
-        .appendField(new Blockly.FieldTextInput('abc'), 'LEG');
+        .appendField('Y-axis label');
+    this.appendValueInput('Legend')
+        .appendField('Legend');
     this.appendDummyInput('GRID')
         .appendField('Grid?')
         .appendField(new Blockly.FieldCheckbox('FALSE'), 'Grid');
@@ -1114,8 +1110,8 @@ pythonGenerator.forBlock['plot'] = function(block, generator) {
   const format = block.getFieldValue('FMT');
   const title = block.getFieldValue('TTL');
   const size = [block.getFieldValue('XVAL'), block.getFieldValue('YVAL')];
-  const labels = [block.getFieldValue('XLabel'), block.getFieldValue('YLabel')];
-  const legend = block.getFieldValue('LEG');
+  const labels = [generator.valueToCode(block, 'XLabel', pythonGenerator.ORDER_NONE) || "0", generator.valueToCode(block, 'YLabel', pythonGenerator.ORDER_NONE) || "0"];
+  const legend = generator.valueToCode(block, 'LEG', pythonGenerator.ORDER_NONE) || "0";
   let grid = block.getFieldValue('Grid').toLowerCase();
   grid = grid[0].toUpperCase() + grid.slice(1);
   return '' +
@@ -1123,11 +1119,11 @@ pythonGenerator.forBlock['plot'] = function(block, generator) {
   `y = ${dataY}\n` +
   `plt.figure(figsize = (${size[0]}, ${size[1]}))\n` + 
   `plt.plot(x, y, '${format}')\n` + 
-  `plt.title('${title}')\n` +
-  `plt.xlabel('${labels[0]}')\n` + 
-  `plt.ylabel('${labels[1]}')\n` +
+  `plt.title(${title})\n` +
+  `plt.xlabel(${labels[0]})\n` + 
+  `plt.ylabel(${labels[1]})\n` +
   `plt.grid(${grid})\n` +
-  `plt.legend('${legend}')\n` +
+  `plt.legend(${legend})\n` +
   `plt.show()\n`
 }
 
@@ -1140,24 +1136,20 @@ Blockly.Blocks['scatter'] = {
         .appendField('X-value');
     this.appendValueInput('valY')
         .appendField('Y-value');
-    this.appendDummyInput('title')
-        .appendField('title')
-        .appendField(new Blockly.FieldTextInput('Graph of X and Y'), 'TTL')
+    this.appendValueInput('title')
+        .appendField('Title');
     this.appendDummyInput('size')
-        .appendField('size:')
+        .appendField('Size:')
         .appendField('X')
         .appendField(new Blockly.FieldNumber(''), 'XVAL')
         .appendField('Y')
-        .appendField(new Blockly.FieldNumber(''), 'YVAL')
+        .appendField(new Blockly.FieldNumber(''), 'YVAL');
     this.appendValueInput('XLabel')
-        .appendField('X-axis label')
-        .appendField(new Blockly.FieldTextInput('X label'), 'XLabel');
+        .appendField('X-axis label');
     this.appendValueInput('YLabel')
-        .appendField('Y-axis label')
-        .appendField(new Blockly.FieldTextInput('Y label'), 'YLabel');
-    this.appendDummyInput('Legend')
-        .appendField('Legend')
-        .appendField(new Blockly.FieldTextInput('abc'), 'LEG');
+        .appendField('Y-axis label');
+    this.appendValueInput('Legend')
+        .appendField('Legend');
     this.appendDummyInput('GRID')
         .appendField('Grid?')
         .appendField(new Blockly.FieldCheckbox('FALSE'), 'Grid');
@@ -1167,13 +1159,13 @@ Blockly.Blocks['scatter'] = {
     this.setColour(325);
   }
 }
-pythonGenerator.forBlock['plot'] = function(block, generator) {
+pythonGenerator.forBlock['scatter'] = function(block, generator) {
   const dataX = generator.valueToCode(block, 'valX', pythonGenerator.ORDER_NONE) || "0";
   const dataY = generator.valueToCode(block, 'valY', pythonGenerator.ORDER_NONE) || "0";
-  const title = block.getFieldValue('TTL');
+  const title = generator.valueToCode(block, 'TTL', pythonGenerator.ORDER_NONE) || "0";
   const size = [block.getFieldValue('XVAL'), block.getFieldValue('YVAL')];
-  const labels = [block.getFieldValue('XLabel'), block.getFieldValue('YLabel')];
-  const legend = block.getFieldValue('LEG');
+  const labels = [generator.valueToCode(block, 'XLabel', pythonGenerator.ORDER_NONE) || "0", generator.valueToCode(block, 'YLabel', pythonGenerator.ORDER_NONE) || "0"];
+  const legend = generator.valueToCode(block, 'LEG', pythonGenerator.ORDER_NONE) || "0";
   let grid = block.getFieldValue('Grid').toLowerCase();
   grid = grid[0].toUpperCase() + grid.slice(1);
   return '' +
@@ -1181,11 +1173,11 @@ pythonGenerator.forBlock['plot'] = function(block, generator) {
   `y = ${dataY}\n` +
   `plt.figure(figsize = (${size[0]}, ${size[1]}))\n` + 
   `plt.scatter(x, y)\n` + 
-  `plt.title('${title}')\n` +
-  `plt.xlabel('${labels[0]}')\n` + 
-  `plt.ylabel('${labels[1]}')\n` +
+  `plt.title(${title})\n` +
+  `plt.xlabel(${labels[0]})\n` + 
+  `plt.ylabel(${labels[1]})\n` +
   `plt.grid(${grid})\n` +
-  `plt.legend('${legend}')\n` +
+  `plt.legend(${legend})\n` +
   `plt.show()\n`
 }
 
@@ -1249,4 +1241,25 @@ Blockly.Blocks['load_json'] = {
 pythonGenerator.forBlock['load_json'] = function(block, generator) {
   const dataset = block.getFieldValue('json') || '0';
   return [`pd.read_json('${dataset}.json')`, pythonGenerator.ORDER_ATOMIC];
+};
+
+Blockly.Blocks['arange'] = {
+  init: function(){
+    this.appendValueInput('start')
+        .appendField('Generate values between');
+    this.appendValueInput('stop')
+        .appendField('and')
+    this.appendValueInput('step')
+        .appendField('with step');
+    this.setTooltip('');
+    this.setInputsInline(false);
+    this.setOutput(true, 'Array');
+    this.setColour(200);
+  },
+};
+pythonGenerator.forBlock['arange'] = function(block, generator) {
+  const start = generator.valueToCode(block, 'start', pythonGenerator.ORDER_ATOMIC);
+  const stop = generator.valueToCode(block, 'stop', pythonGenerator.ORDER_ATOMIC);
+  const step = generator.valueToCode(block, 'step', pythonGenerator.ORDER_ATOMIC);
+  return [`np.arange(${start}, ${stop}, ${step})`, pythonGenerator.ORDER_ATOMIC];
 };
