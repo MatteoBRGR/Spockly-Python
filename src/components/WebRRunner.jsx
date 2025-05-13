@@ -4,6 +4,7 @@ import { WebR } from "@r-wasm/webr"; // Correct import
 import { Box, Fab, Stack, Typography } from "@mui/material";
 import { PlayArrow } from "@mui/icons-material";
 import { darkTheme, lightTheme } from "./../appTheme";
+import { lightBlue } from "@mui/material/colors";
 
 const webR = new WebR();
 
@@ -60,7 +61,7 @@ const WebRRunner = ({ code, isDarkMode }) => {
           variant="h6"
           fontWeight="bold"
           sx={{
-            color: theme.palette.primary.contrastText,
+            color: theme.palette.primary.light,
             paddingBottom: "15px",
           }}
         >
@@ -73,10 +74,10 @@ const WebRRunner = ({ code, isDarkMode }) => {
           sx={{
             left: 20,
             width: "140px",
-            bgcolor: "#13B3FF",
-            color: theme.palette.primary.contrastText,
+            bgcolor: "#33bfff",
+            color: theme.palette.primary.light,
             "&:hover": {
-              bgcolor: "#05A255",
+              bgcolor: "#00b0ff",
             },
             boxShadow: "none",
           }}
@@ -102,7 +103,7 @@ const WebRRunner = ({ code, isDarkMode }) => {
         <Typography
           fontWeight="bold"
           sx={{
-            color: isDarkMode ? theme.palette.primary.contrastText : theme.palette.primary.dark,
+            color: theme.palette.primary.contrastText,
             paddingBottom: "10px",
             padding: "20px",
           }}

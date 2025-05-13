@@ -3,11 +3,17 @@ import { Outlet } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
-const Layout = ({isDarkMode, toggleTheme}) => {
+const Layout = ({ isDarkMode, toggleTheme }) => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+      }}
+    >
       <Navbar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
-      <main >
+      <main style={{ flex: 1 }}>
         <Outlet />
       </main>
       <Footer />

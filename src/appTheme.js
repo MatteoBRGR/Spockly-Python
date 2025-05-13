@@ -7,7 +7,8 @@ export const lightTheme = createTheme({
     mode: "light",
     primary: {
       main: lightBlue[700],
-      contrastText: "#fff",
+      contrastText: "#000000",
+      light: "#fff",
     },
     secondary: {
       main: lightBlue[900],
@@ -15,7 +16,7 @@ export const lightTheme = createTheme({
     },
     background: {
       default: "#f5f5f5",
-      paper:"#EEEAEA",
+      paper: "#EEEAEA",
     },
   },
   components: {
@@ -36,10 +37,16 @@ export const darkTheme = createTheme({
       main: "#15134C",
       contrastText: "#fff",
       dark: "#15134C",
+      light: "#fff",
+    },
+    secondary: {
+      dark:lightBlue[900],
+      main: lightBlue[800],
+      contrastText: "#fff",
     },
     background: {
       default: "#202A7C",
-      paper:"#262626",
+      paper: "#262626",
     },
   },
   components: {
@@ -47,6 +54,24 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: "none",
+        },
+      },
+    },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: lightBlue[700],
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+          "&.Mui-selected": {
+            color: lightBlue[700], 
+            fontWeight: "bold", 
+          },
         },
       },
     },

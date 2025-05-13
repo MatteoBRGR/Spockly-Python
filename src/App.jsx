@@ -55,8 +55,11 @@ function App() {
               <Layout isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
             }
           >
-            <Route index element={<Home />} />
-            <Route path="spockly" element={<SPOCKLY isDarkMode={isDarkMode}/>} />
+            <Route index element={<Home isDarkMode={isDarkMode} />} />
+            <Route
+              path="spockly"
+              element={<SPOCKLY isDarkMode={isDarkMode} />}
+            />
             <Route path="/tutorials/*" element={<Tutorials />}>
               <Route index element={<TutorialIntroduction />} />
               <Route path="introduction" element={<TutorialIntroduction />} />
