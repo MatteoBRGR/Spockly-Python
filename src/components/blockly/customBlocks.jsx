@@ -2,23 +2,7 @@ import * as Blockly from "blockly";
 import { pythonGenerator } from "blockly/python";
 
 /**
- * 1. Statement Block (no input)
- */
-Blockly.Blocks["print_hello"] = {
-  init: function () {
-    this.appendDummyInput().appendField("Say Hello");
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(160);
-    this.setTooltip("Prints a hello message");
-  },
-};
-pythonGenerator.forBlock["print_hello"] = function () {
-  return "print('Hello from custom block')\n";
-};
-
-/**
- * 2. Value Input Block (returns value)
+ * Value Input Block (returns value)
  */
 Blockly.Blocks["math_square"] = {
   init: function () {
@@ -31,28 +15,11 @@ Blockly.Blocks["math_square"] = {
 pythonGenerator.forBlock["math_square"] = function (block, generator) {
   const num =
     generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`(${num} ** 2)`, pythonGenerator.ORDER_ATOMIC];
+  return [`(${num} ** 2)`, pythonGenerator.ORDER_EXPONENTIATION];
 };
 
-// /**
-//  * 3. Text Block (returns string)
-//  */
-// Blockly.Blocks["text_greeting"] = {
-//   init: function () {
-//     this.appendValueInput("NAME").setCheck("String").appendField("greet");
-//     this.setOutput(true, "String");
-//     this.setColour(65);
-//     this.setTooltip("Returns a greeting with a name");
-//   },
-// };
-// pythonGenerator.forBlock["text_greeting"] = function (block, generator) {
-//   const name =
-//     generator.valueToCode(block, "NAME", pythonGenerator.ORDER_NONE) || "''";
-//   return [`('Hello, ' + ${name})`, pythonGenerator.ORDER_ATOMIC];
-// };
-
 /**
- * 4. Statement Input Block (loop)
+ * Statement Input Block (loop)
  */
 Blockly.Blocks["repeat_times"] = {
   init: function () {
@@ -71,38 +38,13 @@ pythonGenerator.forBlock["repeat_times"] = function (block, generator) {
   return `for i in range(${times}):\n${branch}`;
 };
 
-// /**
-//  * 5. Dropdown Field Block
-//  */
-// Blockly.Blocks["dropdown_color"] = {
-//   init: function () {
-//     this.appendDummyInput()
-//       .appendField("favorite color")
-//       .appendField(
-//         new Blockly.FieldDropdown([
-//           ["Red", "RED"],
-//           ["Green", "GREEN"],
-//           ["Blue", "BLUE"],
-//         ]),
-//         "COLOR"
-//       );
-//     this.setOutput(true, "String");
-//     this.setColour(20);
-//     this.setTooltip("Returns selected color");
-//   },
-// };
-// pythonGenerator.forBlock["dropdown_color"] = function (block) {
-//   const color = block.getFieldValue("COLOR");
-//   return [`"${color.toLowerCase()}"`, pythonGenerator.ORDER_ATOMIC];
-// };
-
 /**
- * 6. Length of str (returns int)
+ * Length of str (returns int)
  */
 Blockly.Blocks["length_of_str"] = {
   init: function(){
     this.appendValueInput('STR')
-    .appendField('length of:')
+    .appendField('length of')
     .setCheck('String');
     this.appendDummyInput();
     this.appendEndRowInput();
@@ -130,7 +72,6 @@ const modulo = {
   }
 };
 Blockly.common.defineBlocks({modulo: modulo});
-                    
 pythonGenerator.forBlock['modulo'] = function(block) {
   const number_a = block.getFieldValue('a');
   const number_b = block.getFieldValue('b');
@@ -140,7 +81,6 @@ pythonGenerator.forBlock['modulo'] = function(block) {
 /**
  * Operators block
  */
-
 const operators = {
   init: function() {
     this.appendValueInput('VALUE')
@@ -161,7 +101,6 @@ const operators = {
   }
 };
 Blockly.common.defineBlocks({operators: operators});
-
 pythonGenerator.forBlock['operators'] = function(block,generator) {
   
   const dropdown_name = block.getFieldValue('NAME');
@@ -180,52 +119,89 @@ pythonGenerator.forBlock['operators'] = function(block,generator) {
   }
 }
 
+/** Mathematical constants */
+
+/**
+ * Ohh! A nice a block
+ */
+
+Blockly.Blocks['pi'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('pi');
+    this.setOutput(true);
+    this.setTooltip('Mathematical constant pi');
+    this.setColour(300);
+  }
+}
+pythonGenerator.forBlock['pi'] = function(block, generator) {
+  return ['np.pi', pythonGenerator.ORDER_NONE];
+};
+
+Blockly.Blocks['e'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('e');
+    this.setOutput(true);
+    this.setTooltip('Euler\'s number');
+    this.setColour(300);
+  }
+}
+pythonGenerator.forBlock['e'] = function(block, generator) {
+  return ['np.e', pythonGenerator.ORDER_NONE];
+};
+
+Blockly.Blocks['inf'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('positive infinity');
+    this.setOutput(true);
+    this.setTooltip('Mathematical positive infinity');
+    this.setColour(300);
+  }
+}
+pythonGenerator.forBlock['inf'] = function(block, generator) {
+  return ['np.inf', pythonGenerator.ORDER_NONE];
+};
+
 /************************
  * 
  * LOADING BLOCKS
  * 
  ************************/
 /**
- * Load csv file (using pandas)
+ * Load csv file
  */
 Blockly.Blocks['load_csv'] = {
   init: function(){
     this.appendDummyInput()
-    .appendField('Load data from CSV:')
-    .appendField(new Blockly.FieldTextInput('iris.csv', (txt) => {
-      if(!~txt.indexOf('.csv')) txt = txt + '.csv';
-      return txt
-    }), 'CSV');
+        .appendField('Load data from CSV:')
+        .appendField(new Blockly.FieldTextInput('iris'), 'CSV')
+        .appendField('.csv');
     this.setTooltip('Loads a given CSV dataset');
     this.appendEndRowInput();
     this.setOutput(true, 'Array');
     this.setColour(200);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
   },
 };
 pythonGenerator.forBlock['load_csv'] = function(block, generator) {
   const dataset = block.getFieldValue('CSV') || '0';
-  return [`pd.read_csv('${dataset}')`, pythonGenerator.ORDER_ATOMIC];
+  return [`pd.read_csv('${dataset}.csv')`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /**
- * Load CSV file from URL (u sing pandas)
+ * Load file from URL
  */
-
 Blockly.Blocks['load_csv_from_url'] = {
   init: function(){
     this.appendDummyInput()
     .appendField('Load CSV file from URL')
-    .appendField(new Blockly.FieldTextInput('http://example.com/iris.csv', (url) => {
-      if(url.match(/^[a-z]{4,5}:\/\/[A-Za-zÀ-ÖØ-öø-ÿ0-9.\/:_-]*?\.[a-z]{2,6}/)) { return url } else { return 'ERROR!' }
-    }), 'CSV');
+    .appendField(new Blockly.FieldTextInput('http://example.com/iris.csv', (url) => url.match(/^[a-z]{4,5}:\/\/[A-Za-zÀ-ÖØ-öø-ÿ0-9.\/:_-]*?\.[a-z]{2,6}/) ? url : 'ERROR!'), 'CSV');
     this.setTooltip('Loads a given CSV dataset from an URL. Local files can be used by prepending "file://".');
     this.appendEndRowInput();
     this.setOutput(true, 'Array');
     this.setColour(200);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
+
   },
 };
 pythonGenerator.forBlock['load_csv_from_url'] = function(block, generator) {
@@ -379,9 +355,6 @@ Blockly.Blocks["mean"] = {
     .appendField("Mean of");
     this.setOutput(true, "Number");
     this.setColour(150);
-    this.setInputsInline(true);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
     this.setTooltip("Returns the mean of an array of numbers");
   },
 };
@@ -401,9 +374,6 @@ Blockly.Blocks["median"] = {
     .appendField("Median of");
     this.setOutput(true, "Number");
     this.setColour(150);
-    this.setInputsInline(true);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
     this.setTooltip("Returns the median of an array of numbers");
   },
 };
@@ -423,9 +393,6 @@ Blockly.Blocks["sum"] = {
     .appendField("Sum of");
     this.setOutput(true, "Number");
     this.setColour(150);
-    this.setPreviousStatement(true, null);
-    this.setInputsInline(true);
-    this.setNextStatement(true, null);
     this.setTooltip("Returns the sum of an array of numbers");
   },
 };
@@ -445,9 +412,6 @@ Blockly.Blocks["std"] = {
     .appendField("Standard deviation of");
     this.setOutput(true, "Number");
     this.setColour(150);
-    this.setInputsInline(true);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
     this.setTooltip("Returns the standard deviation of an array of numbers");
   },
 };
@@ -467,9 +431,6 @@ Blockly.Blocks["mean_squared"] = {
     .appendField("Mean squared error of");
     this.setOutput(true, "Number");
     this.setColour(150);
-    this.setInputsInline(true);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
     this.setTooltip("Returns the mean squared error of an array of numbers");
   },
 };
@@ -486,18 +447,15 @@ quad_err /= ${msq}.shape[0])\n`, pythonGenerator.ORDER_ATOMIC];
 const max = {
   init: function() {
     this.appendValueInput('maximum')
-    .setCheck('Array')
-      .appendField(new Blockly.FieldLabelSerializable('Maximum of'), 'MAXIMUM');
+        .setCheck('Array')
+        .appendField(new Blockly.FieldLabelSerializable('Maximum of'), 'MAXIMUM');
     this.setOutput(true, 'Number');
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
     this.setTooltip('"Returns the maximum of an array of numbers"');
     this.setHelpUrl('');
     this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({max: max});
-
 pythonGenerator.forBlock["max"] = function(block, generator) {
   const maxi =
     generator.valueToCode(block, "maximum", pythonGenerator.ORDER_NONE) || "0";
@@ -507,26 +465,90 @@ pythonGenerator.forBlock["max"] = function(block, generator) {
 /** 
  * Minimum of array of numbers
  */
-const min = {
+const min = { 
   init: function() {
     this.appendValueInput('minimum')
     .setCheck('Array')
       .appendField(new Blockly.FieldLabelSerializable('Minimum of'), 'MINIMUM');
     this.setOutput(true, 'Number');
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
     this.setTooltip('Returns the minimum of an array of numbers');
     this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({min: min});
-
 pythonGenerator.forBlock["min"] = function(block, generator) {
   const mini =
     generator.valueToCode(block, "minimum", pythonGenerator.ORDER_NONE) || "0";
   return [`np.min(${mini})`, pythonGenerator.ORDER_ATOMIC];
 };
                 
+/* Slice iterable */
+Blockly.Blocks['slice'] = {
+  init: function() {
+    this.appendDummyInput('NAME')
+        .appendField('slice variable')
+        .appendField(new Blockly.FieldVariable("VAR_NAME"), "VAR")
+        .appendField('to values')
+        .appendField(new Blockly.FieldNumber("0"), "VAL1")
+        .appendField(':')
+        .appendField(new Blockly.FieldNumber("0"), "VAL2");
+    this.setOutput(true);
+    this.setTooltip('Slice a variable according to given indexes.')
+    this.setColour(200);
+  }
+};
+pythonGenerator.forBlock['slice'] = function(block, generator) {
+  const Val1 = block.getFieldValue('VAL1');
+  const Val2 = block.getFieldValue('VAL2');
+  const varID = block.getFieldValue('VAR') || '0';
+  const getVar = block.workspace.getVariableById(varID);
+  const Var = getVar ? getVar.name : 'undefined';
+  return `${Var} = ${Var}[${Val1}:${Val2}]`
+};
+
+/* Slice file */
+Blockly.Blocks['slice_file'] = {
+  init: function() {
+    this.appendDummyInput('NAME')
+        .appendField('slice file')
+        .appendField(new Blockly.FieldVariable("VAR_NAME"), "VAR");
+    this.appendValueInput('CNAME')
+        .appendField('to condition');
+    this.setInputsInline(true);
+    this.setOutput(true);
+    this.setTooltip('Slice a file according to a given condition.')
+    this.setColour(200);
+  }
+};
+pythonGenerator.forBlock['slice_file'] = function(block, generator) {
+  const varID = block.getFieldValue('VAR') || '0';
+  const getVar = block.workspace.getVariableById(varID);
+  const Var = getVar ? getVar.name : 'undefined';
+  const cond = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
+  return [`${Var}[${cond}]\n`, pythonGenerator.ORDER_ATOMIC]
+};
+
+Blockly.Blocks['list_access'] = {
+  init: function() {
+    this.appendDummyInput('NAME')
+        .appendField(new Blockly.FieldVariable("VAR_NAME"), "LIST")
+        .appendField('[');
+    this.appendValueInput('CNAME');
+    this.appendEndRowInput()
+        .appendField(']');
+    this.setInputsInline(true);
+    this.setOutput(true);
+    this.setTooltip('Access an element in a given list');
+    this.setColour(200);
+  }
+};
+pythonGenerator.forBlock['list_access'] = function(block, generator) {
+  const varName = block.getFieldValue('LIST') || '0';
+  const getVar = block.workspace.getVariableById(varName);
+  const listName = getVar ? getVar.name : 'undefined';
+  const elem = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
+  return [`${listName}[${elem}]`, pythonGenerator.ORDER_ATOMIC]
+};
 
 /************************
  * 
@@ -540,15 +562,14 @@ pythonGenerator.forBlock["min"] = function(block, generator) {
 Blockly.Blocks['variables_get'] = {
   init: function() {
     this.appendDummyInput('FIELD1')
-      .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD1");
+        .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD1");
     this.setOutput(true, null);
     this.setColour(95);
   }
 };
 pythonGenerator.forBlock["variables_get"] = function(block, generator) {
   const varID = block.getFieldValue('FIELD1') || '0';
-  const workspace = block.workspace;
-  const getVar = workspace.getVariableById(varID);
+  const getVar = block.workspace.getVariableById(varID);
   const varName = getVar ? getVar.name : 'undefined';
   return [varName, pythonGenerator.ORDER_ATOMIC];
 };
@@ -559,10 +580,9 @@ pythonGenerator.forBlock["variables_get"] = function(block, generator) {
 const variables_sett = {
   init: function() {
     this.appendValueInput('NAME')
-      .appendField('Set')
-      .appendField(new Blockly.FieldVariable('VAR_NAME'), 'NAME')
-      .appendField('to');
-    this.setOutput(true, null);
+        .appendField('Set')
+        .appendField(new Blockly.FieldVariable('VAR_NAME'), 'NAME')
+        .appendField('to');
     this.setTooltip('Set a variable to a value');
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
@@ -572,9 +592,8 @@ const variables_sett = {
 Blockly.common.defineBlocks({variables_setting: variables_sett});
 pythonGenerator.forBlock['variables_setting'] = function(block, generator) {
   const varName = generator.getVariableName(block.getFieldValue('NAME'));
-  console.info(block);
   const value = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC) || '0';
-  return [`\n${varName} = ${value}\n`, pythonGenerator.ORDER_ATOMIC];
+  return `\n${varName} = ${value}\n`;
 }
 
 /**
@@ -688,7 +707,7 @@ function getExtraBlockState(block) {
  */
 
 //**Shape of data */
-const Data_shape = {
+const data_shape = {
   init: function() {
     this.appendValueInput('data')
     .setCheck('Array')
@@ -699,9 +718,8 @@ const Data_shape = {
     this.setColour(200);
   }
 };
-Blockly.common.defineBlocks({Data_shape: Data_shape});
-
-pythonGenerator.forBlock['Data_shape'] = function(block,generator) {
+Blockly.common.defineBlocks({data_shape: data_shape});
+pythonGenerator.forBlock['data_shape'] = function(block,generator) {
   const data = generator.valueToCode(block, 'data', pythonGenerator.ORDER_ATOMIC);
   return [`np.shape(${data})`, pythonGenerator.ORDER_COLLECTION];
 }
@@ -727,7 +745,6 @@ const stacking = {
   }
 };
 Blockly.common.defineBlocks({stacking: stacking});
-
 pythonGenerator.forBlock['stacking'] = function(block, generator) {
   const dropdown_type = block.getFieldValue('type');
   const db1 = generator.valueToCode(block, 'db1', pythonGenerator.ORDER_COLLECTION);
@@ -752,7 +769,6 @@ const create_array = {
   }
 };
 Blockly.common.defineBlocks({create_array: create_array});
-
 pythonGenerator.forBlock['create_array'] = function(block,generator) {
   const array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_ATOMIC);
   return [`np.array(${array})`, pythonGenerator.ORDER_COLLECTION];
@@ -775,7 +791,6 @@ const delete_object = {
   }
 };
 Blockly.common.defineBlocks({delete_object: delete_object});
-
 pythonGenerator.forBlock['delete_object'] = function(block,generator) {
   const value_object = generator.valueToCode(block, 'object', pythonGenerator.ORDER_ATOMIC);
   const value_array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_COLLECTION);
@@ -799,7 +814,6 @@ const add_object = {
   }
 };
 Blockly.common.defineBlocks({add_object: add_object});
-
 pythonGenerator.forBlock['add_object'] = function(block,generator) {
   const value_object = generator.valueToCode(block, 'object', pythonGenerator.ORDER_ATOMIC);
   const value_array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_COLLECTION);
@@ -912,21 +926,59 @@ const input = {
     this.setOutput(true, null);
     this.appendEndRowInput();
     this.setColour(95);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
   }
 };
 Blockly.common.defineBlocks({input: input});
 pythonGenerator.forBlock['input'] = function(block, generator) {
   const question = block.getFieldValue('CSV') || '0';
-  return [`input('${question}')`, pythonGenerator.ORDER_ATOMIC];
+  return [`input('${question}')\n`, pythonGenerator.ORDER_ATOMIC];
 }
 
-/** Import blocks */
+/** Lambda func block */
+const lambda = {
+  init: function() {
+    this.appendValueInput('EXPR')
+        .appendField('lambda')
+        .appendField(new Blockly.FieldTextInput('x', (txt) => txt.match(/^[A-Za-z_][A-Za-z0-9_]*$/) ? txt : 'ERROR!'), 'LAMBDA')
+        .appendField(':');
+    this.setTooltip('Python lambda function (used for plotting for example). You can use multiple arguments by separating them with a comma.');
+    this.setColour(120);
+    this.setHelpUrl('https://www.w3schools.com/python/python_lambda.asp');
+    this.setOutput(true);
+  }
+}
+Blockly.common.defineBlocks({lambda: lambda});
+pythonGenerator.forBlock['lambda'] = function(block, generator) {
+  const VAR = block.getFieldValue('LAMBDA') || '0';
+  const EXPR = generator.valueToCode(block, 'EXPR', pythonGenerator.ORDER_NONE)
+  return [`lambda ${VAR}: (${EXPR})\n`, pythonGenerator.ORDER_LAMBDA]; //ORDER_LAMBDA does a strange parentheses game, whereas ORDER_ATOMIC always works, although without parentheses.
+}
 
+/**
+ * Temporary variables
+ * 
+ * As these could represent a dangerous security
+ * threat when compiling, they are limited to
+ * one character so as to protect the compiler
+ * from malware.
+ */
+Blockly.Blocks['temp_var'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldTextInput('VAR_NAME', (txt) => txt.slice(0, 1)), 'var');
+    this.setOutput(true);
+    this.setColour(15);
+  }
+};
+pythonGenerator.forBlock['temp_var'] = function(block, generator) {
+  const varName = block.getFieldValue('var') || '0';
+  return [varName, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** Import blocks */
 const import0 = {
   init: function() {
-    this.appendDummyInput('CNAME')
+    this.appendDummyInput()
         .appendField('import')
         .appendField(new Blockly.FieldTextInput('module'), 'IMPORT');
     this.setTooltip('Import module to code');
@@ -1064,7 +1116,7 @@ Blockly.Blocks['func_download'] = {
 };
 pythonGenerator.forBlock['func_download'] = function(block, generator) {
   const url = block.getFieldValue('NAME');
-  return `download('${url}')`
+  return `download('${url}')\n`
 }
 
 Blockly.Blocks['read_file'] = {
@@ -1075,11 +1127,150 @@ Blockly.Blocks['read_file'] = {
     this.setTooltip('Use function to read file from URL from previously created \'data\' file.');
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setOutput(true);
     this.setColour(200);
   }
 };
 pythonGenerator.forBlock['read_file'] = function(block, generator) {
   const fileName = block.getFieldValue('NAME');
-  return  [`gpd.read_file(os.path.join(data_folder, ${fileName}))`, pythonGenerator.ORDER_ATOMIC]
+  return `gpd.read_file(os.path.join(data_folder, ${fileName}))\n`
+}
+
+Blockly.Blocks['write_file'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Create GeoPackage')
+        .appendField(new Blockly.FieldTextInput('file_name'), 'NAME')
+        .appendField('.gpkg');
+    this.setTooltip('Write to previously created output folder. The format of this file is GeoPackage (.gpkg).')
+    this.setNextStatement(true);
+    this.setPreviousStatement(true);
+    this.setColour(200);
+  }
+}
+pythonGenerator.forBlock['write_file'] = function(block, generator) {
+  const fileName = block.getFieldValue('NAME');
+  return '\n' + 
+  `output_file = "${fileName}"\n` + 
+  'output_path = os.path.join(output_folder, output_file)\n' + 
+  'capitals.to_file(driver="GPKG", filename=output_path)\n'
+}
+
+/** Show data **/
+Blockly.Blocks['plot'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Plot line');
+    this.appendValueInput('valX')
+        .appendField('X-value');
+    this.appendValueInput('valY')
+        .appendField('Y-value');
+    this.appendDummyInput('fmt')
+        .appendField('format')
+        .appendField(new Blockly.FieldTextInput('^k:'), 'FMT')
+    this.appendDummyInput('title')
+        .appendField('title')
+        .appendField(new Blockly.FieldTextInput('Graph of X and Y'), 'TTL')
+    this.appendDummyInput('size')
+        .appendField('size:')
+        .appendField('X')
+        .appendField(new Blockly.FieldNumber(''), 'XVAL')
+        .appendField('Y')
+        .appendField(new Blockly.FieldNumber(''), 'YVAL')
+    this.appendValueInput('XLabel')
+        .appendField('X-axis label')
+        .appendField(new Blockly.FieldTextInput('X label'), 'XLabel');
+    this.appendValueInput('YLabel')
+        .appendField('Y-axis label')
+        .appendField(new Blockly.FieldTextInput('Y label'), 'YLabel');
+    this.appendDummyInput('Legend')
+        .appendField('Legend')
+        .appendField(new Blockly.FieldTextInput('abc'), 'LEG');
+    this.appendDummyInput('GRID')
+        .appendField('Grid?')
+        .appendField(new Blockly.FieldCheckbox('FALSE'), 'Grid');
+    this.setInputsInline(false);
+    this.setTooltip('Plot a line with X and Y data');
+    this.setHelpUrl('https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot');
+    this.setColour(325);
+  }
+}
+pythonGenerator.forBlock['plot'] = function(block, generator) {
+  const dataX = generator.valueToCode(block, 'valX', pythonGenerator.ORDER_NONE) || "0";
+  const dataY = generator.valueToCode(block, 'valY', pythonGenerator.ORDER_NONE) || "0";
+  const format = block.getFieldValue('FMT');
+  const title = block.getFieldValue('TTL');
+  const size = [block.getFieldValue('XVAL'), block.getFieldValue('YVAL')];
+  const labels = [block.getFieldValue('XLabel'), block.getFieldValue('YLabel')];
+  const legend = block.getFieldValue('LEG');
+  let grid = block.getFieldValue('Grid').toLowerCase();
+  grid = grid[0].toUpperCase() + grid.slice(1);
+  return '' +
+  `x = ${dataX}\n` +
+  `y = ${dataY}\n` +
+  `plt.figure(figsize = (${size[0]}, ${size[1]}))\n` + 
+  `plt.plot(x, y, '${format}')\n` + 
+  `plt.title('${title}')\n` +
+  `plt.xlabel('${labels[0]}')\n` + 
+  `plt.ylabel('${labels[1]}')\n` +
+  `plt.grid(${grid})\n` +
+  `plt.legend('${legend}')\n` +
+  `plt.show()\n`
+}
+
+/** Show scattered data */
+Blockly.Blocks['scatter'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Plot scatter graph');
+    this.appendValueInput('valX')
+        .appendField('X-value');
+    this.appendValueInput('valY')
+        .appendField('Y-value');
+    this.appendDummyInput('title')
+        .appendField('title')
+        .appendField(new Blockly.FieldTextInput('Graph of X and Y'), 'TTL')
+    this.appendDummyInput('size')
+        .appendField('size:')
+        .appendField('X')
+        .appendField(new Blockly.FieldNumber(''), 'XVAL')
+        .appendField('Y')
+        .appendField(new Blockly.FieldNumber(''), 'YVAL')
+    this.appendValueInput('XLabel')
+        .appendField('X-axis label')
+        .appendField(new Blockly.FieldTextInput('X label'), 'XLabel');
+    this.appendValueInput('YLabel')
+        .appendField('Y-axis label')
+        .appendField(new Blockly.FieldTextInput('Y label'), 'YLabel');
+    this.appendDummyInput('Legend')
+        .appendField('Legend')
+        .appendField(new Blockly.FieldTextInput('abc'), 'LEG');
+    this.appendDummyInput('GRID')
+        .appendField('Grid?')
+        .appendField(new Blockly.FieldCheckbox('FALSE'), 'Grid');
+    this.setInputsInline(false);
+    this.setHelpUrl('https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.scatter.html#matplotlib.axes.Axes.scatter');
+    this.setTooltip('Plot a graph with X and Y data');
+    this.setColour(325);
+  }
+}
+pythonGenerator.forBlock['plot'] = function(block, generator) {
+  const dataX = generator.valueToCode(block, 'valX', pythonGenerator.ORDER_NONE) || "0";
+  const dataY = generator.valueToCode(block, 'valY', pythonGenerator.ORDER_NONE) || "0";
+  const title = block.getFieldValue('TTL');
+  const size = [block.getFieldValue('XVAL'), block.getFieldValue('YVAL')];
+  const labels = [block.getFieldValue('XLabel'), block.getFieldValue('YLabel')];
+  const legend = block.getFieldValue('LEG');
+  let grid = block.getFieldValue('Grid').toLowerCase();
+  grid = grid[0].toUpperCase() + grid.slice(1);
+  return '' +
+  `x = ${dataX}\n` +
+  `y = ${dataY}\n` +
+  `plt.figure(figsize = (${size[0]}, ${size[1]}))\n` + 
+  `plt.scatter(x, y)\n` + 
+  `plt.title('${title}')\n` +
+  `plt.xlabel('${labels[0]}')\n` + 
+  `plt.ylabel('${labels[1]}')\n` +
+  `plt.grid(${grid})\n` +
+  `plt.legend('${legend}')\n` +
+  `plt.show()\n`
 }

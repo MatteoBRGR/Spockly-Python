@@ -20,6 +20,9 @@ const BlocklyComponent = ({ setCode }) => {
         <xml>
           <category name="Math" colour="#A9A9A9">
             <block type="math_number"></block>
+            <block type="pi"></block>
+            <block type="e"></block>
+            <block type="inf"></block>
             <block type="math_arithmetic"></block>
             <block type="logic_compare"></block>
             <block type="bool1"></block>
@@ -38,7 +41,7 @@ const BlocklyComponent = ({ setCode }) => {
           <category name="Data" colour="#FA2">
             <block type="load_csv"></block>
             <block type="load_csv_from_url"></block>
-            <block type="Data_shape"></block>
+            <block type="data_shape"></block>
             <block type="stacking"></block>
             <block type="add_object"></block>
             <block type="delete_object"></block>
@@ -49,6 +52,9 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="def_download"></block>
             <block type="func_download"></block>
             <block type="read_file"></block>
+            <block type="write_file"></block>
+            <block type="plot"></block>
+            <block type="scatter"></block>
           </category>
           <category name="Statistics" colour="#B6C">
             <block type="mean"></block>
@@ -63,6 +69,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="variables_get"></block>
             <block type="variables_setting"></block>
             <block type="list_create"></block>
+            <block type="list_access"></block>
           </category>
           <category name="Other" colour="#5C81A6">
             <block type="controls_if"></block>
@@ -77,6 +84,10 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="import1"></block>
             <block type="import2"></block>
             <block type="import3"></block>
+            <block type="slice"></block>
+            <block type="slice_file"></block>
+            <block type="lambda"></block>
+            <block type="temp_var"></block>
           </category>
         </xml>
       `,
