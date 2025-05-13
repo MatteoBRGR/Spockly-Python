@@ -1049,13 +1049,14 @@ Blockly.common.defineBlocks({def_download: def_download});
 pythonGenerator.forBlock['def_download'] = function() {
   return '' +
   'import requests\n' +
-  'filename = os.path.join(data_folder, os.path.basename(url))\n' +
-  'if not os.path.exists(filename):\n' + 
-    '\twith requests.get(url, stream=True, allow_redirects=True) as r:\n' +
-        '\t\twith open(filename, "wb") as f:\n' + 
-            '\t\t\tfor chunk in r.iter_content(chunk_size=8192):\n' +
-                '\t\t\t\tf.write(chunk)\n' + 
-    '\tprint("Downloaded", filename)\n\n'
+  'def download(url):\n' +
+  '\tfilename = os.path.join(data_folder, os.path.basename(url))\n' +
+  '\tif not os.path.exists(filename):\n' + 
+    '\t\twith requests.get(url, stream=True, allow_redirects=True) as r:\n' +
+        '\t\t\twith open(filename, "wb") as f:\n' + 
+            '\t\t\t\tfor chunk in r.iter_content(chunk_size=8192):\n' +
+                '\t\t\t\t\tf.write(chunk)\n' + 
+    '\t\tprint("Downloaded ", filename)\n\n'
 }
 
 Blockly.Blocks['func_download'] = {
