@@ -130,14 +130,14 @@ Blockly.Blocks['consts'] = {
           ['γ', 'euler_gamma'],
           ['NaN', 'nan']
         ]), 'NUM');
-    this.setOutput(true);
+    this.setOutput(true, "Number");
     this.setTooltip('A block to be able to use several mathematical constants');
     this.setColour(230);
   }
 }
 pythonGenerator.forBlock['consts'] = function(block,generator) {
   const dropdown_name = block.getFieldValue('NUM');
-  return `np.${dropdown_name}`
+  return [`np.${dropdown_name}`, pythonGenerator.ORDER_ATOMIC];
 }
 
 /************************
