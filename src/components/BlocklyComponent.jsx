@@ -21,7 +21,19 @@ const BlocklyComponent = ({ setCode }) => {
           <category name="Math" colour="#A9A9A9">
             <block type="math_number"></block>
             <block type="consts"></block>
-            <block type="math_arithmetic"></block>
+            <block type="math_arithmetic">
+              <field name="OP">ADD</field>
+                <value name="A">
+                  <shadow type="math_number">
+                    <field name="NUM">1</field>
+                  </shadow>
+                </value>
+                <value name="B">
+                  <shadow type="math_number">
+                    <field name="NUM">1</field>
+                  </shadow>
+                </value>
+            </block>
             <block type="logic_compare"></block>
             <block type="math_square"></block>
             <block type="sqrt_of"></block>
@@ -66,10 +78,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="min"></block>
             <block type="sum"></block>
           </category>
-          <category name="Variables" custom="VARIABLE" colour="#a55b80">
-            <!--<block type="variables_get"></block>
-            <block type="variables_setting"></block>-->
-          </category>
+          <category name="Variables" custom="VARIABLE" colour="#a55b80"></category>
           <category name="Imports" colour="#888">
             <block type="import0"></block>
             <block type="import1"></block>
