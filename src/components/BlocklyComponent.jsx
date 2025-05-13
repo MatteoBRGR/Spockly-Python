@@ -39,6 +39,8 @@ const BlocklyComponent = ({ setCode }) => {
           <category name="Data" colour="#FA2">
             <block type="load_csv"></block>
             <block type="load_csv_from_url"></block>
+            <block type="load_txt"></block>
+            <block type="load_json"></block>
             <block type="data_shape"></block>
             <block type="stacking"></block>
             <block type="add_object"></block>
@@ -46,6 +48,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="create_array"></block>
             <block type="list_filter"></block>
             <block type="sort"></block>
+            <block type="reshape"></block>
             <block type="slice_file"></block>
           </category>
           <category name="Visualisation" colour="#c124ba">
