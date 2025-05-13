@@ -652,8 +652,6 @@ const stacking = {
     .setCheck('Array');
     this.setInputsInline(true)
     this.setOutput(true, 'Array');
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
     this.setTooltip('Stack the data by rows or columns');
     this.setColour(200);
   }
@@ -1190,3 +1188,66 @@ pythonGenerator.forBlock['plot'] = function(block, generator) {
   `plt.legend('${legend}')\n` +
   `plt.show()\n`
 }
+
+//**reshape an array */
+const reshape = {
+  init: function() {
+    this.appendValueInput('NAME')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('reshape array :'), 'DATA');
+    this.appendValueInput('rows')
+    .setCheck('Number')
+      .appendField(new Blockly.FieldLabelSerializable('new size :'), 'SIZE');
+    this.appendValueInput('columns')
+    .setCheck('Number');
+    this.setInputsInline(true)
+    this.setOutput(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('');
+    this.setColour(200);
+  }
+};
+Blockly.common.defineBlocks({reshape: reshape});    
+
+pythonGenerator.forBlock['reshape'] = function(block,generator) {
+  const value_array = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_COLLECTION);
+  const value_rows = generator.valueToCode(block, 'rows', pythonGenerator.ORDER_ATOMIC);
+  const value_columns = generator.valueToCode(block, 'columns', pythonGenerator.ORDER_ATOMIC);
+  return `np.reshape(${value_array}, (${value_rows},${value_columns}))`;
+}
+
+//**load from txt */
+Blockly.Blocks['load_txt'] = {
+  init: function(){
+    this.appendDummyInput()
+        .appendField('Load data from txt:')
+        .appendField(new Blockly.FieldTextInput(''), 'txt')
+        .appendField('.txt');
+    this.setTooltip('Loads a given txt dataset');
+    this.appendEndRowInput();
+    this.setOutput(true, 'Array');
+    this.setColour(200);
+  },
+};
+pythonGenerator.forBlock['load_txt'] = function(block, generator) {
+  const dataset = block.getFieldValue('txt') || '0';
+  return [`np.loadtxt('${dataset}.txt')`, pythonGenerator.ORDER_ATOMIC];
+};
+
+//**load from a json file */
+Blockly.Blocks['load_json'] = {
+  init: function(){
+    this.appendDummyInput()
+        .appendField('Load data from json:')
+        .appendField(new Blockly.FieldTextInput(''), 'json')
+        .appendField('.json');
+    this.setTooltip('Loads a given json file');
+    this.appendEndRowInput();
+    this.setOutput(true, 'Array');
+    this.setColour(200);
+  },
+};
+pythonGenerator.forBlock['load_json'] = function(block, generator) {
+  const dataset = block.getFieldValue('json') || '0';
+  return [`pd.read_json('${dataset}.json')`, pythonGenerator.ORDER_ATOMIC];
+};
