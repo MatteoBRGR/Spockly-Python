@@ -550,52 +550,6 @@ pythonGenerator.forBlock['list_access'] = function(block, generator) {
   return [`${listName}[${elem}]`, pythonGenerator.ORDER_ATOMIC]
 };
 
-/************************
- * 
- * VARIABLE BLOCKS
- * 
- ************************/
-
-/** 
- *  Block for variable getter.
- */
-Blockly.Blocks['variables_get'] = {
-  init: function() {
-    this.appendDummyInput('FIELD1')
-        .appendField(new Blockly.FieldVariable("VAR_NAME"), "FIELD1");
-    this.setOutput(true, null);
-    this.setColour(95);
-  }
-};
-pythonGenerator.forBlock["variables_get"] = function(block, generator) {
-  const varID = block.getFieldValue('FIELD1') || '0';
-  const getVar = block.workspace.getVariableById(varID);
-  const varName = getVar ? getVar.name : 'undefined';
-  return [varName, pythonGenerator.ORDER_ATOMIC];
-};
-
-/** 
- * Block for variable setter.
- */
-const variables_sett = {
-  init: function() {
-    this.appendValueInput('NAME')
-        .appendField('Set')
-        .appendField(new Blockly.FieldVariable('VAR_NAME'), 'NAME')
-        .appendField('to');
-    this.setTooltip('Set a variable to a value');
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(95);
-  }
-};
-Blockly.common.defineBlocks({variables_setting: variables_sett});
-pythonGenerator.forBlock['variables_setting'] = function(block, generator) {
-  const varName = generator.getVariableName(block.getFieldValue('NAME'));
-  const value = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC) || '0';
-  return `\n${varName} = ${value}\n`;
-}
-
 /**
  * Block for creating a list
  */
@@ -1081,7 +1035,7 @@ pythonGenerator.forBlock['create_data_and_output'] = function() {
         '\tos.mkdir(output_folder)\n'
 };
 
-Blockly.Blocks['def_download'] = {
+const def_download = {
   init: function() {
     this.appendDummyInput()
         .appendField('Definition: download (from URL)');
@@ -1091,6 +1045,7 @@ Blockly.Blocks['def_download'] = {
     this.setColour('#888');
   }
 };
+Blockly.common.defineBlocks({def_download: def_download});
 pythonGenerator.forBlock['def_download'] = function() {
   return '' +
   'import requests\n' +

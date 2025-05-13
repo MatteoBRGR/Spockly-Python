@@ -25,8 +25,6 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="inf"></block>
             <block type="math_arithmetic"></block>
             <block type="logic_compare"></block>
-            <block type="bool1"></block>
-            <block type="bool2"></block>
             <block type="math_square"></block>
             <block type="sqrt_of"></block>
             <block type="exp_of"></block>
@@ -36,7 +34,11 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="tan"></block>
             <block type="round"></block>
             <block type="modulo"></block>
+          </category>
+          <category name="Booleans" colour="#1d8425">
             <block type="to_bool"></block>
+            <block type="bool1"></block>
+            <block type="bool2"></block>
           </category>
           <category name="Data" colour="#FA2">
             <block type="load_csv"></block>
@@ -48,6 +50,9 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="create_array"></block>
             <block type="list_filter"></block>
             <block type="sort"></block>
+            <block type="slice_file"></block>
+          </category>
+          <category name="Visualisation" colour="#c124ba">
             <block type="create_data_and_output"></block>
             <block type="def_download"></block>
             <block type="func_download"></block>
@@ -65,29 +70,34 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="min"></block>
             <block type="sum"></block>
           </category>
-          <category name="Variables" colour="#B52">
-            <block type="variables_get"></block>
-            <block type="variables_setting"></block>
-            <block type="list_create"></block>
-            <block type="list_access"></block>
+          <category name="Variables" custom="VARIABLE" colour="#a55b80">
+            <!--<block type="variables_get"></block>
+            <block type="variables_setting"></block>-->
           </category>
-          <category name="Other" colour="#5C81A6">
-            <block type="controls_if"></block>
-            <block type="repeat_times"></block>
-            <block type="text"></block>
-            <block type="text_print"></block>
-            <block type="length_of_str"></block>
-            <block type="operators"></block>
-            <block type="line_break"></block>
-            <block type="input"></block>
+          <category name="Imports" colour="#888">
             <block type="import0"></block>
             <block type="import1"></block>
             <block type="import2"></block>
             <block type="import3"></block>
+          </category>
+          <category name="Basic functions" colour="#A6200B">
+            <block type="input"></block>
             <block type="slice"></block>
-            <block type="slice_file"></block>
             <block type="lambda"></block>
+            <block type="text_print"></block>
+            <block type="length_of_str"></block>
+            <block type="list_access"></block>
+          </category>
+          <category name="Functions" custom="PROCEDURE" colour="#05a219">
+          </category>
+          <category name="Other" colour="#5C81A6">
+            <block type="controls_if"></block>
+            <block type="operators"></block>
+            <block type="repeat_times"></block>
             <block type="temp_var"></block>
+            <block type="text"></block>
+            <block type="line_break"></block>
+            <block type="list_create"></block>
           </category>
         </xml>
       `,
