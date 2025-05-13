@@ -120,49 +120,25 @@ pythonGenerator.forBlock['operators'] = function(block,generator) {
 }
 
 /** Mathematical constants */
-
-/**
- * Ohh! A nice a block
- */
-
-Blockly.Blocks['pi'] = {
+Blockly.Blocks['consts'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField('pi');
+        .appendField(new Blockly.FieldDropdown([
+          ['e', 'e'],
+          ['π', 'pi'],
+          ['∞', 'inf'],
+          ['γ', 'euler_gamma'],
+          ['NaN', 'nan']
+        ]), 'NUM');
     this.setOutput(true);
-    this.setTooltip('Mathematical constant pi');
-    this.setColour(300);
+    this.setTooltip('A block to be able to use several mathematical constants');
+    this.setColour(230);
   }
 }
-pythonGenerator.forBlock['pi'] = function(block, generator) {
-  return ['np.pi', pythonGenerator.ORDER_NONE];
-};
-
-Blockly.Blocks['e'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField('e');
-    this.setOutput(true);
-    this.setTooltip('Euler\'s number');
-    this.setColour(300);
-  }
+pythonGenerator.forBlock['consts'] = function(block,generator) {
+  const dropdown_name = block.getFieldValue('NUM');
+  return `np.${dropdown_name}`
 }
-pythonGenerator.forBlock['e'] = function(block, generator) {
-  return ['np.e', pythonGenerator.ORDER_NONE];
-};
-
-Blockly.Blocks['inf'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField('positive infinity');
-    this.setOutput(true);
-    this.setTooltip('Mathematical positive infinity');
-    this.setColour(300);
-  }
-}
-pythonGenerator.forBlock['inf'] = function(block, generator) {
-  return ['np.inf', pythonGenerator.ORDER_NONE];
-};
 
 /************************
  * 
@@ -254,49 +230,33 @@ pythonGenerator.forBlock["log_of"] = function (block, generator) {
   return [`np.log(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
-/** sinus block**/
-Blockly.Blocks["sin"] = {
-  init: function () {
-    this.appendValueInput("NUM").setCheck("Number").appendField("sin");
+Blockly.Blocks['trigo'] = {
+  init: function() {
+    this.appendValueInput("NUM")
+        .setCheck("Number")
+        .appendField(new Blockly.FieldDropdown([
+          ['sin', 'sin'],
+          ['cos', 'cos'],
+          ['tan', 'tan'],
+          ['arcsin', 'arcsin'],
+          ['arccos', 'arccos'],
+          ['arctan', 'arctan'],
+          ['sinh', 'sinh'],
+          ['cosh', 'cosh'],
+          ['tanh', 'tanh'],
+          ['arcsinh', 'arcsinh'],
+          ['arccosh', 'arccosh'],
+          ['arctanh', 'arctanh']
+        ]), 'TRIGO');
     this.setOutput(true, "Number");
     this.setColour(230);
-    this.setTooltip("Returns the sinus of a number");
-  },
-};
-pythonGenerator.forBlock["sin"] = function (block, generator) {
-  const num =
-    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.sin(${num})`, pythonGenerator.ORDER_ATOMIC];
-};
-
-/** cosinus block**/
-Blockly.Blocks["cos"] = {
-  init: function () {
-    this.appendValueInput("NUM").setCheck("Number").appendField("cos");
-    this.setOutput(true, "Number");
-    this.setColour(230);
-    this.setTooltip("Returns the cosinus of a number");
-  },
-};
-pythonGenerator.forBlock["cos"] = function (block, generator) {
-  const num =
-    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.cos(${num})`, pythonGenerator.ORDER_ATOMIC];
-};
-
-/** tangente block**/
-Blockly.Blocks["tan"] = {
-  init: function () {
-    this.appendValueInput("NUM").setCheck("Number").appendField("tan");
-    this.setOutput(true, "Number");
-    this.setColour(230);
-    this.setTooltip("Returns the tangente of a number");
-  },
-};
-pythonGenerator.forBlock["tan"] = function (block, generator) {
-  const num =
-    generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
-  return [`np.tan(${num})`, pythonGenerator.ORDER_ATOMIC];
+    this.setTooltip("Returns the sine, cosine, tangent, etc. of a number");
+  }
+}
+pythonGenerator.forBlock['trigo'] = function (block, generator) {
+  const num = generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  const trigFunc = block.getFieldValue('TRIGO');
+  return [`np.${trigFunc}(${num})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 /** round block**/
@@ -905,7 +865,7 @@ Blockly.common.defineBlocks({lambda: lambda});
 pythonGenerator.forBlock['lambda'] = function(block, generator) {
   const VAR = block.getFieldValue('LAMBDA') || '0';
   const EXPR = generator.valueToCode(block, 'EXPR', pythonGenerator.ORDER_NONE)
-  return [`lambda ${VAR}: (${EXPR})\n`, pythonGenerator.ORDER_LAMBDA]; //ORDER_LAMBDA does a strange parentheses game, whereas ORDER_ATOMIC always works, although without parentheses.
+  return [`lambda ${VAR}: (${EXPR})\n`, pythonGenerator.ORDER_ATOMIC]; //ORDER_LAMBDA does a strange parentheses game, whereas ORDER_ATOMIC always works, although without parentheses.
 }
 
 /**

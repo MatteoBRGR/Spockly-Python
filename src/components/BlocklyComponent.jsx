@@ -20,18 +20,14 @@ const BlocklyComponent = ({ setCode }) => {
         <xml>
           <category name="Math" colour="#A9A9A9">
             <block type="math_number"></block>
-            <block type="pi"></block>
-            <block type="e"></block>
-            <block type="inf"></block>
+            <block type="consts"></block>
             <block type="math_arithmetic"></block>
             <block type="logic_compare"></block>
             <block type="math_square"></block>
             <block type="sqrt_of"></block>
             <block type="exp_of"></block>
             <block type="log_of"></block>
-            <block type="sin"></block>
-            <block type="cos"></block>
-            <block type="tan"></block>
+            <block type="trigo"></block>
             <block type="round"></block>
             <block type="modulo"></block>
           </category>
