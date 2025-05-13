@@ -1194,26 +1194,25 @@ const reshape = {
   init: function() {
     this.appendValueInput('NAME')
     .setCheck('Array')
-      .appendField(new Blockly.FieldLabelSerializable('reshape array :'), 'DATA');
+      .appendField(new Blockly.FieldLabelSerializable('reshape array:'), 'DATA');
     this.appendValueInput('rows')
     .setCheck('Number')
-      .appendField(new Blockly.FieldLabelSerializable('new size :'), 'SIZE');
+      .appendField(new Blockly.FieldLabelSerializable('new size:'), 'SIZE');
     this.appendValueInput('columns')
     .setCheck('Number');
     this.setInputsInline(true)
     this.setOutput(true, null);
-    this.setTooltip('');
-    this.setHelpUrl('');
+    this.setTooltip('Reshape an array');
+    this.setHelpUrl('https://www.w3schools.com/python/numpy/numpy_array_reshape.asp');
     this.setColour(200);
   }
 };
 Blockly.common.defineBlocks({reshape: reshape});    
-
 pythonGenerator.forBlock['reshape'] = function(block,generator) {
   const value_array = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_COLLECTION);
   const value_rows = generator.valueToCode(block, 'rows', pythonGenerator.ORDER_ATOMIC);
   const value_columns = generator.valueToCode(block, 'columns', pythonGenerator.ORDER_ATOMIC);
-  return `np.reshape(${value_array}, (${value_rows},${value_columns}))`;
+  return [`np.reshape(${value_array}, (${value_rows},${value_columns}))`, pythonGenerator.ORDER_ATOMIC];
 }
 
 //**load from txt */
