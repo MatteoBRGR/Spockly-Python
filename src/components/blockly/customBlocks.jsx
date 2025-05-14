@@ -1353,14 +1353,13 @@ pythonGenerator.forBlock["ind_find"] = function(block, generator) {
 //**GEOMETRY BLOCKS*/
 const buffer = {
   init: function() {
-    this.appendDummyInput('buffer')
-        .appendField(new Blockly.FieldLabelSerializable('buffer'), 'BUFFER');
     this.appendDummyInput('center')
-        .appendField(new Blockly.FieldLabelSerializable('center'), 'CENTER')
+        .appendField(new Blockly.FieldLabelSerializable('Buffer: centre'), 'CENTER')
         .appendField(new Blockly.FieldNumber(0), 'x')
+        .appendField(',')
         .appendField(new Blockly.FieldNumber(0), 'y');
     this.appendDummyInput('radius')
-        .appendField(new Blockly.FieldLabelSerializable('radius'), 'RADIUS')
+        .appendField(new Blockly.FieldLabelSerializable('Radius'), 'RADIUS')
         .appendField(new Blockly.FieldNumber(0), 'r');
     this.appendDummyInput()
         .appendField('Show cercle?')
@@ -1380,12 +1379,12 @@ pythonGenerator.forBlock['buffer'] = function(block, generator) {
   const number_y = block.getFieldValue('y') || '0';
   const number_rad = block.getFieldValue('r') || '0';
   const varName = block.getFieldValue('name') || '0';
-  let show = block.getFieldValue('SHOW');
-  show = (show.toLowerCase() === 'true') ? '\npoint\n' : '\n'
+  let show0 = block.getFieldValue('SHOW');
+  show0 = (show0.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
   return `from shapely.geometry import Point\n`+
   `point_from_buffer = Point(${number_x}, ${number_y})\n`+
-  `${varName} = point.buffer(${number_rad})\n`+
-  `${show}`
+  `${varName} = point.buffer(${number_rad})`+
+  `${show0}`
 }
 
 const create_point = { 
@@ -1412,10 +1411,10 @@ pythonGenerator.forBlock["create_point"] = function(block, generator) {
   const X_Coord = block.getFieldValue('XCoord') || '0';
   const Y_Coord = block.getFieldValue('YCoord') || '0';
   const varName = block.getFieldValue('name') || '0';
-  let show = block.getFieldValue('SHOW');
-  show = (show.toLowerCase() === 'true') ? '\npoint\n' : '\n'
+  let show1 = block.getFieldValue('SHOW');
+  show1 = (show1.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
   return '' + 
   'from shapely.geometry import Point\n' +
   `${varName} = Point(${X_Coord}, ${Y_Coord})` + 
-  `${show}`;
+  `${show1}`;
 };
