@@ -1566,7 +1566,6 @@ const polygon_area = {
   }
 };
 Blockly.common.defineBlocks({polygon_area: polygon_area});
-
 pythonGenerator.forBlock['polygon_area'] = function(block, generator) {
   const polygon = generator.valueToCode(block, 'polygon', pythonGenerator.ORDER_ATOMIC);
   return `${polygon}.area`;
@@ -1580,16 +1579,49 @@ const polygon_perimeter = {
       .appendField(new Blockly.FieldLabelSerializable('Polygon perimeter'), 'NAME');
     this.setOutput(true, 'Number');
     this.setTooltip('Compute the polygon perimeter');
-    this.setHelpUrl('');
+    this.setHelpUrl('https://shapely.readthedocs.io/en/stable/reference/shapely.length.html');
     this.setColour(60);
   }
 };
 Blockly.common.defineBlocks({polygon_perimeter: polygon_perimeter});
-
 pythonGenerator.forBlock['polygon_perimeter'] = function(block, generator) {
   const polygon = generator.valueToCode(block, 'polygon', pythonGenerator.ORDER_ATOMIC);
   return `${polygon}.length`;
 }
+
+Blockly.Blocks['distance_calc'] = {
+  init: function() {
+    this.appendValueInput('point1')
+        .appendField('Point/Polygon 1')
+        .setCheck(['Coords', 'Polygon']);
+    this.appendValueInput('point2')
+        .appendField('Point/Polygon 2')
+        .setCheck(['Coords', 'Polygon']);
+    this.setOutput(true, 'Number');
+    this.setTooltip('Find the distance between points and polygons');
+    this.setHelpUrl('https://shapely.readthedocs.io/en/stable/reference/shapely.distance.html');
+    this.setColour(60);
+  }
+};
+pythonGenerator.forBlock['distance_calc'] = function(block, generator) {
+  const coord1 = generator.valueToCode(block, 'point1', pythonGenerator.ORDER_ATOMIC);
+  const coord2 = generator.valueToCode(block, 'point2', pythonGenerator.ORDER_ATOMIC);
+  return [`Point${coord1}.distance(Point${coord2})`, pythonGenerator.ORDER_ATOMIC];
+}
+// from shapely.geometry import Point
+// point_1 = Point(0, 0)
+// point_2 = Point(0, 1)
+// point_1.union(point_2)
+// point_1.union(point_2)
+// # Calculate and print the distance between the two points
+// distance_points = point_1.distance(point_2)
+// print(f"Distance between {point_1} and {point_2}: {distance_points}", "\n")
+// # Create buffers (circles) around the two points with a radius of 0.5 units
+// circle_1 = point_1.buffer(0.5)
+// circle_2 = point_2.buffer(0.25)
+// distance_circle_to_point = circle_1.distance(point_2)
+// print(f"Distance from the edge of circle_1 to point_2: {distance_circle_to_point}", "\n")
+// circle_1.union(point_2)
 
 //**Multipolygon */
 const multipolygon = {
@@ -1607,19 +1639,18 @@ const multipolygon = {
       .appendField(new Blockly.FieldTextInput('multipolygon'), 'variable');
     this.setOutput(true, 'Polygon');
     this.setTooltip('Create a multipolygon from a sequel of polygons');
-    this.setHelpUrl('');
+    this.setHelpUrl('https://shapely.readthedocs.io/en/stable/reference/shapely.MultiPolygon.html');
     this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({multipolygon: multipolygon});  
-
 pythonGenerator.forBlock['multipolygon'] = function(block, generator) {
   const value_polygon1 = generator.valueToCode(block, 'polygon1', pythonGenerator.ORDER_ATOMIC);
   const value_polygon2 = generator.valueToCode(block, 'polygon2', pythonGenerator.ORDER_ATOMIC);
   const text_variable = block.getFieldValue('variable');
   let show_polygon = block.getFieldValue('SHOW');
   show_polygon = (show_polygon.toLowerCase() === 'true') ? `\n${text_variable}\n` : '\n'
-  return `from shapely.geometry import Polygon, MultiPolygon\n`+
+  return [`from shapely.geometry import Polygon, MultiPolygon\n`+
           `${text_variable} = MultiPolygon([${value_polygon1}, ${value_polygon2}])\n`+
-          `${show_polygon}`;
+          `${show_polygon}`, pythonGenerator.ORDER_ATOMIC];
 }            

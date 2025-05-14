@@ -140,10 +140,11 @@ const BlocklyComponent = ({ setCode }) => {
           </category>
           <category name="Functions" custom="PROCEDURE" colour="#05a219"></category>
           <category name="Geometry" colour="#763728">
+            <block type="coords"></block>
             <block type="create_point"></block>
             <block type="buffer"></block>
             <block type="line_segment"></block>
-            <block type="coords"></block>
+            <block type="distance_calc"></block>
             <block type="multipolygon"></block>
             <block type="polygon_area"></block>
             <block type="polygon_perimeter"></block>
