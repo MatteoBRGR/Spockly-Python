@@ -1566,7 +1566,6 @@ const polygon_area = {
   }
 };
 Blockly.common.defineBlocks({polygon_area: polygon_area});
-
 pythonGenerator.forBlock['polygon_area'] = function(block, generator) {
   const polygon = generator.valueToCode(block, 'polygon', pythonGenerator.ORDER_ATOMIC);
   return `${polygon}.area`;
@@ -1580,15 +1579,34 @@ const polygon_perimeter = {
       .appendField(new Blockly.FieldLabelSerializable('Polygon perimeter'), 'NAME');
     this.setOutput(true, 'Number');
     this.setTooltip('Compute the polygon perimeter');
-    this.setHelpUrl('');
+    this.setHelpUrl('https://shapely.readthedocs.io/en/stable/reference/shapely.length.html');
     this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({polygon_perimeter: polygon_perimeter});
-
 pythonGenerator.forBlock['polygon_perimeter'] = function(block, generator) {
   const polygon = generator.valueToCode(block, 'polygon', pythonGenerator.ORDER_ATOMIC);
   return `${polygon}.length`;
+}
+
+Blockly.Blocks['distance_calc'] = {
+  init: function() {
+    this.appendValueInput('point1')
+        .appendField('Point/Polygon 1')
+        .setCheck(['Coords', 'Polygon']);
+    this.appendValueInput('point2')
+        .appendField('Point/Polygon 2')
+        .setCheck(['Coords', 'Polygon']);
+    this.setOutput(true, 'Number');
+    this.setTooltip('Find the distance between points and polygons');
+    this.setHelpUrl('https://shapely.readthedocs.io/en/stable/reference/shapely.distance.html');
+    this.setColour(60);
+  }
+};
+pythonGenerator.forBlock['distance_calc'] = function(block, generator) {
+  const coord1 = generator.valueToCode(block, 'point1', pythonGenerator.ORDER_ATOMIC);
+  const coord2 = generator.valueToCode(block, 'point2', pythonGenerator.ORDER_ATOMIC);
+  return [`Point${coord1}.distance(Point${coord2})`, pythonGenerator.ORDER_ATOMIC];
 }
 
 //**Multipolygon */
@@ -1607,21 +1625,20 @@ const multipolygon = {
       .appendField(new Blockly.FieldTextInput('multipolygon'), 'variable');
     this.setOutput(true, 'Polygon');
     this.setTooltip('Create a multipolygon from a sequel of polygons');
-    this.setHelpUrl('');
+    this.setHelpUrl('https://shapely.readthedocs.io/en/stable/reference/shapely.MultiPolygon.html');
     this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({multipolygon: multipolygon});  
-
 pythonGenerator.forBlock['multipolygon'] = function(block, generator) {
   const value_polygon1 = generator.valueToCode(block, 'polygon1', pythonGenerator.ORDER_ATOMIC);
   const value_polygon2 = generator.valueToCode(block, 'polygon2', pythonGenerator.ORDER_ATOMIC);
   const text_variable = block.getFieldValue('variable');
   let show_polygon = block.getFieldValue('SHOW');
   show_polygon = (show_polygon.toLowerCase() === 'true') ? `\n${text_variable}\n` : '\n'
-  return `from shapely.geometry import Polygon, MultiPolygon\n`+
+  return [`from shapely.geometry import Polygon, MultiPolygon\n`+
           `${text_variable} = MultiPolygon([${value_polygon1}, ${value_polygon2}])\n`+
-          `${show_polygon}`;
+          `${show_polygon}`, pythonGenerator.ORDER_ATOMIC];
 }
 
 //**Bounding box */
