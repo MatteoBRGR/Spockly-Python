@@ -1046,7 +1046,7 @@ Blockly.Blocks['read_file'] = {
 };
 pythonGenerator.forBlock['read_file'] = function(block, generator) {
   const fileName = block.getFieldValue('NAME');
-  return `gpd.read_file(os.path.join(data_folder, ${fileName}))\n`
+  return `gpd.read_file(os.path.join(data_folder, '${fileName}'))\n`
 }
 
 Blockly.Blocks['write_file'] = {
@@ -1261,6 +1261,7 @@ Blockly.Blocks['arange'] = {
         .appendField('with step');
     this.setTooltip('Generate a range of values between two numbers');
     this.setInputsInline(false);
+    this.setHelpUrl('https://numpy.org/doc/stable/reference/generated/numpy.arange.html');
     this.setOutput(true, 'Array');
     this.setColour(200);
   },
@@ -1270,6 +1271,28 @@ pythonGenerator.forBlock['arange'] = function(block, generator) {
   const stop = generator.valueToCode(block, 'stop', pythonGenerator.ORDER_ATOMIC);
   const step = generator.valueToCode(block, 'step', pythonGenerator.ORDER_ATOMIC);
   return [`np.arange(${start}, ${stop}, ${step})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+Blockly.Blocks['linspace'] = {
+  init: function(){
+    this.appendValueInput('number')
+        .appendField('Generate');
+    this.appendValueInput('start')
+        .appendField('values between');
+    this.appendValueInput('stop')
+        .appendField('and');
+    this.setTooltip('Generate a number of values between two numbers');
+    this.setInputsInline(false);
+    this.setHelpUrl('https://numpy.org/doc/stable/reference/generated/numpy.linspace.html');
+    this.setOutput(true, 'Array');
+    this.setColour(200);
+  },
+};
+pythonGenerator.forBlock['linspace'] = function(block, generator) {
+  const start = generator.valueToCode(block, 'start', pythonGenerator.ORDER_ATOMIC);
+  const stop = generator.valueToCode(block, 'stop', pythonGenerator.ORDER_ATOMIC);
+  const number = generator.valueToCode(block, 'number', pythonGenerator.ORDER_ATOMIC);
+  return [`np.linspace(${start}, ${stop}, num=${number})`, pythonGenerator.ORDER_ATOMIC];
 };
 
 //**indices in array */

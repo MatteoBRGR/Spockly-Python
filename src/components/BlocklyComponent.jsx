@@ -176,6 +176,23 @@ const BlocklyComponent = ({ setCode }) => {
                 </shadow>
               </value>
             </block>
+            <block type="linspace">
+              <value name="number">
+                <shadow type="math_number">
+                  <field name="NUM">0</field>
+                </shadow>
+              </value>
+              <value name="start">
+                <shadow type="math_number">
+                  <field name="NUM">10</field>
+                </shadow>
+              </value>
+              <value name="stop">
+                <shadow type="math_number">
+                  <field name="NUM">100</field>
+                </shadow>
+              </value>
+            </block>
           </category>
         </xml>
       `

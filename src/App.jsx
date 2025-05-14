@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import BlocklyComponent from "./components/BlocklyComponent";
 import CodeDisplay from "./components/CodeDisplay";
+import Pyodide from "./components/Pyodide";
 
 function App() {
   const [code, setCode] = useState("");
@@ -27,9 +28,13 @@ function App() {
         >
           <h2>Generated Python Code</h2>
           <CodeDisplay code={code} />
+          <hr />
+          <h2>Output</h2>
+          <Pyodide code={code} />
         </div>
       </div>
     </div>
+    
   );
 }
 
