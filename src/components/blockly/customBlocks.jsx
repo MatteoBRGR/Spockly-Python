@@ -1345,3 +1345,35 @@ pythonGenerator.forBlock["ind_find"] = function(block, generator) {
     generator.valueToCode(block, "find", pythonGenerator.ORDER_NONE) || "0";
   return [`np.argwhere(${ind_find})`, pythonGenerator.ORDER_COLLECTION];
 };
+
+//**GEOMETRY BLOCKS*/
+const buffer = {
+  init: function() {
+    this.appendDummyInput('buffer')
+      .appendField(new Blockly.FieldLabelSerializable('buffer'), 'BUFFER');
+    this.appendDummyInput('center')
+      .appendField(new Blockly.FieldLabelSerializable('center'), 'CENTER')
+      .appendField(new Blockly.FieldNumber(0), 'x')
+      .appendField(new Blockly.FieldNumber(0), 'y');
+    this.appendDummyInput('radius')
+      .appendField(new Blockly.FieldLabelSerializable('radius'), 'RADIUS')
+      .appendField(new Blockly.FieldNumber(0), 'r');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('Create a buffer with its center and its radius');
+    this.setHelpUrl('');
+    this.setColour(60);
+  }
+};
+Blockly.common.defineBlocks({buffer: buffer});
+pythonGenerator.forBlock['buffer'] = function(block, generator) {
+  const number_x = block.getFieldValue('x')|| '0';
+  const number_y = block.getFieldValue('y')|| '0';
+
+  const number_rad = block.getFieldValue('r')|| '0';
+
+  return `from shapely.geometry import Point\n`+
+  `point = Point(${number_x}, ${number_y})\n`+
+  `circle = point.buffer(${number_rad})\n`+
+  `circle`
+}
