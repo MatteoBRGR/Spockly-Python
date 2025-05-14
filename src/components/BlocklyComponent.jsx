@@ -142,6 +142,9 @@ const BlocklyComponent = ({ setCode }) => {
           <category name="Geometry" colour="#763728">
             <block type="create_point"></block>
             <block type="buffer"></block>
+            <block type="multipolygon"></block>
+            <block type="polygon_area"></block>
+            <block type="polygon_perimeter"></block>
           </category>
           <category name="Other" colour="#5C81A6">
             <block type="controls_if"></block>
