@@ -1418,5 +1418,3 @@ pythonGenerator.forBlock["create_point"] = function(block, generator) {
   `${varName} = Point(${X_Coord}, ${Y_Coord})` + 
   `${show1}`;
 };
-//testing blockly code
-
