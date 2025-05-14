@@ -1552,3 +1552,74 @@ pythonGenerator.forBlock["coords"] = function(block, generator) {
   const Y_Coord = block.getFieldValue('YCoord') || '0';
   return [`(${X_Coord}, ${Y_Coord})`, pythonGenerator.ORDER_ATOMIC]
 };
+
+//**Polygon area */
+const polygon_area = {
+  init: function() {
+    this.appendValueInput('polygon')
+    .setCheck('Polygon')
+      .appendField(new Blockly.FieldLabelSerializable('Polygon area'), 'NAME');
+    this.setOutput(true, 'Number');
+    this.setTooltip('Compute the polygon area');
+    this.setHelpUrl('');
+    this.setColour(60);
+  }
+};
+Blockly.common.defineBlocks({polygon_area: polygon_area});
+
+pythonGenerator.forBlock['polygon_area'] = function(block, generator) {
+  const polygon = generator.valueToCode(block, 'polygon', pythonGenerator.ORDER_ATOMIC);
+  return `${polygon}.area`;
+}
+
+//**Polygon perimeter */
+const polygon_perimeter = {
+  init: function() {
+    this.appendValueInput('polygon')
+    .setCheck('Polygon')
+      .appendField(new Blockly.FieldLabelSerializable('Polygon perimeter'), 'NAME');
+    this.setOutput(true, 'Number');
+    this.setTooltip('Compute the polygon perimeter');
+    this.setHelpUrl('');
+    this.setColour(60);
+  }
+};
+Blockly.common.defineBlocks({polygon_perimeter: polygon_perimeter});
+
+pythonGenerator.forBlock['polygon_perimeter'] = function(block, generator) {
+  const polygon = generator.valueToCode(block, 'polygon', pythonGenerator.ORDER_ATOMIC);
+  return `${polygon}.length`;
+}
+
+//**Multipolygon */
+const multipolygon = {
+  init: function() {
+    this.appendValueInput('polygon1')
+    .setCheck('Polygon')
+      .appendField(new Blockly.FieldLabelSerializable('Polygon1'), 'Polygon1');
+    this.appendValueInput('polygon2')
+    .setCheck('Polygon')
+      .appendField(new Blockly.FieldLabelSerializable('Polygon2'), 'Polygon2');
+    this.appendDummyInput('')
+      .appendField(new Blockly.FieldLabelSerializable('Show multipolygon?'), 'show')
+      .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
+    this.appendDummyInput('')
+      .appendField(new Blockly.FieldTextInput('multipolygon'), 'variable');
+    this.setOutput(true, 'Polygon');
+    this.setTooltip('Create a multipolygon from a sequel of polygons');
+    this.setHelpUrl('');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({multipolygon: multipolygon});  
+
+pythonGenerator.forBlock['multipolygon'] = function(block, generator) {
+  const value_polygon1 = generator.valueToCode(block, 'polygon1', pythonGenerator.ORDER_ATOMIC);
+  const value_polygon2 = generator.valueToCode(block, 'polygon2', pythonGenerator.ORDER_ATOMIC);
+  const text_variable = block.getFieldValue('variable');
+  let show_polygon = block.getFieldValue('SHOW');
+  show_polygon = (show_polygon.toLowerCase() === 'true') ? `\n${text_variable}\n` : '\n'
+  return `from shapely.geometry import Polygon, MultiPolygon\n`+
+          `${text_variable} = MultiPolygon([${value_polygon1}, ${value_polygon2}])\n`+
+          `${show_polygon}`;
+}            
