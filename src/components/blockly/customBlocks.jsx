@@ -1366,45 +1366,24 @@ const buffer = {
     this.appendDummyInput('radius')
         .appendField(new Blockly.FieldLabelSerializable('Radius'), 'RADIUS')
         .appendField(new Blockly.FieldNumber(0), 'r');
-    this.appendDummyInput()
-        .appendField('Show cercle?')
-        .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
-    this.appendDummyInput()
-        .appendField('Circle variable name')
-        .appendField(new Blockly.FieldTextInput('circle'), 'name');
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setTooltip('Create a buffer with its center and its radius');
+    this.setOutput(true);
+    this.setInputsInline(false);
+    this.setTooltip('Create a circle with its center and its radius');
     this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({buffer: buffer});
 pythonGenerator.forBlock['buffer'] = function(block, generator) {
-  const number_x = block.getFieldValue('x') || '0';
-  const number_y = block.getFieldValue('y') || '0';
-  const coordinates_circle = generator.valueToCode(block, 'center', pythonGenerator.ORDER_ATOMIC) || '0';
-  const number_rad = block.getFieldValue('r') || '0';
-  const varName = block.getFieldValue('name') || '0';
-  let show0 = block.getFieldValue('SHOW');
-  show0 = (show0.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
-  return `from shapely.geometry import Point\n`+
-  `point_from_buffer = Point${coordinates_circle}\n`+
-  `${varName} = point.buffer(${number_rad})`+
-  `${show0}`
+  const coordinates_circle = generator.valueToCode(block, 'center', pythonGenerator.ORDER_ATOMIC) || '(0, 0)';
+  const number_rad = block.getFieldValue('r') || '1';
+  return [`Point${coordinates_circle}.buffer(${number_rad})`, pythonGenerator.ORDER_ATOMIC];
 }
-
 
 const line_segment = {
   init: function() {
     this.itemCount_ = 0
     this.appendDummyInput()
         .appendField('Create line segment');
-    this.appendDummyInput()
-        .appendField('Show Line?')
-        .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
-    this.appendDummyInput()
-        .appendField('Line variable name')
-        .appendField(new Blockly.FieldTextInput('line'), 'name');
     this.appendValueInput('element_0')
         .appendField('Coordinates')
         .setCheck('Coords');
@@ -1422,8 +1401,7 @@ const line_segment = {
     this.appendDummyInput('close')
         .appendField(appendFieldPlusIcon);
     this.setColour(150);
-    this.setNextStatement(true);
-    this.setPreviousStatement(true);
+    this.setOutput(true);
     this.setTooltip('Creates a line segment with given coordinates');
   },
 
@@ -1492,16 +1470,10 @@ const line_segment = {
 Blockly.common.defineBlocks({line_segment: line_segment});
 pythonGenerator.forBlock['line_segment'] = function(block, generator) {
   const elements = [];
-  const varName = block.getFieldValue('name') || '0';
-  let show2 = block.getFieldValue('SHOW');
-  show2 = (show2.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
   for (let i = 0; i < block.itemCount_; i++) {
     elements.push(generator.valueToCode(block, 'element_' + i, pythonGenerator.ORDER_NONE) || 'None');
   }
-  return '' +
-  'from shapely.geometry import LineString\n' +
-  `${varName} = LineString([${elements.join(', ')}])` +
-  `${show2}`;
+  return [`LineString([${elements.join(', ')}])`, pythonGenerator.ORDER_ATOMIC];
 };
 
 const create_point = { 
@@ -1509,28 +1481,15 @@ const create_point = {
     this.appendValueInput('point')
         .setCheck('Coords')
         .appendField('Create point with coordinates');
-    this.appendDummyInput()
-        .appendField('Show point?')
-        .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
-    this.appendDummyInput()
-        .appendField('Point variable name')
-        .appendField(new Blockly.FieldTextInput('point'), 'name');
-    this.setNextStatement(true);
-    this.setPreviousStatement(true);
+    this.setOutput(true)
     this.setTooltip('Returns a Point() object with given coordinates');
     this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({create_point: create_point});
-pythonGenerator.forBlock["create_point"] = function(block, generator) {
-  const coordinates = generator.valueToCode(block, 'point', pythonGenerator.ORDER_ATOMIC) || '0';
-  const varName = block.getFieldValue('name') || '0';
-  let show1 = block.getFieldValue('SHOW');
-  show1 = (show1.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
-  return '' + 
-  'from shapely.geometry import Point\n' +
-  `${varName} = Point${coordinates}` + 
-  `${show1}`;
+pythonGenerator.forBlock['create_point'] = function(block, generator) {
+  const coordinates = generator.valueToCode(block, 'point', pythonGenerator.ORDER_ATOMIC) || '(0, 0)';
+  return [`Point${coordinates}`, pythonGenerator.ORDER_ATOMIC];
 };
 
 const coords = { 
@@ -1557,8 +1516,8 @@ pythonGenerator.forBlock["coords"] = function(block, generator) {
 const polygon_area = {
   init: function() {
     this.appendValueInput('polygon')
-    .setCheck('Polygon')
-      .appendField(new Blockly.FieldLabelSerializable('Polygon area'), 'NAME');
+        .setCheck('Polygon')
+        .appendField(new Blockly.FieldLabelSerializable('Polygon area'), 'NAME');
     this.setOutput(true, 'Number');
     this.setTooltip('Compute the polygon area');
     this.setHelpUrl('');
@@ -1591,6 +1550,8 @@ pythonGenerator.forBlock['polygon_perimeter'] = function(block, generator) {
 
 Blockly.Blocks['distance_calc'] = {
   init: function() {
+    this.appendDummyInput()
+        .appendField('Distance');
     this.appendValueInput('point1')
         .appendField('Point/Polygon 1')
         .setCheck(['Coords', 'Polygon']);
@@ -1672,7 +1633,7 @@ pythonGenerator.forBlock['bounding_box'] = function(block, generator) {
   const min_y = block.getFieldValue('min_y') || '0';
   const max_x = block.getFieldValue('max_x') || '0';
   const max_y = block.getFieldValue('max_y') || '0';
-  const varName = block.getFieldValue('name') || '0';
+  const varName = block.getFieldValue('name') || 'name';
   let show_box = block.getFieldValue('SHOW');
   show_box = (show_box.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
   return `from shapely.geometry import box\n`+
@@ -1687,12 +1648,6 @@ const polygon = {
     this.itemCount_ = 0
     this.appendDummyInput()
         .appendField('Create a polygon');
-    this.appendDummyInput()
-        .appendField('Show polygon?')
-        .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
-    this.appendDummyInput()
-        .appendField('Polygon variable name')
-        .appendField(new Blockly.FieldTextInput('polygon'), 'name');
     this.appendValueInput('element_0')
         .appendField('Coordinates')
         .setCheck('Coords');
@@ -1779,14 +1734,8 @@ const polygon = {
 Blockly.common.defineBlocks({polygon: polygon});
 pythonGenerator.forBlock['polygon'] = function(block, generator) {
   const elements = [];
-  const varName = block.getFieldValue('name') || '0';
-  let show3 = block.getFieldValue('SHOW');
-  show3 = (show3.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
   for (let i = 0; i < block.itemCount_; i++) {
-    elements.push(generator.valueToCode(block, 'element_' + i, pythonGenerator.ORDER_NONE) || 'None');
+    elements.push(generator.valueToCode(block, 'element_' + i, pythonGenerator.ORDER_NONE) || '(0, 0)');
   }
-  return '' +
-  'from shapely.geometry import Polygon\n' +
-  `${varName} = Polygon([${elements.join(', ')}])` +
-  `${show3}`;
+  return [`Polygon([${elements.join(', ')}])`, pythonGenerator.ORDER_ATOMIC];
 };
