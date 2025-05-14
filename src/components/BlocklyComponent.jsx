@@ -122,10 +122,6 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="max"></block>
             <block type="min"></block>
             <block type="sum"></block>
-            <block type="ind_max"></block>
-            <block type="ind_min"></block>
-            <block type="ind_sort"></block>
-            <block type="ind_find"></block>
           </category>
           <category name="Variables" custom="VARIABLE" colour="#a55b80"></category>
           <category name="Imports" colour="#888">
@@ -142,7 +138,9 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="length_of_str"></block>
             <block type="list_access"></block>
           </category>
-          <category name="Functions" custom="PROCEDURE" colour="#05a219">
+          <category name="Functions" custom="PROCEDURE" colour="#05a219"></category>
+          <category name="Geometry" colour="#763728">
+            <block type="create_point"></block>
           </category>
           <category name="Other" colour="#5C81A6">
             <block type="controls_if"></block>

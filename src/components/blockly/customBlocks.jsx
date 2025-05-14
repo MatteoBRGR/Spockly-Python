@@ -1251,7 +1251,7 @@ Blockly.Blocks['arange'] = {
         .appendField('and')
     this.appendValueInput('step')
         .appendField('with step');
-    this.setTooltip('');
+    this.setTooltip('Generate a range of values between two numbers');
     this.setInputsInline(false);
     this.setOutput(true, 'Array');
     this.setColour(200);
@@ -1272,11 +1272,12 @@ pythonGenerator.forBlock['arange'] = function(block, generator) {
 const ind_min = { 
   init: function() {
     this.appendValueInput('minimum')
-    .setCheck('Array')
-      .appendField(new Blockly.FieldLabelSerializable('Indice of minimum of'), "IND_MINIMUM");
+        .setCheck('Array')
+        .appendField(new Blockly.FieldLabelSerializable('Indice of minimum of'), "IND_MINIMUM");
     this.setOutput(true, 'Number');
-    this.setTooltip('Returns the indice minimum of an array of numbers');
+    this.setTooltip('Returns the indice of the minimum of an array of numbers');
     this.setColour(150);
+    this.setHelpUrl('https://numpy.org/doc/2.1/reference/generated/numpy.argmin.html');
   }
 };
 Blockly.common.defineBlocks({ind_min: ind_min});
@@ -1292,10 +1293,11 @@ pythonGenerator.forBlock["ind_min"] = function(block, generator) {
 const ind_max = { 
   init: function() {
     this.appendValueInput('maximum')
-    .setCheck('Array')
-      .appendField(new Blockly.FieldLabelSerializable('Indice of maximum of'), 'IND_MAXIMUM');
+        .setCheck('Array')
+        .appendField(new Blockly.FieldLabelSerializable('Indice of maximum of'), 'IND_MAXIMUM');
     this.setOutput(true, 'Number');
-    this.setTooltip('Returns the indice maximum of an array of numbers');
+    this.setTooltip('Returns the indice of the maximum of an array of numbers');
+    this.setHelpUrl('https://numpy.org/doc/stable/reference/generated/numpy.argmax.html');
     this.setColour(150);
   }
 };
@@ -1312,10 +1314,11 @@ pythonGenerator.forBlock["ind_max"] = function(block, generator) {
 const ind_sort = { 
   init: function() {
     this.appendValueInput('sort')
-    .setCheck('Array')
-      .appendField(new Blockly.FieldLabelSerializable('Sorted array indices of'), 'IND_SORT');
+        .setCheck('Array')
+        .appendField(new Blockly.FieldLabelSerializable('Sorted array of indices of'), 'IND_SORT');
     this.setOutput(true, 'Array');
-    this.setTooltip('Returns the Sorted array indices of an array of numbers');
+    this.setTooltip('Returns an array of indices of an array of numbers according to their values');
+    this.setHelpUrl('https://numpy.org/doc/stable/reference/generated/numpy.argsort.html');
     this.setColour(150);
   }
 };
@@ -1332,10 +1335,11 @@ pythonGenerator.forBlock["ind_sort"] = function(block, generator) {
 const ind_find = { 
   init: function() {
     this.appendValueInput('find')
-    .setCheck('Boolean')
-      .appendField(new Blockly.FieldLabelSerializable('Found indices where'), 'IND_FIND');
+        .setCheck('Boolean')
+        .appendField(new Blockly.FieldLabelSerializable('Find indices'), 'IND_FIND');
     this.setOutput(true, 'Array');
-    this.setTooltip('Returns the found indices of an array of numbers');
+    this.setTooltip('Returns the found indices of an array of numbers, given a condition');
+    this.setHelpUrl('https://numpy.org/doc/stable/reference/generated/numpy.argwhere.html');
     this.setColour(150);
   }
 };
@@ -1344,4 +1348,32 @@ pythonGenerator.forBlock["ind_find"] = function(block, generator) {
   const ind_find =
     generator.valueToCode(block, "find", pythonGenerator.ORDER_NONE) || "0";
   return [`np.argwhere(${ind_find})`, pythonGenerator.ORDER_COLLECTION];
+};
+
+const create_point = { 
+  init: function() {
+    this.appendDummyInput('point')
+        .appendField('Create point with coordinates')
+        .appendField(new Blockly.FieldNumber('1'), 'XCoord')
+        .appendField(',')
+        .appendField(new Blockly.FieldNumber('1'), 'YCoord');
+    this.appendDummyInput()
+        .appendField('Show point?')
+        .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW')
+    this.setNextStatement(true);
+    this.setPreviousStatement(true);
+    this.setTooltip('Returns a Point() object with given coordinates');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({create_point: create_point});
+pythonGenerator.forBlock["create_point"] = function(block, generator) {
+  const X_Coord = block.getFieldValue('XCoord');
+  const Y_Coord = block.getFieldValue('YCoord');
+  let show = block.getFieldValue('SHOW');
+  show = (show.toLowerCase() === 'true') ? '\npoint\n' : '\n'
+  return '' + 
+  'from shapely.geometry import Point\n' +
+  `point = Point(${X_Coord}, ${Y_Coord})` + 
+  `${show}`;
 };
