@@ -179,6 +179,7 @@ const BlocklyComponent = ({ setCode }) => {
           </category>
         </xml>
       `,
+      renderer: 'zelos'
     });
 
     return () => {
