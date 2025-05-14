@@ -1608,20 +1608,6 @@ pythonGenerator.forBlock['distance_calc'] = function(block, generator) {
   const coord2 = generator.valueToCode(block, 'point2', pythonGenerator.ORDER_ATOMIC);
   return [`Point${coord1}.distance(Point${coord2})`, pythonGenerator.ORDER_ATOMIC];
 }
-// from shapely.geometry import Point
-// point_1 = Point(0, 0)
-// point_2 = Point(0, 1)
-// point_1.union(point_2)
-// point_1.union(point_2)
-// # Calculate and print the distance between the two points
-// distance_points = point_1.distance(point_2)
-// print(f"Distance between {point_1} and {point_2}: {distance_points}", "\n")
-// # Create buffers (circles) around the two points with a radius of 0.5 units
-// circle_1 = point_1.buffer(0.5)
-// circle_2 = point_2.buffer(0.25)
-// distance_circle_to_point = circle_1.distance(point_2)
-// print(f"Distance from the edge of circle_1 to point_2: {distance_circle_to_point}", "\n")
-// circle_1.union(point_2)
 
 //**Multipolygon */
 const multipolygon = {
