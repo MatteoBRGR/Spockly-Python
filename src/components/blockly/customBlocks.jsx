@@ -1263,3 +1263,85 @@ pythonGenerator.forBlock['arange'] = function(block, generator) {
   const step = generator.valueToCode(block, 'step', pythonGenerator.ORDER_ATOMIC);
   return [`np.arange(${start}, ${stop}, ${step})`, pythonGenerator.ORDER_ATOMIC];
 };
+
+//**indices in array */
+
+/** 
+ * Minimum indices of array of numbers
+ */
+const ind_min = { 
+  init: function() {
+    this.appendValueInput('minimum')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('Indice of minimum of'), "IND_MINIMUM");
+    this.setOutput(true, 'Number');
+    this.setTooltip('Returns the indice minimum of an array of numbers');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({ind_min: ind_min});
+pythonGenerator.forBlock["ind_min"] = function(block, generator) {
+  const ind_mini =
+    generator.valueToCode(block, "minimum", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.argmin(${ind_mini})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** 
+ * Maximum indices of array of numbers
+ */
+const ind_max = { 
+  init: function() {
+    this.appendValueInput('maximum')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('Indice of maximum of'), 'IND_MAXIMUM');
+    this.setOutput(true, 'Number');
+    this.setTooltip('Returns the indice maximum of an array of numbers');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({ind_max: ind_max});
+pythonGenerator.forBlock["ind_max"] = function(block, generator) {
+  const ind_maxi =
+    generator.valueToCode(block, "maximum", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.argmax(${ind_maxi})`, pythonGenerator.ORDER_ATOMIC];
+};
+
+/** 
+ * Sorting indices of array of numbers
+ */
+const ind_sort = { 
+  init: function() {
+    this.appendValueInput('sort')
+    .setCheck('Array')
+      .appendField(new Blockly.FieldLabelSerializable('Sorted array indices of'), 'IND_SORT');
+    this.setOutput(true, 'Array');
+    this.setTooltip('Returns the Sorted array indices of an array of numbers');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({ind_sort: ind_sort});
+pythonGenerator.forBlock["ind_sort"] = function(block, generator) {
+  const ind_sort =
+    generator.valueToCode(block, "sort", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.argsort(${ind_sort})`, pythonGenerator.ORDER_COLLECTION];
+};
+
+/** 
+ * Finding the indice of array of numbers
+ */
+const ind_find = { 
+  init: function() {
+    this.appendValueInput('find')
+    .setCheck('Boolean')
+      .appendField(new Blockly.FieldLabelSerializable('Found indices where'), 'IND_FIND');
+    this.setOutput(true, 'Array');
+    this.setTooltip('Returns the found indices of an array of numbers');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({ind_find: ind_find});
+pythonGenerator.forBlock["ind_find"] = function(block, generator) {
+  const ind_find =
+    generator.valueToCode(block, "find", pythonGenerator.ORDER_NONE) || "0";
+  return [`np.argwhere(${ind_find})`, pythonGenerator.ORDER_COLLECTION];
+};
