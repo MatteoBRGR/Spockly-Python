@@ -124,6 +124,9 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="sum"></block>
           </category>
           <category name="Variables" custom="VARIABLE" colour="#a55b80"></category>
+          <category name="Geometry" colour="#a55b80">
+            <block type="buffer"></block>
+          </category>
           <category name="Imports" colour="#888">
             <block type="import0"></block>
             <block type="import1"></block>
