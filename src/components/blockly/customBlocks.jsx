@@ -1375,7 +1375,7 @@ const buffer = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setTooltip('Create a buffer with its center and its radius');
-    this.setColour(60);
+    this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({buffer: buffer});
@@ -1562,7 +1562,7 @@ const polygon_area = {
     this.setOutput(true, 'Number');
     this.setTooltip('Compute the polygon area');
     this.setHelpUrl('');
-    this.setColour(60);
+    this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({polygon_area: polygon_area});
@@ -1581,7 +1581,7 @@ const polygon_perimeter = {
     this.setOutput(true, 'Number');
     this.setTooltip('Compute the polygon perimeter');
     this.setHelpUrl('');
-    this.setColour(60);
+    this.setColour(150);
   }
 };
 Blockly.common.defineBlocks({polygon_perimeter: polygon_perimeter});
@@ -1622,4 +1622,154 @@ pythonGenerator.forBlock['multipolygon'] = function(block, generator) {
   return `from shapely.geometry import Polygon, MultiPolygon\n`+
           `${text_variable} = MultiPolygon([${value_polygon1}, ${value_polygon2}])\n`+
           `${show_polygon}`;
-}            
+}
+
+//**Bounding box */
+const bounding_box = {
+  init: function() {
+    this.appendDummyInput('')
+        .appendField(new Blockly.FieldLabelSerializable('Bounding box'), 'BOX')
+    this.appendDummyInput('x')
+        .appendField(new Blockly.FieldNumber(0), 'min_x')
+        .appendField(',')
+        .appendField(new Blockly.FieldNumber(0), 'max_x');
+    this.appendDummyInput('y')
+        .appendField(new Blockly.FieldNumber(0), 'min_y')
+        .appendField(',')
+        .appendField(new Blockly.FieldNumber(0), 'max_y');
+    this.appendDummyInput()
+        .appendField('Show box?')
+        .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
+    this.appendDummyInput()
+        .appendField('Box variable name')
+        .appendField(new Blockly.FieldTextInput('bbox'), 'name');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('Create a bounding box');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({bounding_box: bounding_box});
+pythonGenerator.forBlock['bounding_box'] = function(block, generator) {
+  const min_x = block.getFieldValue('min_x') || '0';
+  const min_y = block.getFieldValue('min_y') || '0';
+  const max_x = block.getFieldValue('max_x') || '0';
+  const max_y = block.getFieldValue('max_y') || '0';
+  const varName = block.getFieldValue('name') || '0';
+  let show_box = block.getFieldValue('SHOW');
+  show_box = (show_box.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
+  return `from shapely.geometry import box\n`+
+  `point_from_buffer = Point(${number_x}, ${number_y})\n`+
+  `${varName} = box(minx=${min_x}, miny=${min_y}, maxx=${max_x}, maxy=${max_y}))`+
+  `${show_box}`
+}
+
+//**Polygon block */
+const polygon = {
+  init: function() {
+    this.itemCount_ = 0
+    this.appendDummyInput()
+        .appendField('Create a polygon');
+    this.appendDummyInput()
+        .appendField('Show polygon?')
+        .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
+    this.appendDummyInput()
+        .appendField('Polygon variable name')
+        .appendField(new Blockly.FieldTextInput('polygon'), 'name');
+    this.appendValueInput('element_0')
+        .appendField('Coordinates')
+        .setCheck('Coords');
+    this.setInputsInline(false);
+    const appendFieldPlusIcon = new Blockly.FieldImage(
+      // eslint-disable-next-line quotes
+      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-plus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 5l0 14' /%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E",
+      16,
+      16,
+      'Add',
+      function (block) {
+        block.sourceBlock_.appendArrayElementInput()
+      }
+    )
+    this.appendDummyInput('close')
+        .appendField(appendFieldPlusIcon);
+    this.setColour(150);
+    this.setOutput(true, 'Polygon');
+    this.setTooltip('Creates a polygon with given coordinates');
+  },
+
+  saveExtraState: function() {
+    return {
+      itemCount: this.itemCount_,
+    }
+  },
+
+  loadExtraState: function(state) {
+    this.itemCount_ = state['itemCount']
+    this.updateShape()
+  },
+
+  appendArrayElementInput: function() {
+    Blockly.Events.setGroup(true)
+    const oldExtraState = getExtraBlockState(this)
+    this.itemCount_ += 1
+    const newExtraState = getExtraBlockState(this)
+    Blockly.Events.fire(new Blockly.Events.BlockChange(this, 'mutation', null, oldExtraState, newExtraState))
+    Blockly.Events.setGroup(false)
+    this.updateShape()
+  },
+
+  deleteArrayElementInput: function(inputToDelete) {
+    const oldExtraState = getExtraBlockState(this)
+    Blockly.Events.setGroup(true)
+    var inputNameToDelete = inputToDelete.name
+    var inputIndexToDelete = Number(inputNameToDelete.match(/\d+/)[0])
+    var substructure = this.getInputTargetBlock(inputNameToDelete)
+    if (substructure) substructure.dispose(true, true)
+    this.removeInput(inputNameToDelete)
+    this.itemCount_ -= 1
+    for (var i = inputIndexToDelete + 1; i <= this.itemCount_; i++) {
+      var input = this.getInput('element_' + i)
+      input.name = 'element_' + (i - 1)
+    }
+
+    const newExtraState = getExtraBlockState(this)
+    Blockly.Events.fire(new Blockly.Events.BlockChange(this, 'mutation', null, oldExtraState, newExtraState))
+    Blockly.Events.setGroup(false)
+  },
+
+  updateShape: function() {
+    for (let i = 1; i < this.itemCount_; i++) {
+      if (!this.getInput('element_' + i)) {
+        const appended_input = this.appendValueInput('element_' + i).setCheck('Coords');
+
+        var deleteArrayElementIcon = new Blockly.FieldImage(
+          // eslint-disable-next-line quotes
+          `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-minus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E`,
+          16,
+          16,
+          'Remove',
+          function (block) {
+            block.sourceBlock_.deleteArrayElementInput(appended_input)
+          }
+        )
+        appended_input.appendField(deleteArrayElementIcon, 'delete_' + i)
+
+        this.moveInputBefore('element_' + i, 'close')
+      }
+    }
+  },
+}
+Blockly.common.defineBlocks({polygon: polygon});
+pythonGenerator.forBlock['polygon'] = function(block, generator) {
+  const elements = [];
+  const varName = block.getFieldValue('name') || '0';
+  let show3 = block.getFieldValue('SHOW');
+  show3 = (show3.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
+  for (let i = 0; i < block.itemCount_; i++) {
+    elements.push(generator.valueToCode(block, 'element_' + i, pythonGenerator.ORDER_NONE) || 'None');
+  }
+  return '' +
+  'from shapely.geometry import Polygon\n' +
+  `${varName} = Polygon([${elements.join(', ')}])` +
+  `${show3}`;
+};
