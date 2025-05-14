@@ -142,6 +142,8 @@ const BlocklyComponent = ({ setCode }) => {
           <category name="Geometry" colour="#763728">
             <block type="create_point"></block>
             <block type="buffer"></block>
+            <block type="line_segment"></block>
+            <block type="coords"></block>
           </category>
           <category name="Other" colour="#5C81A6">
             <block type="controls_if"></block>

@@ -896,7 +896,7 @@ const import0 = {
     this.setTooltip('Import module to code');
     this.setColour('#888');
     this.setPreviousStatement(true);
-    this.setNextStatement(true, null);
+    this.setNextStatement(true);
   }
 };
 Blockly.common.defineBlocks({import0: import0});
@@ -1099,6 +1099,8 @@ Blockly.Blocks['plot'] = {
         .appendField('Grid?')
         .appendField(new Blockly.FieldCheckbox('FALSE'), 'Grid');
     this.setInputsInline(false);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
     this.setTooltip('Plot a line with X and Y data');
     this.setHelpUrl('https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot');
     this.setColour(325);
@@ -1108,10 +1110,10 @@ pythonGenerator.forBlock['plot'] = function(block, generator) {
   const dataX = generator.valueToCode(block, 'valX', pythonGenerator.ORDER_NONE) || "0";
   const dataY = generator.valueToCode(block, 'valY', pythonGenerator.ORDER_NONE) || "0";
   const format = block.getFieldValue('FMT');
-  const title = block.getFieldValue('TTL');
+  const title = generator.valueToCode(block, 'title', pythonGenerator.ORDER_NONE) || "0";
   const size = [block.getFieldValue('XVAL'), block.getFieldValue('YVAL')];
   const labels = [generator.valueToCode(block, 'XLabel', pythonGenerator.ORDER_NONE) || "0", generator.valueToCode(block, 'YLabel', pythonGenerator.ORDER_NONE) || "0"];
-  const legend = generator.valueToCode(block, 'LEG', pythonGenerator.ORDER_NONE) || "0";
+  const legend = generator.valueToCode(block, 'Legend', pythonGenerator.ORDER_NONE) || "0";
   let grid = block.getFieldValue('Grid').toLowerCase();
   grid = grid[0].toUpperCase() + grid.slice(1);
   return '' +
@@ -1136,6 +1138,9 @@ Blockly.Blocks['scatter'] = {
         .appendField('X-value');
     this.appendValueInput('valY')
         .appendField('Y-value');
+    this.appendDummyInput()
+        .appendField('Colour')
+        .appendField(new Blockly.FieldTextInput('red'), 'COL')
     this.appendValueInput('title')
         .appendField('Title');
     this.appendDummyInput('size')
@@ -1153,6 +1158,8 @@ Blockly.Blocks['scatter'] = {
     this.appendDummyInput('GRID')
         .appendField('Grid?')
         .appendField(new Blockly.FieldCheckbox('FALSE'), 'Grid');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
     this.setInputsInline(false);
     this.setHelpUrl('https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.scatter.html#matplotlib.axes.Axes.scatter');
     this.setTooltip('Plot a graph with X and Y data');
@@ -1162,17 +1169,18 @@ Blockly.Blocks['scatter'] = {
 pythonGenerator.forBlock['scatter'] = function(block, generator) {
   const dataX = generator.valueToCode(block, 'valX', pythonGenerator.ORDER_NONE) || "0";
   const dataY = generator.valueToCode(block, 'valY', pythonGenerator.ORDER_NONE) || "0";
-  const title = generator.valueToCode(block, 'TTL', pythonGenerator.ORDER_NONE) || "0";
+  const title = generator.valueToCode(block, 'title', pythonGenerator.ORDER_NONE) || "0";
+  const col = block.getFieldValue('COL');
   const size = [block.getFieldValue('XVAL'), block.getFieldValue('YVAL')];
   const labels = [generator.valueToCode(block, 'XLabel', pythonGenerator.ORDER_NONE) || "0", generator.valueToCode(block, 'YLabel', pythonGenerator.ORDER_NONE) || "0"];
-  const legend = generator.valueToCode(block, 'LEG', pythonGenerator.ORDER_NONE) || "0";
+  const legend = generator.valueToCode(block, 'Legend', pythonGenerator.ORDER_NONE) || "0";
   let grid = block.getFieldValue('Grid').toLowerCase();
   grid = grid[0].toUpperCase() + grid.slice(1);
   return '' +
   `x = ${dataX}\n` +
   `y = ${dataY}\n` +
   `plt.figure(figsize = (${size[0]}, ${size[1]}))\n` + 
-  `plt.scatter(x, y)\n` + 
+  `plt.scatter(x, y, color = '${col}')\n` + 
   `plt.title(${title})\n` +
   `plt.xlabel(${labels[0]})\n` + 
   `plt.ylabel(${labels[1]})\n` +
@@ -1353,11 +1361,8 @@ pythonGenerator.forBlock["ind_find"] = function(block, generator) {
 //**GEOMETRY BLOCKS*/
 const buffer = {
   init: function() {
-    this.appendDummyInput('center')
-        .appendField(new Blockly.FieldLabelSerializable('Buffer: centre'), 'CENTER')
-        .appendField(new Blockly.FieldNumber(0), 'x')
-        .appendField(',')
-        .appendField(new Blockly.FieldNumber(0), 'y');
+    this.appendValueInput('center')
+        .appendField(new Blockly.FieldLabelSerializable('Buffer: center coordinates'), 'CENTER');
     this.appendDummyInput('radius')
         .appendField(new Blockly.FieldLabelSerializable('Radius'), 'RADIUS')
         .appendField(new Blockly.FieldNumber(0), 'r');
@@ -1377,23 +1382,133 @@ Blockly.common.defineBlocks({buffer: buffer});
 pythonGenerator.forBlock['buffer'] = function(block, generator) {
   const number_x = block.getFieldValue('x') || '0';
   const number_y = block.getFieldValue('y') || '0';
+  const coordinates_circle = generator.valueToCode(block, 'center', pythonGenerator.ORDER_ATOMIC) || '0';
   const number_rad = block.getFieldValue('r') || '0';
   const varName = block.getFieldValue('name') || '0';
   let show0 = block.getFieldValue('SHOW');
   show0 = (show0.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
   return `from shapely.geometry import Point\n`+
-  `point_from_buffer = Point(${number_x}, ${number_y})\n`+
+  `point_from_buffer = Point${coordinates_circle}\n`+
   `${varName} = point.buffer(${number_rad})`+
   `${show0}`
 }
 
+
+const line_segment = {
+  init: function() {
+    this.itemCount_ = 0
+    this.appendDummyInput()
+        .appendField('Create line segment');
+    this.appendDummyInput()
+        .appendField('Show Line?')
+        .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
+    this.appendDummyInput()
+        .appendField('Line variable name')
+        .appendField(new Blockly.FieldTextInput('line'), 'name');
+    this.appendValueInput('element_0')
+        .appendField('Coordinates')
+        .setCheck('Coords');
+    this.setInputsInline(false);
+    const appendFieldPlusIcon = new Blockly.FieldImage(
+      // eslint-disable-next-line quotes
+      "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-plus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 5l0 14' /%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E",
+      16,
+      16,
+      'Add',
+      function (block) {
+        block.sourceBlock_.appendArrayElementInput()
+      }
+    )
+    this.appendDummyInput('close')
+        .appendField(appendFieldPlusIcon);
+    this.setColour(150);
+    this.setNextStatement(true);
+    this.setPreviousStatement(true);
+    this.setTooltip('Creates a line segment with given coordinates');
+  },
+
+  saveExtraState: function() {
+    return {
+      itemCount: this.itemCount_,
+    }
+  },
+
+  loadExtraState: function(state) {
+    this.itemCount_ = state['itemCount']
+    this.updateShape()
+  },
+
+  appendArrayElementInput: function() {
+    Blockly.Events.setGroup(true)
+    const oldExtraState = getExtraBlockState(this)
+    this.itemCount_ += 1
+    const newExtraState = getExtraBlockState(this)
+    Blockly.Events.fire(new Blockly.Events.BlockChange(this, 'mutation', null, oldExtraState, newExtraState))
+    Blockly.Events.setGroup(false)
+    this.updateShape()
+  },
+
+  deleteArrayElementInput: function(inputToDelete) {
+    const oldExtraState = getExtraBlockState(this)
+    Blockly.Events.setGroup(true)
+    var inputNameToDelete = inputToDelete.name
+    var inputIndexToDelete = Number(inputNameToDelete.match(/\d+/)[0])
+    var substructure = this.getInputTargetBlock(inputNameToDelete)
+    if (substructure) substructure.dispose(true, true)
+    this.removeInput(inputNameToDelete)
+    this.itemCount_ -= 1
+    for (var i = inputIndexToDelete + 1; i <= this.itemCount_; i++) {
+      var input = this.getInput('element_' + i)
+      input.name = 'element_' + (i - 1)
+    }
+
+    const newExtraState = getExtraBlockState(this)
+    Blockly.Events.fire(new Blockly.Events.BlockChange(this, 'mutation', null, oldExtraState, newExtraState))
+    Blockly.Events.setGroup(false)
+  },
+
+  updateShape: function() {
+    for (let i = 1; i < this.itemCount_; i++) {
+      if (!this.getInput('element_' + i)) {
+        const appended_input = this.appendValueInput('element_' + i).setCheck('Coords');
+
+        var deleteArrayElementIcon = new Blockly.FieldImage(
+          // eslint-disable-next-line quotes
+          `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-minus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E`,
+          16,
+          16,
+          'Remove',
+          function (block) {
+            block.sourceBlock_.deleteArrayElementInput(appended_input)
+          }
+        )
+        appended_input.appendField(deleteArrayElementIcon, 'delete_' + i)
+
+        this.moveInputBefore('element_' + i, 'close')
+      }
+    }
+  },
+}
+Blockly.common.defineBlocks({line_segment: line_segment});
+pythonGenerator.forBlock['line_segment'] = function(block, generator) {
+  const elements = [];
+  const varName = block.getFieldValue('name') || '0';
+  let show2 = block.getFieldValue('SHOW');
+  show2 = (show2.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
+  for (let i = 0; i < block.itemCount_; i++) {
+    elements.push(generator.valueToCode(block, 'element_' + i, pythonGenerator.ORDER_NONE) || 'None');
+  }
+  return '' +
+  'from shapely.geometry import LineString\n' +
+  `${varName} = LineString([${elements.join(', ')}])` +
+  `${show2}`;
+};
+
 const create_point = { 
   init: function() {
-    this.appendDummyInput('point')
-        .appendField('Create point with coordinates')
-        .appendField(new Blockly.FieldNumber('1'), 'XCoord')
-        .appendField(',')
-        .appendField(new Blockly.FieldNumber('1'), 'YCoord');
+    this.appendValueInput('point')
+        .setCheck('Coords')
+        .appendField('Create point with coordinates');
     this.appendDummyInput()
         .appendField('Show point?')
         .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
@@ -1408,13 +1523,32 @@ const create_point = {
 };
 Blockly.common.defineBlocks({create_point: create_point});
 pythonGenerator.forBlock["create_point"] = function(block, generator) {
-  const X_Coord = block.getFieldValue('XCoord') || '0';
-  const Y_Coord = block.getFieldValue('YCoord') || '0';
+  const coordinates = generator.valueToCode(block, 'point', pythonGenerator.ORDER_ATOMIC) || '0';
   const varName = block.getFieldValue('name') || '0';
   let show1 = block.getFieldValue('SHOW');
   show1 = (show1.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
   return '' + 
   'from shapely.geometry import Point\n' +
-  `${varName} = Point(${X_Coord}, ${Y_Coord})` + 
+  `${varName} = Point${coordinates}` + 
   `${show1}`;
+};
+
+const coords = { 
+  init: function() {
+    this.appendDummyInput()
+        .appendField('(')
+        .appendField(new Blockly.FieldNumber('0'), 'XCoord')
+        .appendField(',')
+        .appendField(new Blockly.FieldNumber('0'), 'YCoord')
+        .appendField(')');
+    this.setOutput(true, ['Coords']);
+    this.setTooltip('Returns a pair of coordinates');
+    this.setColour(150);
+  }
+};
+Blockly.common.defineBlocks({coords: coords});
+pythonGenerator.forBlock["coords"] = function(block, generator) {
+  const X_Coord = block.getFieldValue('XCoord') || '0';
+  const Y_Coord = block.getFieldValue('YCoord') || '0';
+  return [`(${X_Coord}, ${Y_Coord})`, pythonGenerator.ORDER_ATOMIC]
 };
