@@ -63,9 +63,14 @@ const Pyodide = ({ code }) => {
                 <div>Loading Pyodide...</div>
             ) : (
                 <pre style={{
-                    margin: 0,
-                    whiteSpace: 'pre-wrap',
-                    wordWrap: 'break-word'
+                    backgroundColor: "#f4f4f4",
+                    padding: "10px",
+                    borderRadius: "5px",
+                    textAlign: "left",
+                    whiteSpace: "pre-wrap",
+                    wordWrap: "break-word",
+                    border: "1px solid #ddd",
+                    minHeight: "50px",
                 }}>
                     {output || 'No output'}
                 </pre>
