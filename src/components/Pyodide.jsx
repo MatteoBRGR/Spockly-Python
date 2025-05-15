@@ -1,42 +1,65 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 const Pyodide = ({ code }) => {
     const [output, setOutput] = useState("");
     const [pyodide, setPyodide] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const printProxyRef = useRef(null); 
 
     useEffect(() => {
         const loadPyodideAndPackages = async () => {
             try {
-                const pyodideInstance = await window.loadPyodide({
+                if (!window.loadPyodide) {
+                    throw new Error("Pyodide script not loaded.");
+                }
+                let pyodideInstance = await window.loadPyodide({
                     indexURL: "https://cdn.jsdelivr.net/pyodide/v0.27.5/full/"
                 });
-                
-                // Redirect Python stdout to capture print statements
-                pyodideInstance.globals.set("print", (s) => {
-                    setOutput(prev => prev + s + "\n");
-                });
-                
+                const print_proxy = (s) => {
+                    console.info('%cOutput:\n', 'font-size:1em; color: violet', s);
+                    if (typeof s === "function") {
+                        s = s.toString();
+                        setOutput(prev => prev + "[Warning] Printing functions/lambdas is not supported in this Pyodide version." +
+                                                 "\nHowever, this is the stringified version of the given function:\n\n" + s);
+                    } else if (typeof s === "list" || typeof s === "object") {
+                        s = s.toString();
+                        setOutput(prev => prev + s + "\n");
+                    } else {
+                        setOutput(prev => prev + s + "\n");
+                    }
+                };
+                printProxyRef.current = pyodideInstance.toPy(print_proxy);
+                pyodideInstance.globals.set("print", printProxyRef.current);
                 setPyodide(pyodideInstance);
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error loading Pyodide:", error);
-                setOutput("Error loading Pyodide");
+                setOutput("Error loading Pyodide: " + error.toString());
                 setIsLoading(false);
             }
         };
         loadPyodideAndPackages();
+        return () => {
+            if (pyodide && pyodide.globals && pyodide.globals.get("print")) {
+                try {
+                    pyodide.globals.get("print").destroy();
+                } catch (e) {
+                    console.error(e)
+                }
+            }
+            printProxyRef.current = null;
+        };
     }, []);
-
     useEffect(() => {
         const runCode = async () => {
             if (pyodide && code) {
-              code = "import pandas as pd\n" + "import numpy as np\n" + "import geopandas as gpd\n" + "import matplotlib.pyplot as plt\n" + "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n" + code;
-              console.log(code);
+                // code = "import pandas as pd\n" + "import numpy as np\n" + "import geopandas as gpd\n" + "import matplotlib.pyplot as plt\n" + "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n" + code;
+                console.log("%cThis code is going to be compiled:\n", "font-size: 2em; color: violet", "\n" + code);
                 await pyodide.loadPackage("pandas");
                 await pyodide.loadPackage("geopandas");
                 await pyodide.loadPackage("matplotlib");
                 await pyodide.loadPackage("requests");
+                pyodide.setDebug(true);
                 setOutput("");
                 try {
                     const result = await pyodide.runPython(code);
@@ -52,13 +75,28 @@ const Pyodide = ({ code }) => {
         runCode();
     }, [pyodide, code]);
 
+    useEffect(() => {
+        const findWarn = () => {
+            const cslWarn = console.warn;
+            console.warn = function(message) {
+                onWarn(message);
+            };
+
+            function onWarn(message){
+                cslWarn(message);
+                if (message == 'Matplotlib is building the font cache; this may take a moment.') {
+                    document.getElementById('toast').style.color = '#089d08';
+                    document.querySelector('#toast p').innerHTML = 'Libraries loaded!';
+                    document.getElementById('toast').style.animation = 'slideOut 5s ease-in-out';
+                    setTimeout(() => document.getElementById('toast').style.display = 'none', 5100);
+                }
+            }
+        };
+        findWarn();
+    })
+
     return (
-        <div style={{ 
-            padding: '1rem',
-            backgroundColor: '#f5f5f5',
-            borderRadius: '4px',
-            minHeight: '100px'
-        }}>
+        <div>
             {isLoading ? (
                 <div>Loading Pyodide...</div>
             ) : (
@@ -72,7 +110,7 @@ const Pyodide = ({ code }) => {
                     border: "1px solid #ddd",
                     minHeight: "50px",
                 }}>
-                    {output || 'No output'}
+                    { output || 'No output' }
                 </pre>
             )}
         </div>

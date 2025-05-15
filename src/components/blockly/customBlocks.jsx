@@ -59,7 +59,7 @@ pythonGenerator.forBlock["length_of_str"] = function(block, generator) {
 };
 
 /**Block modulo**/
-const modulo = {
+Blockly.Blocks['modulo'] = {
   init: function() {
     this.appendValueInput('NAME')
     .setAlign(Blockly.inputs.Align.RIGHT)
@@ -71,7 +71,6 @@ const modulo = {
     this.setColour(230);
   }
 };
-Blockly.common.defineBlocks({modulo: modulo});
 pythonGenerator.forBlock['modulo'] = function(block) {
   const number_a = block.getFieldValue('a');
   const number_b = block.getFieldValue('b');
@@ -81,7 +80,7 @@ pythonGenerator.forBlock['modulo'] = function(block) {
 /**
  * Operators block
  */
-const operators = {
+Blockly.Blocks['operators'] = {
   init: function() {
     this.appendValueInput('VALUE')
     .setAlign(Blockly.inputs.Align.RIGHT)
@@ -100,7 +99,6 @@ const operators = {
     this.setColour(0);
   }
 };
-Blockly.common.defineBlocks({operators: operators});
 pythonGenerator.forBlock['operators'] = function(block,generator) {
   
   const dropdown_name = block.getFieldValue('NAME');
@@ -275,7 +273,7 @@ pythonGenerator.forBlock["round"] = function (block, generator) {
 };
 
 //** boolean blocks*/
-const bool1 = {
+Blockly.Blocks['bool1'] = {
   init: function() {
     this.appendDummyInput('')
       .appendField('True');
@@ -285,12 +283,11 @@ const bool1 = {
     this.setColour(230);
   }
 };
-Blockly.common.defineBlocks({bool1: bool1});
 pythonGenerator.forBlock['bool1'] = function() {
   return ['True', pythonGenerator.ORDER_ATOMIC];
 }
 
-const bool2 = {
+Blockly.Blocks['bool2'] = {
   init: function() {
     this.appendDummyInput('')
       .appendField('False');
@@ -300,7 +297,6 @@ const bool2 = {
     this.setColour(230);
   }
 };
-Blockly.common.defineBlocks({bool2: bool2});
 pythonGenerator.forBlock['bool2'] = function() {
   return ['False', pythonGenerator.ORDER_ATOMIC];
 }
@@ -404,7 +400,7 @@ quad_err /= ${msq}.shape[0])\n`, pythonGenerator.ORDER_ATOMIC];
 /** 
  * Maximum of array of numbers
  */
-const max = {
+Blockly.Blocks['max'] = {
   init: function() {
     this.appendValueInput('maximum')
         .setCheck('Array')
@@ -415,7 +411,6 @@ const max = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({max: max});
 pythonGenerator.forBlock["max"] = function(block, generator) {
   const maxi =
     generator.valueToCode(block, "maximum", pythonGenerator.ORDER_NONE) || "0";
@@ -425,7 +420,7 @@ pythonGenerator.forBlock["max"] = function(block, generator) {
 /** 
  * Minimum of array of numbers
  */
-const min = { 
+Blockly.Blocks['min'] = { 
   init: function() {
     this.appendValueInput('minimum')
     .setCheck('Array')
@@ -435,7 +430,6 @@ const min = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({min: min});
 pythonGenerator.forBlock["min"] = function(block, generator) {
   const mini =
     generator.valueToCode(block, "minimum", pythonGenerator.ORDER_NONE) || "0";
@@ -516,7 +510,7 @@ pythonGenerator.forBlock['list_access'] = function(block, generator) {
 
 Blockly.Blocks['list_create'] = {
   init: function() {
-    this.itemCount_ = 0
+    this.itemCount_ = 1;
     this.appendValueInput('element_0')
     .appendField('create list');
     this.setInputsInline(false);
@@ -621,7 +615,7 @@ function getExtraBlockState(block) {
  */
 
 //**Shape of data */
-const data_shape = {
+Blockly.Blocks['data_shape'] = {
   init: function() {
     this.appendValueInput('data')
     .setCheck('Array')
@@ -632,14 +626,13 @@ const data_shape = {
     this.setColour(200);
   }
 };
-Blockly.common.defineBlocks({data_shape: data_shape});
 pythonGenerator.forBlock['data_shape'] = function(block,generator) {
   const data = generator.valueToCode(block, 'data', pythonGenerator.ORDER_ATOMIC);
   return [`np.shape(${data})`, pythonGenerator.ORDER_COLLECTION];
 }
 
 //**stacking data */
-const stacking = {
+Blockly.Blocks['stacking'] = {
   init: function() {
     this.appendValueInput('db1')
     .setCheck('Array')
@@ -656,7 +649,6 @@ const stacking = {
     this.setColour(200);
   }
 };
-Blockly.common.defineBlocks({stacking: stacking});
 pythonGenerator.forBlock['stacking'] = function(block, generator) {
   const dropdown_type = block.getFieldValue('type');
   const db1 = generator.valueToCode(block, 'db1', pythonGenerator.ORDER_COLLECTION);
@@ -670,7 +662,7 @@ pythonGenerator.forBlock['stacking'] = function(block, generator) {
 }
 
 //** create an array*/
-const create_array = {
+Blockly.Blocks['create_array'] = {
   init: function() {
     this.appendValueInput('array')
     .setCheck(['Number', 'Boolean', 'String', 'List', 'Matrix'])
@@ -680,14 +672,13 @@ const create_array = {
     this.setColour(200);
   }
 };
-Blockly.common.defineBlocks({create_array: create_array});
 pythonGenerator.forBlock['create_array'] = function(block,generator) {
   const array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_ATOMIC);
   return [`np.array(${array})`, pythonGenerator.ORDER_COLLECTION];
 }             
 
 //**Delete in an array */
-const delete_object = {
+Blockly.Blocks['delete_object'] = {
   init: function() {
     this.appendValueInput('object')
     .setCheck(['Array', 'Number'])
@@ -702,7 +693,6 @@ const delete_object = {
     this.setColour(195);
   }
 };
-Blockly.common.defineBlocks({delete_object: delete_object});
 pythonGenerator.forBlock['delete_object'] = function(block,generator) {
   const value_object = generator.valueToCode(block, 'object', pythonGenerator.ORDER_ATOMIC);
   const value_array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_COLLECTION);
@@ -710,7 +700,7 @@ pythonGenerator.forBlock['delete_object'] = function(block,generator) {
 }
 
 //**Add in an array */
-const add_object = {
+Blockly.Blocks['add_object'] = {
   init: function() {
     this.appendValueInput('object')
     .setCheck(['Array', 'Number'])
@@ -725,7 +715,6 @@ const add_object = {
     this.setColour(200);
   }
 };
-Blockly.common.defineBlocks({add_object: add_object});
 pythonGenerator.forBlock['add_object'] = function(block,generator) {
   const value_object = generator.valueToCode(block, 'object', pythonGenerator.ORDER_ATOMIC);
   const value_array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_COLLECTION);
@@ -735,7 +724,7 @@ pythonGenerator.forBlock['add_object'] = function(block,generator) {
 /**
  * Nunmpy: filter list
  */
-const list_filter = {
+Blockly.Blocks['list_filter'] = {
   init: function() {
     this.appendValueInput('CNAME')
       .appendField('array to filter')
@@ -753,7 +742,6 @@ const list_filter = {
     this.setColour(315);
   }
 };
-Blockly.common.defineBlocks({list_filter: list_filter});
 pythonGenerator.forBlock['list_filter'] = function(block, generator) {
   const text_cname = block.getFieldValue('CNAME');
   const text_dname = block.getFieldValue('DNAME');
@@ -766,7 +754,7 @@ pythonGenerator.forBlock['list_filter'] = function(block, generator) {
 /**
  * Value to boolean
  */
-const to_bool = {
+Blockly.Blocks['to_bool'] = {
   init: function() {
     this.appendValueInput('NAME')
       .appendField('convert to boolean');
@@ -777,7 +765,6 @@ const to_bool = {
     this.setColour(95);
   }
 };
-Blockly.common.defineBlocks({to_bool: to_bool});
 pythonGenerator.forBlock['to_bool'] = function(block, generator) {
   const value_name = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_ATOMIC);
   return [`bool(${value_name})`, pythonGenerator.ORDER_ATOMIC];
@@ -787,7 +774,7 @@ pythonGenerator.forBlock['to_bool'] = function(block, generator) {
  * Line-break
  */
 
-const lineBreak = {
+Blockly.Blocks['line_break'] = {
   init: function() {
     this.appendDummyInput('')
         .appendField('Line-break');
@@ -797,7 +784,6 @@ const lineBreak = {
     this.setColour('#888');
   }
 };
-Blockly.common.defineBlocks({line_break: lineBreak});
 pythonGenerator.forBlock['line_break'] = function() {
   return '\n'
 }
@@ -806,7 +792,7 @@ pythonGenerator.forBlock['line_break'] = function() {
  * Sort a list
  */
 
-const sort = {
+Blockly.Blocks['sort'] = {
   init: function() {
     this.appendValueInput('CNAME')
       .appendField('list to sort');
@@ -817,7 +803,6 @@ const sort = {
     this.setColour(95);
   }
 };
-Blockly.common.defineBlocks({sort: sort});
 pythonGenerator.forBlock['sort'] = function(block, generator) {
   const value_name = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
   return [`np.sort(np.array(${value_name}))`, pythonGenerator.ORDER_ATOMIC];
@@ -827,7 +812,7 @@ pythonGenerator.forBlock['sort'] = function(block, generator) {
  * Input block
  */
 
-const input = {
+Blockly.Blocks['input'] = {
   init: function() {
     this.appendDummyInput('CNAME')
         .appendField('input')
@@ -840,14 +825,13 @@ const input = {
     this.setColour(95);
   }
 };
-Blockly.common.defineBlocks({input: input});
 pythonGenerator.forBlock['input'] = function(block, generator) {
   const question = block.getFieldValue('CSV') || '0';
-  return [`input('${question}')\n`, pythonGenerator.ORDER_ATOMIC];
+  return [`input('${question}')`, pythonGenerator.ORDER_ATOMIC];
 }
 
 /** Lambda func block */
-const lambda = {
+Blockly.Blocks['lambda'] = {
   init: function() {
     this.appendValueInput('EXPR')
         .appendField('lambda')
@@ -859,11 +843,11 @@ const lambda = {
     this.setOutput(true);
   }
 }
-Blockly.common.defineBlocks({lambda: lambda});
+
 pythonGenerator.forBlock['lambda'] = function(block, generator) {
   const VAR = block.getFieldValue('LAMBDA') || '0';
   const EXPR = generator.valueToCode(block, 'EXPR', pythonGenerator.ORDER_NONE)
-  return [`lambda ${VAR}: (${EXPR})\n`, pythonGenerator.ORDER_ATOMIC]; //ORDER_LAMBDA does a strange parentheses game, whereas ORDER_ATOMIC always works, although without parentheses.
+  return [`lambda ${VAR}: (${EXPR})`, pythonGenerator.ORDER_LAMBDA];
 }
 
 /**
@@ -888,7 +872,7 @@ pythonGenerator.forBlock['temp_var'] = function(block, generator) {
 };
 
 /** Import blocks */
-const import0 = {
+Blockly.Blocks['import0'] = {
   init: function() {
     this.appendDummyInput()
         .appendField('import')
@@ -899,13 +883,12 @@ const import0 = {
     this.setNextStatement(true);
   }
 };
-Blockly.common.defineBlocks({import0: import0});
 pythonGenerator.forBlock['import0'] = function(block, generator) {
   const module = block.getFieldValue('IMPORT') || '0';
   return `import ${module}\n`;
 }
 
-const import1 = {
+Blockly.Blocks['import1'] = {
   init: function() {
     this.appendDummyInput('CNAME')
         .appendField('import')
@@ -918,14 +901,13 @@ const import1 = {
     this.setNextStatement(true);
   }
 };
-Blockly.common.defineBlocks({import1: import1});
 pythonGenerator.forBlock['import1'] = function(block, generator) {
   const module = block.getFieldValue('IMPORT') || '0';
   const alias = block.getFieldValue('ALIAS') || '0';
   return `import ${module} as ${alias}\n`;
 }
 
-const import2 = {
+Blockly.Blocks['import2'] = {
   init: function() {
     this.appendDummyInput('CNAME')
         .appendField('from')
@@ -938,14 +920,13 @@ const import2 = {
     this.setNextStatement(true);
   }
 };
-Blockly.common.defineBlocks({import2: import2});
 pythonGenerator.forBlock['import2'] = function(block, generator) {
   const module = block.getFieldValue('IMPORT') || '0';
   const func = block.getFieldValue('FUNCTION') || '0';
   return `from ${module} import ${func}\n`;
 }
 
-const import3 = {
+Blockly.Blocks['import3'] = {
   init: function() {
     this.appendDummyInput('CNAME')
         .appendField('from')
@@ -960,13 +941,12 @@ const import3 = {
     this.setNextStatement(true);
   }
 };
-Blockly.common.defineBlocks({import3: import3});
 pythonGenerator.forBlock['import3'] = function(block, generator) {
   const module = block.getFieldValue('IMPORT') || '0';
   const func = block.getFieldValue('FUNCTION') || '0';
   const alias = block.getFieldValue('ALIAS') || '0';
   return `from ${module} import ${func} as ${alias}\n`;
-}
+};
 
 /*****************
  * DATA VIZ BLOCKS
@@ -993,7 +973,7 @@ pythonGenerator.forBlock['create_data_and_output'] = function() {
         '\tos.mkdir(output_folder)\n'
 };
 
-const def_download = {
+Blockly.Blocks['def_download'] = {
   init: function() {
     this.appendDummyInput()
         .appendField('Definition: download (from URL)');
@@ -1003,7 +983,6 @@ const def_download = {
     this.setColour('#888');
   }
 };
-Blockly.common.defineBlocks({def_download: def_download});
 pythonGenerator.forBlock['def_download'] = function() {
   return '' +
   'import requests\n' +
@@ -1190,7 +1169,7 @@ pythonGenerator.forBlock['scatter'] = function(block, generator) {
 }
 
 //**reshape an array */
-const reshape = {
+Blockly.Blocks['reshape'] = {
   init: function() {
     this.appendValueInput('NAME')
     .setCheck('Array')
@@ -1207,13 +1186,12 @@ const reshape = {
     this.setColour(200);
   }
 };
-Blockly.common.defineBlocks({reshape: reshape});    
 pythonGenerator.forBlock['reshape'] = function(block,generator) {
   const value_array = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_COLLECTION);
   const value_rows = generator.valueToCode(block, 'rows', pythonGenerator.ORDER_ATOMIC);
   const value_columns = generator.valueToCode(block, 'columns', pythonGenerator.ORDER_ATOMIC);
   return [`np.reshape(${value_array}, (${value_rows},${value_columns}))`, pythonGenerator.ORDER_ATOMIC];
-}
+};
 
 //**load from txt */
 Blockly.Blocks['load_txt'] = {
@@ -1300,7 +1278,7 @@ pythonGenerator.forBlock['linspace'] = function(block, generator) {
 /** 
  * Minimum indices of array of numbers
  */
-const ind_min = { 
+Blockly.Blocks['ind_min'] = {
   init: function() {
     this.appendValueInput('minimum')
         .setCheck('Array')
@@ -1311,7 +1289,6 @@ const ind_min = {
     this.setHelpUrl('https://numpy.org/doc/2.1/reference/generated/numpy.argmin.html');
   }
 };
-Blockly.common.defineBlocks({ind_min: ind_min});
 pythonGenerator.forBlock["ind_min"] = function(block, generator) {
   const ind_mini =
     generator.valueToCode(block, "minimum", pythonGenerator.ORDER_NONE) || "0";
@@ -1321,7 +1298,7 @@ pythonGenerator.forBlock["ind_min"] = function(block, generator) {
 /** 
  * Maximum indices of array of numbers
  */
-const ind_max = { 
+Blockly.Blocks['ind_max'] = { 
   init: function() {
     this.appendValueInput('maximum')
         .setCheck('Array')
@@ -1332,7 +1309,6 @@ const ind_max = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({ind_max: ind_max});
 pythonGenerator.forBlock["ind_max"] = function(block, generator) {
   const ind_maxi =
     generator.valueToCode(block, "maximum", pythonGenerator.ORDER_NONE) || "0";
@@ -1342,7 +1318,7 @@ pythonGenerator.forBlock["ind_max"] = function(block, generator) {
 /** 
  * Sorting indices of array of numbers
  */
-const ind_sort = { 
+Blockly.Blocks['ind_sort'] = { 
   init: function() {
     this.appendValueInput('sort')
         .setCheck('Array')
@@ -1353,7 +1329,6 @@ const ind_sort = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({ind_sort: ind_sort});
 pythonGenerator.forBlock["ind_sort"] = function(block, generator) {
   const ind_sort =
     generator.valueToCode(block, "sort", pythonGenerator.ORDER_NONE) || "0";
@@ -1363,7 +1338,7 @@ pythonGenerator.forBlock["ind_sort"] = function(block, generator) {
 /** 
  * Finding the indice of array of numbers
  */
-const ind_find = { 
+Blockly.Blocks['ind_find'] = { 
   init: function() {
     this.appendValueInput('find')
         .setCheck('Boolean')
@@ -1374,7 +1349,6 @@ const ind_find = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({ind_find: ind_find});
 pythonGenerator.forBlock["ind_find"] = function(block, generator) {
   const ind_find =
     generator.valueToCode(block, "find", pythonGenerator.ORDER_NONE) || "0";
@@ -1382,7 +1356,7 @@ pythonGenerator.forBlock["ind_find"] = function(block, generator) {
 };
 
 //**GEOMETRY BLOCKS*/
-const buffer = {
+Blockly.Blocks['buffer'] = {
   init: function() {
     this.appendValueInput('center')
         .appendField(new Blockly.FieldLabelSerializable('Buffer: center coordinates'), 'CENTER');
@@ -1395,14 +1369,13 @@ const buffer = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({buffer: buffer});
 pythonGenerator.forBlock['buffer'] = function(block, generator) {
   const coordinates_circle = generator.valueToCode(block, 'center', pythonGenerator.ORDER_ATOMIC) || '(0, 0)';
   const number_rad = block.getFieldValue('r') || '1';
   return [`Point${coordinates_circle}.buffer(${number_rad})`, pythonGenerator.ORDER_ATOMIC];
 }
 
-const line_segment = {
+Blockly.Blocks['line_segment'] = {
   init: function() {
     this.itemCount_ = 0
     this.appendDummyInput()
@@ -1490,7 +1463,7 @@ const line_segment = {
     }
   },
 }
-Blockly.common.defineBlocks({line_segment: line_segment});
+
 pythonGenerator.forBlock['line_segment'] = function(block, generator) {
   const elements = [];
   for (let i = 0; i < block.itemCount_; i++) {
@@ -1499,7 +1472,7 @@ pythonGenerator.forBlock['line_segment'] = function(block, generator) {
   return [`LineString([${elements.join(', ')}])`, pythonGenerator.ORDER_ATOMIC];
 };
 
-const create_point = { 
+Blockly.Blocks['create_point'] = { 
   init: function() {
     this.appendValueInput('point')
         .setCheck('Coords')
@@ -1509,13 +1482,12 @@ const create_point = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({create_point: create_point});
 pythonGenerator.forBlock['create_point'] = function(block, generator) {
   const coordinates = generator.valueToCode(block, 'point', pythonGenerator.ORDER_ATOMIC) || '(0, 0)';
   return [`Point${coordinates}`, pythonGenerator.ORDER_ATOMIC];
 };
 
-const coords = { 
+Blockly.Blocks['coords'] = { 
   init: function() {
     this.appendDummyInput()
         .appendField('(')
@@ -1528,7 +1500,6 @@ const coords = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({coords: coords});
 pythonGenerator.forBlock["coords"] = function(block, generator) {
   const X_Coord = block.getFieldValue('XCoord') || '0';
   const Y_Coord = block.getFieldValue('YCoord') || '0';
@@ -1536,7 +1507,7 @@ pythonGenerator.forBlock["coords"] = function(block, generator) {
 };
 
 //**Polygon area */
-const polygon_area = {
+Blockly.Blocks['polygon_area'] = {
   init: function() {
     this.appendValueInput('polygon')
         .setCheck('Polygon')
@@ -1547,14 +1518,13 @@ const polygon_area = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({polygon_area: polygon_area});
 pythonGenerator.forBlock['polygon_area'] = function(block, generator) {
   const polygon = generator.valueToCode(block, 'polygon', pythonGenerator.ORDER_ATOMIC);
   return `${polygon}.area`;
 }
 
 //**Polygon perimeter */
-const polygon_perimeter = {
+Blockly.Blocks['polygon_perimeter'] = {
   init: function() {
     this.appendValueInput('polygon')
     .setCheck('Polygon')
@@ -1565,7 +1535,6 @@ const polygon_perimeter = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({polygon_perimeter: polygon_perimeter});
 pythonGenerator.forBlock['polygon_perimeter'] = function(block, generator) {
   const polygon = generator.valueToCode(block, 'polygon', pythonGenerator.ORDER_ATOMIC);
   return `${polygon}.length`;
@@ -1594,7 +1563,7 @@ pythonGenerator.forBlock['distance_calc'] = function(block, generator) {
 }
 
 //**Multipolygon */
-const multipolygon = {
+Blockly.Blocks['multipolygon'] = {
   init: function() {
     this.appendValueInput('polygon1')
     .setCheck('Polygon')
@@ -1613,7 +1582,7 @@ const multipolygon = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({multipolygon: multipolygon});  
+  
 pythonGenerator.forBlock['multipolygon'] = function(block, generator) {
   const value_polygon1 = generator.valueToCode(block, 'polygon1', pythonGenerator.ORDER_ATOMIC);
   const value_polygon2 = generator.valueToCode(block, 'polygon2', pythonGenerator.ORDER_ATOMIC);
@@ -1626,7 +1595,7 @@ pythonGenerator.forBlock['multipolygon'] = function(block, generator) {
 }
 
 //**Bounding box */
-const bounding_box = {
+Blockly.Blocks['bounding_box'] = {
   init: function() {
     this.appendDummyInput('')
         .appendField(new Blockly.FieldLabelSerializable('Bounding box'), 'BOX')
@@ -1650,7 +1619,6 @@ const bounding_box = {
     this.setColour(150);
   }
 };
-Blockly.common.defineBlocks({bounding_box: bounding_box});
 pythonGenerator.forBlock['bounding_box'] = function(block, generator) {
   const min_x = block.getFieldValue('min_x') || '0';
   const min_y = block.getFieldValue('min_y') || '0';
@@ -1666,7 +1634,7 @@ pythonGenerator.forBlock['bounding_box'] = function(block, generator) {
 }
 
 //**Polygon block */
-const polygon = {
+Blockly.Blocks['polygon'] = {
   init: function() {
     this.itemCount_ = 0
     this.appendDummyInput()
@@ -1754,7 +1722,7 @@ const polygon = {
     }
   },
 }
-Blockly.common.defineBlocks({polygon: polygon});
+
 pythonGenerator.forBlock['polygon'] = function(block, generator) {
   const elements = [];
   for (let i = 0; i < block.itemCount_; i++) {
