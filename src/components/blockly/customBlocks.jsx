@@ -150,7 +150,7 @@ Blockly.Blocks['load_csv'] = {
   init: function(){
     this.appendDummyInput()
         .appendField('Load data from CSV:')
-        .appendField(new Blockly.FieldTextInput('iris'), 'CSV')
+        .appendField(new Blockly.FieldTextInput('file'), 'CSV')
         .appendField('.csv');
     this.setTooltip('Loads a given CSV dataset');
     this.appendEndRowInput();
@@ -170,7 +170,7 @@ Blockly.Blocks['load_csv_from_url'] = {
   init: function(){
     this.appendDummyInput()
     .appendField('Load CSV file from URL')
-    .appendField(new Blockly.FieldTextInput('http://example.com/iris.csv', (url) => url.match(/^[a-z]{4,5}:\/\/[A-Za-zÀ-ÖØ-öø-ÿ0-9.\/:_-]*?\.[a-z]{2,6}/) ? url : 'ERROR!'), 'CSV');
+    .appendField(new Blockly.FieldTextInput('http://example.com/file.csv', (url) => url.match(/^[a-z]{4,5}:\/\/[A-Za-zÀ-ÖØ-öø-ÿ0-9.\/:_-]*?\.[a-z]{2,6}/) ? url : 'ERROR!'), 'CSV');
     this.setTooltip('Loads a given CSV dataset from an URL. Local files can be used by prepending "file://".');
     this.appendEndRowInput();
     this.setOutput(true, 'Array');
@@ -457,7 +457,7 @@ pythonGenerator.forBlock['slice'] = function(block, generator) {
   const varID = block.getFieldValue('VAR') || '0';
   const getVar = block.workspace.getVariableById(varID);
   const Var = getVar ? getVar.name : 'undefined';
-  return `${Var} = ${Var}[${Val1}:${Val2}]`
+  return [`${Var}[${Val1}:${Val2}]\n`, pythonGenerator.ORDER_ATOMIC]
 };
 
 /* Slice file */
@@ -479,7 +479,7 @@ pythonGenerator.forBlock['slice_file'] = function(block, generator) {
   const getVar = block.workspace.getVariableById(varID);
   const Var = getVar ? getVar.name : 'undefined';
   const cond = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
-  return [`${Var}[${cond}]\n`, pythonGenerator.ORDER_ATOMIC]
+  return [`${Var}[${cond}]`, pythonGenerator.ORDER_COLLECTION]
 };
 
 Blockly.Blocks['list_access'] = {
@@ -955,18 +955,24 @@ pythonGenerator.forBlock['import3'] = function(block, generator) {
 Blockly.Blocks['create_data_and_output'] = {
   init: function() {
     this.appendDummyInput('')
-        .appendField('Create data and output folders');
+        .appendField('Create')
+        .appendField(new Blockly.FieldTextInput('data', txt => txt.replace(/[\/<>:?*\\"|]/g, '')), 'DATA')
+        .appendField('and')
+        .appendField(new Blockly.FieldTextInput('output', txt => txt.replace(/[\/<>:?*\\"|]/g, '')), 'OUTPUT')
+        .appendField('folders');
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setColour(200);
     this.setTooltip('Create data and output folders for data visualisation');
   }
 };
-pythonGenerator.forBlock['create_data_and_output'] = function() {
+pythonGenerator.forBlock['create_data_and_output'] = function(block) {
+  const data = block.getFieldValue('DATA');
+  const output = block.getFieldValue('OUTPUT');
   return '' + 
-  'import os\n\n' +
-    'data_folder = "data"\n' +
-    'output_folder = "output"\n\n' +
+    'import os\n\n' +
+    `data_folder = "${data}"\n` +
+    `output_folder = "${output}"\n\n` +
     'if not os.path.exists(data_folder):\n' +
         '\tos.mkdir(data_folder)\n' +
     'if not os.path.exists(output_folder):\n' +
@@ -1030,11 +1036,11 @@ pythonGenerator.forBlock['read_file'] = function(block, generator) {
 
 Blockly.Blocks['write_file'] = {
   init: function() {
-    this.appendDummyInput()
+    this.appendValueInput('RES')
         .appendField('Create GeoPackage')
         .appendField(new Blockly.FieldTextInput('file_name'), 'NAME')
-        .appendField('.gpkg');
-    this.setTooltip('Write to previously created output folder. The format of this file is GeoPackage (.gpkg).')
+        .appendField('.gpkg with results:');
+    this.setTooltip('Write to previously created output folder. The format of this file is GeoPackage (.gpkg).');
     this.setNextStatement(true);
     this.setPreviousStatement(true);
     this.setColour(200);
@@ -1042,12 +1048,42 @@ Blockly.Blocks['write_file'] = {
 }
 pythonGenerator.forBlock['write_file'] = function(block, generator) {
   const fileName = block.getFieldValue('NAME');
+  const res = generator.valueToCode(block, 'RES', pythonGenerator.ORDER_ATOMIC);
   return '\n' + 
   `output_file = "${fileName}"\n` + 
   'output_path = os.path.join(output_folder, output_file)\n' + 
-  'capitals.to_file(driver="GPKG", filename=output_path)\n'
+  `${res}.to_file(driver="GPKG", filename=output_path)\n`
 }
 
+Blockly.Blocks['listdir'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('List all directories in path')
+        .appendField(new Blockly.FieldTextInput('name'), 'PATH');
+    this.setTooltip('List directory of given path');
+    this.setOutput(true);
+    this.setColour(200); 
+  }
+}
+pythonGenerator.forBlock['listdir'] = function(block, generator) {
+  let path = block.getFieldValue('PATH');
+  if (path) { path = "'" + path + "'"; }
+  return [`os.listdir(${path})`, pythonGenerator.ORDER_ATOMIC];
+}
+
+Blockly.Blocks['type'] = {
+  init: function() {
+    this.appendValueInput('TYPE')
+        .appendField('check type of');
+    this.setTooltip('Find the type of another block');
+    this.setOutput(true);
+    this.setColour(200);
+  }
+}
+pythonGenerator.forBlock['type'] = function(block, generator) {
+  const type = generator.valueToCode(block, 'TYPE', pythonGenerator.ORDER_ATOMIC);
+  return [`type(${type})`, pythonGenerator.ORDER_ATOMIC];
+}
 /** Show data **/
 Blockly.Blocks['plot'] = {
   init: function() {

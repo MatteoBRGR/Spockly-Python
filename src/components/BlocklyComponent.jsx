@@ -69,6 +69,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="func_download"></block>
             <block type="read_file"></block>
             <block type="write_file"></block>
+            <block type="listdir"></block>
             <block type="plot">
               <value name="title">
                 <shadow type="text">
@@ -137,6 +138,7 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="text_print"></block>
             <block type="length_of_str"></block>
             <block type="list_access"></block>
+            <block type="type"></block>
           </category>
           <category name="Functions" custom="PROCEDURE" colour="#05a219"></category>
           <category name="Geometry" colour="#763728">

@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
+var firstRun = true;
+
 const Pyodide = ({ code }) => {
     const [output, setOutput] = useState("");
     const [pyodide, setPyodide] = useState(null);
@@ -21,7 +23,7 @@ const Pyodide = ({ code }) => {
                         s = s.toString();
                         setOutput(prev => prev + "[Warning] Printing functions/lambdas is not supported in this Pyodide version." +
                                                  "\nHowever, this is the stringified version of the given function:\n\n" + s);
-                    } else if (typeof s === "list" || typeof s === "object") {
+                    } else if (typeof s === "object") {
                         s = s.toString();
                         setOutput(prev => prev + s + "\n");
                     } else {
@@ -53,12 +55,16 @@ const Pyodide = ({ code }) => {
     useEffect(() => {
         const runCode = async () => {
             if (pyodide && code) {
-                // code = "import pandas as pd\n" + "import numpy as np\n" + "import geopandas as gpd\n" + "import matplotlib.pyplot as plt\n" + "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n" + code;
-                console.log("%cThis code is going to be compiled:\n", "font-size: 2em; color: violet", "\n" + code);
-                await pyodide.loadPackage("pandas");
-                await pyodide.loadPackage("geopandas");
-                await pyodide.loadPackage("matplotlib");
-                await pyodide.loadPackage("requests");
+                console.log("%cThis code is being compiled:\n", "font-size: 2em; color: violet", "\n" + code);
+                console.info(firstRun);
+                if (firstRun) {
+                    await pyodide.loadPackage("micropip");
+                    const micropip = pyodide.pyimport("micropip");
+                    await micropip.install("pandas");
+                    await micropip.install("geopandas");
+                    await micropip.install("matplotlib");
+                    await micropip.install("requests");
+                }
                 pyodide.setDebug(true);
                 setOutput("");
                 try {
@@ -70,6 +76,7 @@ const Pyodide = ({ code }) => {
                     console.error("Error running Python code:", error);
                     setOutput(`Error: ${error.message}`);
                 }
+                firstRun = false;
             }
         };
         runCode();
