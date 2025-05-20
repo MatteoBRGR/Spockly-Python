@@ -7,13 +7,6 @@ function App() {
   const [code, setCode] = useState("");
 
   useEffect(() => {
-    setCode(prev =>
-      prev ? prev :
-            "import pandas as pd\n" +
-            "import numpy as np\n" +
-            "import geopandas as gpd\n" +
-            "import matplotlib.pyplot as plt\n" +
-            "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n");
     document.getElementById('toast').style.animation = 'slideIn 5s ease-in-out';
     document.getElementById('toast').style.display = 'block';
   }, []);

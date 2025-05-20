@@ -14,7 +14,11 @@ const CodeDisplay = ({ code }) => {
         minHeight: "50px",
       }}
     >
-      { code || "Generated Python code will appear here..." }
+      { "import pandas as pd\n" +
+        "import numpy as np\n" +
+        "import geopandas as gpd\n" +
+        "import matplotlib.pyplot as plt\n" +
+        "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n" + code || "Generated Python code will appear here..." }
     </pre>
   );
 };

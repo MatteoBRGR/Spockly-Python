@@ -1039,7 +1039,7 @@ Blockly.Blocks['write_file'] = {
     this.appendValueInput('RES')
         .appendField('Create GeoPackage')
         .appendField(new Blockly.FieldTextInput('file_name'), 'NAME')
-        .appendField('.gpkg with results:');
+        .appendField('.gpkg with data:');
     this.setTooltip('Write to previously created output folder. The format of this file is GeoPackage (.gpkg).');
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -1050,7 +1050,7 @@ pythonGenerator.forBlock['write_file'] = function(block, generator) {
   const fileName = block.getFieldValue('NAME');
   const res = generator.valueToCode(block, 'RES', pythonGenerator.ORDER_ATOMIC);
   return '\n' + 
-  `output_file = "${fileName}"\n` + 
+  `output_file = "${fileName}.gpkg"\n` + 
   'output_path = os.path.join(output_folder, output_file)\n' + 
   `${res}.to_file(driver="GPKG", filename=output_path)\n`
 }

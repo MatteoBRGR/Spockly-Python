@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 
-var firstRun = true;
-
 const Pyodide = ({ code }) => {
     const [output, setOutput] = useState("");
     const [pyodide, setPyodide] = useState(null);
@@ -55,16 +53,12 @@ const Pyodide = ({ code }) => {
     useEffect(() => {
         const runCode = async () => {
             if (pyodide && code) {
+                code =  "import pandas as pd\n" +
+                        "import numpy as np\n" +
+                        "import geopandas as gpd\n" +
+                        "import matplotlib.pyplot as plt\n" +
+                        "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n" + code;
                 console.log("%cThis code is being compiled:\n", "font-size: 2em; color: violet", "\n" + code);
-                console.info(firstRun);
-                if (firstRun) {
-                    await pyodide.loadPackage("micropip");
-                    const micropip = pyodide.pyimport("micropip");
-                    await micropip.install("pandas");
-                    await micropip.install("geopandas");
-                    await micropip.install("matplotlib");
-                    await micropip.install("requests");
-                }
                 pyodide.setDebug(true);
                 setOutput("");
                 try {
@@ -76,22 +70,61 @@ const Pyodide = ({ code }) => {
                     console.error("Error running Python code:", error);
                     setOutput(`Error: ${error.message}`);
                 }
-                firstRun = false;
             }
         };
         runCode();
     }, [pyodide, code]);
 
+    const firstRunRef = useRef(false);
     useEffect(() => {
-        const findWarn = () => {
-            const cslWarn = console.warn;
-            console.warn = function(message) {
-                onWarn(message);
+        const first = async () => {
+            if (pyodide && !firstRunRef.current) {
+                firstRunRef.current = true;
+                // Install pandas and other core packages
+                await pyodide.loadPackage("pandas");
+                // await pyodide.loadPackage("geopandas");
+                await pyodide.loadPackage("matplotlib");
+                await pyodide.loadPackage("requests");
+                // await pyodide.loadPackage("micropip");
+                await pyodide.loadPackage("pytest");
+
+                // const micropip = pyodide.pyimport("micropip");
+
+                var initCode =
+                    "import pandas as pd\n" +
+                    "import numpy as np\n" +
+                    "import geopandas as gpd\n" +
+                    "import matplotlib.pyplot as plt\n" +
+                    "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n";
+                await pyodide.runPython(initCode);
+                console.info('Imports loaded!'); //Do not change this msg
+//                 const patchReadCsv = `import pytest #; pytest.skip("Can't use top level await in doctests")
+// original_read_csv = pd.read_csv
+// res = pyfetch("http://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv")
+// print(res.ok)
+// print(res.status)
+// print(res)
+// intercepted_read_csv = lambda *args, **kwargs: original_read_csv(res.url, *args, **kwargs)`;
+//                 await pyodide.runPython(patchReadCsv);
+await fetchAndLoadCsv(
+  pyodide,
+  "https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv"
+);
+            }
+        }
+        first();
+    }, [pyodide]);
+    
+    useEffect(() => {
+        const findInfo = () => {
+            const cslInfo = console.info;
+            console.info = function(message) {
+                onInfo(message);
             };
 
-            function onWarn(message){
-                cslWarn(message);
-                if (message == 'Matplotlib is building the font cache; this may take a moment.') {
+            function onInfo(message){
+                cslInfo(message);
+                if (message === 'Imports loaded!') {
                     document.getElementById('toast').style.color = '#089d08';
                     document.querySelector('#toast p').innerHTML = 'Libraries loaded!';
                     document.getElementById('toast').style.animation = 'slideOut 5s ease-in-out';
@@ -99,8 +132,23 @@ const Pyodide = ({ code }) => {
                 }
             }
         };
-        findWarn();
-    })
+        findInfo();
+    });
+
+    const fetchAndLoadCsv = async (pyodide, url, variableName = "df") => {
+        // 1. Fetch the CSV file in JS
+        const response = await fetch(url);
+        const csvText = await response.text();
+
+        // 2. Pass the CSV text to Python and read with pandas
+        const pythonCode = `
+import pandas as pd
+# import io
+# ${variableName} = pd.read_csv('${url}')
+print(${csvText});
+`;
+        await pyodide.runPython(pythonCode);
+    };
 
     return (
         <div>
