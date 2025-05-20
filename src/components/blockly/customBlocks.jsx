@@ -1758,3 +1758,20 @@ pythonGenerator.forBlock['polygon'] = function(block, generator) {
   }
   return [`Polygon([${elements.join(', ')}])`, pythonGenerator.ORDER_ATOMIC];
 };
+
+// Computing centroid
+Blockly.Blocks["centroid"] = {
+  init: function(){
+    this.appendValueInput('CTR')
+    .appendField('centroid of')
+    .setCheck('Polygon');
+    this.setOutput(true);
+    this.setColour(150);
+    this.setTooltip('Returns the centroid of a geometry');
+    this.setHelpUrl('https://shapely.readthedocs.io/en/stable/reference/shapely.centroid.html');
+  },
+};
+pythonGenerator.forBlock["centroid"] = function(block, generator) {
+  const centroide = generator.valueToCode(block, 'CTR', pythonGenerator.ORDER_NONE);
+  return `${centroide}.centroid`;
+};

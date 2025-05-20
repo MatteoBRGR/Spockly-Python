@@ -147,8 +147,9 @@ const BlocklyComponent = ({ setCode }) => {
             <block type="buffer"></block>
             <block type="line_segment"></block>
             <block type="polygon"></block>
-            <block type="distance_calc"></block>
             <block type="multipolygon"></block>
+            <block type="distance_calc"></block>
+            <block type="centroid"></block>
             <block type="polygon_area"></block>
             <block type="polygon_perimeter"></block>
             <block type="bounding_box"></block>
