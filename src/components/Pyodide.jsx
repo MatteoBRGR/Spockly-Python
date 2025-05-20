@@ -82,7 +82,7 @@ const Pyodide = ({ code }) => {
                 firstRunRef.current = true;
                 // Install pandas and other core packages
                 await pyodide.loadPackage("pandas");
-                // await pyodide.loadPackage("geopandas");
+                await pyodide.loadPackage("geopandas");
                 await pyodide.loadPackage("matplotlib");
                 await pyodide.loadPackage("requests");
                 // await pyodide.loadPackage("micropip");

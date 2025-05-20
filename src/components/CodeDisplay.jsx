@@ -17,8 +17,7 @@ const CodeDisplay = ({ code }) => {
       { "import pandas as pd\n" +
         "import numpy as np\n" +
         "import geopandas as gpd\n" +
-        "import matplotlib.pyplot as plt\n" +
-        "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n" + code || "Generated Python code will appear here..." }
+        "import matplotlib.pyplot as plt\n\n" + code || "Generated Python code will appear here..." }
     </pre>
   );
 };
