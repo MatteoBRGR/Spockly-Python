@@ -1631,42 +1631,34 @@ pythonGenerator.forBlock['multipolygon'] = function(block, generator) {
 }
 
 //**Bounding box */
-Blockly.Blocks['bounding_box'] = {
+const bounding_box = {
   init: function() {
-    this.appendDummyInput('')
-        .appendField(new Blockly.FieldLabelSerializable('Bounding box'), 'BOX')
-    this.appendDummyInput('x')
-        .appendField(new Blockly.FieldNumber(0), 'min_x')
-        .appendField(',')
-        .appendField(new Blockly.FieldNumber(0), 'max_x');
-    this.appendDummyInput('y')
-        .appendField(new Blockly.FieldNumber(0), 'min_y')
-        .appendField(',')
-        .appendField(new Blockly.FieldNumber(0), 'max_y');
-    this.appendDummyInput()
-        .appendField('Show box?')
-        .appendField(new Blockly.FieldCheckbox('TRUE'), 'SHOW');
-    this.appendDummyInput()
-        .appendField('Box variable name')
-        .appendField(new Blockly.FieldTextInput('bbox'), 'name');
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
+    this.appendDummyInput('NAME')
+      .appendField('Bounding box');
+    this.appendDummyInput('minimum')
+      .appendField(new Blockly.FieldLabelSerializable('min: x'), 'MIN')
+      .appendField(new Blockly.FieldNumber(0), 'min_x')
+      .appendField(', y')
+      .appendField(new Blockly.FieldNumber(0), 'min_y');
+    this.appendDummyInput('maximum')
+      .appendField(new Blockly.FieldLabelSerializable('max: x'), 'MAX')
+      .appendField(new Blockly.FieldNumber(0), 'max_x')
+      .appendField(', y')
+      .appendField(new Blockly.FieldNumber(0), 'max_y');
+    this.setOutput(true, 'Polygon');
     this.setTooltip('Create a bounding box');
+    this.setHelpUrl('https://shapely.readthedocs.io/en/stable/reference/shapely.box.html');
     this.setColour(150);
   }
 };
+Blockly.common.defineBlocks({bounding_box: bounding_box});             
 pythonGenerator.forBlock['bounding_box'] = function(block, generator) {
   const min_x = block.getFieldValue('min_x') || '0';
   const min_y = block.getFieldValue('min_y') || '0';
   const max_x = block.getFieldValue('max_x') || '0';
   const max_y = block.getFieldValue('max_y') || '0';
-  const varName = block.getFieldValue('name') || 'name';
-  let show_box = block.getFieldValue('SHOW');
-  show_box = (show_box.toLowerCase() === 'true') ? `\n${varName}\n` : '\n'
   return `from shapely.geometry import box\n`+
-  `point_from_buffer = Point(${number_x}, ${number_y})\n`+
-  `${varName} = box(minx=${min_x}, miny=${min_y}, maxx=${max_x}, maxy=${max_y}))`+
-  `${show_box}`
+  `bbox = box(minx=${min_x}, miny=${min_y}, maxx=${max_x}, maxy=${max_y}))`
 }
 
 //**Polygon block */
