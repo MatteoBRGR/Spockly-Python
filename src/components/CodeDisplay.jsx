@@ -67,7 +67,10 @@ const CodeDisplay = ({ code, isDarkMode }) => {
             padding: "20px",
           }}
         >
-          {">>"} {code || "Generated Python code will appear here..."}
+          {">>"} {  "import pandas as pd\n" +
+                    "import numpy as np\n" +
+                    "import geopandas as gpd\n" +
+                    "import matplotlib.pyplot as plt\n\n" + code || "Generated Python code will appear here..."}
         </Typography>
       </Box>
     </Box>
