@@ -41,6 +41,7 @@ const CodeDisplay = ({ code, isDarkMode }) => {
             },
             boxShadow: "none",
           }}
+          onClick={window.generateCode}
         >
           <Box display="flex" alignItems="center" gap={0.5}>
             <PlayArrow fontSize="small" />
@@ -64,13 +65,15 @@ const CodeDisplay = ({ code, isDarkMode }) => {
           sx={{
             color: theme.palette.primary.contrastText,
             paddingBottom: "10px",
+            paddingTop: "5px",
             padding: "20px",
+            whiteSpace: 'pre-line',
           }}
         >
-          {">>"} {  "import pandas as pd\n" +
-                    "import numpy as np\n" +
-                    "import geopandas as gpd\n" +
-                    "import matplotlib.pyplot as plt\n\n" + code || "Generated Python code will appear here..."}
+        { "import pandas as pd\n" +
+          "import numpy as np\n" +
+          // "import matplotlib.pyplot as plt\n" + 
+          "import geopandas as gpd\n\n" + code || "Generated Python code will appear here..."}
         </Typography>
       </Box>
     </Box>

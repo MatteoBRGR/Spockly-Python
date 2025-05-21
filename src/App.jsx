@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react";
-import BlocklyComponent from "./components/BlocklyComponent";
-import CodeDisplay from "./components/CodeDisplay";
-import Pyodide from "./components/Pyodide";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Home from "./pages/Home";
@@ -18,6 +15,7 @@ import SPOCKLY from "./components/Spockly";
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [code, setCode] = useState("");
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
   const theme = isDarkMode ? darkTheme : lightTheme;
 
@@ -26,8 +24,8 @@ function App() {
     document.getElementById('toast').style.display = 'block';
   }, []);
 
-  return (
-  <div style={{ height: "100vh", width: "100vw", margin: 0, padding: 0, overflow: "hidden" }}>
+  /** 
+   * <div style={{ height: "100vh", width: "100vw", margin: 0, padding: 0, overflow: "hidden" }}>
     <h1 style={{ textAlign: "center", margin: "0.5rem 0" }}>
       Spockly Demo: Blockly in React
     </h1>
@@ -53,12 +51,12 @@ function App() {
       </div>
     </div>
     <div style={{ display: "flex", height: "90vh" }}>
-      {/* Blockly Editor */}
+      {/* Blockly Editor }
       <div style={{ flex: 1 }}>
         <BlocklyComponent setCode={setCode} />
       </div>
 
-      {/* Code Output */}
+      {/* Code Output }
       <div
         style={{
           flex: 1,
@@ -74,7 +72,9 @@ function App() {
         <Pyodide code={code} />
       </div>
     </div>
+   */
 
+  return (
     <ThemeProvider theme={theme}>
       <GlobalStyles
         styles={{
@@ -103,6 +103,28 @@ function App() {
           },
         }}
       />
+      <div>
+      <div id="toast"
+        style={{
+          position: "absolute",
+          fontSize: "20px",
+          color: "orange",
+          zIndex: 1051,
+          float: "right",
+          overflow: "hidden",
+          right: "10px",
+          top: "70px",
+          backgroundColor: "#FEFEFE",
+          boxShadow: "-1px 1px 10px #9f9f9f",
+          padding: "0 10px 0 10px",
+          borderRadius: "3px",
+          margin: "10px",
+          display: "none"
+        }}
+      >
+        <p>Loading libraries...</p>
+      </div>
+    </div>
       <Router>
         <Routes>
           <Route
@@ -129,7 +151,6 @@ function App() {
         </Routes>
       </Router>
     </ThemeProvider>
-  </div>
   );
 }
 

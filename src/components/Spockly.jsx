@@ -3,7 +3,7 @@ import BlocklyComponent from "./BlocklyComponent";
 import CodeDisplay from "./CodeDisplay";
 import {Card, Box, Grid } from "@mui/material";
 import { darkTheme, lightTheme } from "./../appTheme";
-import WebRRunner from "./WebRRunner";
+import Pyodide from "./Pyodide";
 
 function SPOCKLY({isDarkMode}) {
   const [code, setCode] = useState("");
@@ -55,7 +55,7 @@ function SPOCKLY({isDarkMode}) {
               <CodeDisplay code={code} isDarkMode={isDarkMode} />
             </Box>
             <Box sx={{ height: "50%", p: 2 }}>
-              <WebRRunner code={code} isDarkMode={isDarkMode} />
+              <Pyodide code={code} isDarkMode={isDarkMode} />
             </Box>
           </Card>
         </Grid>

@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from "react";
 import * as Blockly from "blockly";
 import { pythonGenerator } from "blockly/python";
 import "./blockly/customBlocks"; // Import custom blocks
-import "./blockly/customGenerator"; // Import custom generator
-import "./blockly/rBlocks"; // Import R blocks
 import { Box } from "@mui/material";
 import { lightTheme, darkTheme } from "./blockly/blocklyThemes";
 
@@ -19,10 +17,10 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
     }
 
     workspaceRef.current = Blockly.inject(blocklyDiv.current, {
-      renderer: "zelos",
+      // renderer: "zelos",
       toolbox: `
         <xml>
-          <category name="Math" colour="#A9A9A9">
+          <category name="Math" colour="#FF8A65">
             <block type="math_number"></block>
             <block type="consts"></block>
             <block type="math_arithmetic">
@@ -47,11 +45,13 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
             <block type="round"></block>
             <block type="modulo"></block>
           </category>
+
           <category name="Booleans" colour="#1d8425">
             <block type="to_bool"></block>
             <block type="bool1"></block>
             <block type="bool2"></block>
           </category>
+
           <category name="Data" colour="#FA2">
             <block type="load_csv"></block>
             <block type="load_csv_from_url"></block>
@@ -67,7 +67,8 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
             <block type="reshape"></block>
             <block type="slice_file"></block>
           </category>
-          <category name="Visualisation" colour="#c124ba">
+
+          <category name="Visualisation" colour="#90A4AE">
             <block type="create_data_and_output"></block>
             <block type="def_download"></block>
             <block type="func_download"></block>
@@ -119,7 +120,8 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
               </value>
             </block>
           </category>
-          <category name="Statistics" colour="#B6C">
+
+          <category name="Statistics" colour="#BA68C8">
             <block type="mean"></block>
             <block type="median"></block>
             <block type="std"></block>
@@ -128,14 +130,17 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
             <block type="min"></block>
             <block type="sum"></block>
           </category>
-          <category name="Variables" custom="VARIABLE" colour="#a55b80"></category>
+
+          <category name="Variables" custom="VARIABLE" colour="#A65E2E"></category>
+
           <category name="Imports" colour="#888">
             <block type="import0"></block>
             <block type="import1"></block>
             <block type="import2"></block>
             <block type="import3"></block>
           </category>
-          <category name="Basic functions" colour="#A6200B">
+
+          <category name="Basic functions" colour="#123456">
             <block type="input"></block>
             <block type="slice"></block>
             <block type="lambda"></block>
@@ -144,8 +149,10 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
             <block type="list_access"></block>
             <block type="type"></block>
           </category>
+
           <category name="Functions" custom="PROCEDURE" colour="#05a219"></category>
-          <category name="Geometry" colour="#763728">
+
+          <category name="Geometry" colour="#4DD0E1">
             <block type="coords"></block>
             <block type="create_point"></block>
             <block type="buffer"></block>
@@ -158,6 +165,7 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
             <block type="polygon_perimeter"></block>
             <block type="bounding_box"></block>
           </category>
+
           <category name="Other" colour="#5C81A6">
             <block type="controls_if"></block>
             <block type="operators"></block>
@@ -223,7 +231,7 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
 
       }
     });
-
+    
     return () => {
       if (linkRef.current) {
         linkRef.current.remove();
@@ -233,13 +241,12 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
     };
   }, [isDarkMode]);
 
-  const generateCode = () => {
+  globalThis.generateCode = () => {
     if (!workspaceRef.current) {
       console.error("Blockly workspace is not initialised.");
       return;
     }
-
-    const pythonCode = pythonGenerator.workspaceToCode(workspaceRef.current);
+    var pythonCode = pythonGenerator.workspaceToCode(workspaceRef.current);
     setCode(pythonCode);
   };
 
