@@ -1,13 +1,6 @@
 import * as Blockly from "blockly";
 import { pythonGenerator } from "blockly/python";
 
-
-/**
- * 
- * KULDEEP MADE CHANGES
- * 
- */
-
 /**
  * Value Input Block (returns value)
  */
