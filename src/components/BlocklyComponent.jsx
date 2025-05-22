@@ -166,6 +166,14 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
             <block type="bounding_box"></block>
           </category>
 
+          <category name="Map" colour="#3E65F8">
+            <block type="create_map"></block>
+            <block type="create_marker"></block>
+            <block type="create_polygon"></block>
+            <block type="create_circle"></block>
+            <block type="JSON_on_map"></block>
+          </category>
+
           <category name="Other" colour="#5C81A6">
             <block type="controls_if"></block>
             <block type="operators"></block>

@@ -1581,11 +1581,11 @@ Blockly.Blocks['distance_calc'] = {
     this.appendDummyInput()
         .appendField('Distance');
     this.appendValueInput('point1')
-        .appendField('Point/Polygon 1')
-        .setCheck(['Coords', 'Polygon']);
+        .appendField('Point 1')
+        .setCheck(['Coords']);
     this.appendValueInput('point2')
-        .appendField('Point/Polygon 2')
-        .setCheck(['Coords', 'Polygon']);
+        .appendField('Point 2')
+        .setCheck(['Coords']);
     this.setOutput(true, 'Number');
     this.setTooltip('Find the distance between points and polygons');
     this.setHelpUrl('https://shapely.readthedocs.io/en/stable/reference/shapely.distance.html');
@@ -1658,7 +1658,7 @@ pythonGenerator.forBlock['bounding_box'] = function(block, generator) {
   const max_x = block.getFieldValue('max_x') || '0';
   const max_y = block.getFieldValue('max_y') || '0';
   return `from shapely.geometry import box\n`+
-  `bbox = box(minx=${min_x}, miny=${min_y}, maxx=${max_x}, maxy=${max_y}))`
+  `bbox = box(minx=${min_x}, miny=${min_y}, maxx=${max_x}, maxy=${max_y})`
 }
 
 //**Polygon block */
@@ -1775,3 +1775,149 @@ pythonGenerator.forBlock["centroid"] = function(block, generator) {
   const centroide = generator.valueToCode(block, 'CTR', pythonGenerator.ORDER_NONE);
   return `${centroide}.centroid`;
 };
+
+//map
+const create_map = {
+  init: function() {
+    this.appendValueInput('center')
+    .setCheck('Coords')
+      .appendField('Create a map centred on');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('https://python-visualization.github.io/folium/latest/getting_started.html');
+    this.setColour(270);
+  }
+};
+Blockly.common.defineBlocks({create_map: create_map});
+pythonGenerator.forBlock['create_map'] = function(block,generator) {
+  const value_center = generator.valueToCode(block, 'center', Order.ATOMIC);
+  return `import folium\nm = folium.Map(location=${value_center}, zoom_start=12)`;
+}
+
+const create_marker = {
+  init: function() {
+    this.appendDummyInput('NAME')
+      .appendField('Create marker');
+    this.appendValueInput('position')
+      .appendField(new Blockly.FieldLabelSerializable('Position'), 'NAME');
+    this.appendDummyInput('popup')
+      .appendField('Popup')
+      .appendField(new Blockly.FieldTextInput('marker'), 'popup');
+    this.appendDummyInput('color')
+      .appendField('Icon color')
+      .appendField(new Blockly.FieldTextInput('green'), 'icon');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('https://python-visualization.github.io/folium/latest/getting_started.html');
+    this.setColour(270);
+  }
+};
+Blockly.common.defineBlocks({create_marker: create_marker});
+pythonGenerator.forBlock['create_marker'] = function(block,generator) {
+  const value_position = generator.valueToCode(block, 'position', Order.ATOMIC);
+  const text_popup = block.getFieldValue('popup');
+  const text_icon = block.getFieldValue('icon');
+  return `folium.Marker(
+    location=${value_position},
+    popup=${text_popup},
+    icon=${text_icon},
+).add_to(m)`;
+}
+
+const create_polygon = {
+  init: function() {
+    this.appendDummyInput('NAME')
+      .appendField('Create polygon on map');
+    this.appendValueInput('position')
+      .appendField(new Blockly.FieldLabelSerializable('Position of polygon'), 'NAME');
+    this.appendDummyInput('popup')
+      .appendField('Popup')
+      .appendField(new Blockly.FieldTextInput('polygon'), 'popup');
+    this.appendDummyInput('color')
+      .appendField('color')
+      .appendField(new Blockly.FieldTextInput('green'), 'color');
+    this.appendDummyInput('fill_color')
+      .appendField('fill_color')
+      .appendField(new Blockly.FieldTextInput('green'), 'fill_color');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('https://https://python-visualization.github.io/folium/latest/user_guide/vector_layers/polygon.html');
+    this.setColour(270);
+  }
+};
+Blockly.common.defineBlocks({create_polygon: create_polygon});
+pythonGenerator.forBlock['create_polygon'] = function(block,generator) {
+  const polygon_shown = generator.valueToCode(block, 'position', Order.ATOMIC);
+  const text_popup = block.getFieldValue('popup');
+  const color = block.getFieldValue('color');
+  const fill_color = block.getFieldValue('fill_color');
+  return `folium.Polygon(
+    locations=${polygon_shown},
+    popup=${text_popup},
+    color=${color},
+    fill_color=${fill_color},
+).add_to(m)`;
+}
+
+const create_circle = {
+  init: function() {
+    this.appendDummyInput('NAME')
+      .appendField('Create circle on map');
+    this.appendValueInput('position')
+      .appendField(new Blockly.FieldLabelSerializable('Position of circle'), 'NAME');
+    this.appendDummyInput('radius')
+      .appendField(new Blockly.FieldLabelSerializable('Radius'), 'RADIUS')
+      .appendField(new Blockly.FieldNumber(0), 'radius');
+    this.appendDummyInput('popup')
+      .appendField('Popup')
+      .appendField(new Blockly.FieldTextInput('circle'), 'popup');
+    this.appendDummyInput('color')
+      .appendField('color')
+      .appendField(new Blockly.FieldTextInput('green'), 'color');
+    this.appendDummyInput('fill_color')
+      .appendField('fill_color')
+      .appendField(new Blockly.FieldTextInput('green'), 'fill_color');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('');
+    this.setHelpUrl('https://python-visualization.github.io/folium/latest/user_guide/vector_layers/circle_and_circle_marker.html');
+    this.setColour(270);
+  }
+};
+Blockly.common.defineBlocks({create_circle: create_circle});
+pythonGenerator.forBlock['create_circle'] = function(block,generator) {
+  const polygon_shown = generator.valueToCode(block, 'position', Order.ATOMIC);
+  const radius = block.getFieldValue('radius') || '1';
+  const text_popup = block.getFieldValue('popup');
+  const color = block.getFieldValue('color');
+  const fill_color = block.getFieldValue('fill_color');
+  return `folium.Circle(
+    locations=${polygon_shown},
+    radius=${radius}
+    popup=${text_popup},
+    color=${color},
+    fill_color=${fill_color},
+).add_to(m)`;
+}
+
+const JSON_on_map = {
+  init: function() {
+    this.appendValueInput('json')
+      .appendField('Add json on map');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('It\'s necessary to connect a JSON file');
+    this.setHelpUrl('https://python-visualization.github.io/folium/latest/getting_started.html');
+    this.setColour(270);
+  }
+};
+Blockly.common.defineBlocks({JSON_on_map: JSON_on_map});
+pythonGenerator.forBlock['JSON_on_map'] = function(block,generator) {
+  const value_json = generator.valueToCode(block, 'json', Order.ATOMIC);
+  return `import requests\n
+          geojson_data = requests.get(${value_json}).json()\n
+          folium.GeoJson(geojson_data).add_to(m)`;
+}
