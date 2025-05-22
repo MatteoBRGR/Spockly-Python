@@ -1,66 +1,156 @@
 import React, { useState, useEffect } from "react";
-import BlocklyComponent from "./components/BlocklyComponent";
-import CodeDisplay from "./components/CodeDisplay";
-import Pyodide from "./components/Pyodide";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import Tutorials from "./pages/Tutorials";
+import TutorialIntroduction from "./pages/tutorials/TutorialIntroduction";
+import TutorialWhy from "./pages/tutorials/TutorialWhy";
+import TutorialWho from "./pages/tutorials/TutorialWho";
+import TutorialHow from "./pages/tutorials/TutorialHow";
+import TutorialExample from "./pages/tutorials/TutorialExample";
+import Impressum from "./pages/Impressum";
+import { GlobalStyles, ThemeProvider } from "@mui/material";
+import { darkTheme, lightTheme } from "./appTheme";
+import SPOCKLY from "./components/Spockly";
 
 function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [code, setCode] = useState("");
+  const toggleTheme = () => setIsDarkMode((prev) => !prev);
+  const theme = isDarkMode ? darkTheme : lightTheme;
 
   useEffect(() => {
     document.getElementById('toast').style.animation = 'slideIn 5s ease-in-out';
     document.getElementById('toast').style.display = 'block';
   }, []);
 
-  return (
-    <div style={{ height: "100vh", width: "100vw", margin: 0, padding: 0, overflow: "hidden" }}>
-      <h1 style={{ textAlign: "center", margin: "0.5rem 0" }}>
-        Spockly Demo: Blockly in React
-      </h1>
-      <div>
-        <div id="toast"
-          style={{
-            position: "absolute",
-            fontSize: "20px",
-            color: "orange",
-            zIndex: 100,
-            float: "right",
-            overflow: "hidden",
-            right: "10px",
-            backgroundColor: "#FEFEFE",
-            boxShadow: "-1px 1px 10px #9f9f9f",
-            padding: "0 10px 0 10px",
-            borderRadius: "3px",
-            margin: "10px",
-            display: "none"
-          }}
-        >
-          <p>Loading libraries...</p>
-        </div>
-      </div>
-      <div style={{ display: "flex", height: "90vh" }}>
-        {/* Blockly Editor */}
-        <div style={{ flex: 1 }}>
-          <BlocklyComponent setCode={setCode} />
-        </div>
-
-        {/* Code Output */}
-        <div
-          style={{
-            flex: 1,
-            padding: "1rem",
-            overflow: "auto",
-            background: "#f8f8f8",
-          }}
-        >
-          <h2>Generated Python Code</h2>
-          <CodeDisplay code={code} />
-          <hr />
-          <h2>Output</h2>
-          <Pyodide code={code} />
-        </div>
+  /** 
+   * <div style={{ height: "100vh", width: "100vw", margin: 0, padding: 0, overflow: "hidden" }}>
+    <h1 style={{ textAlign: "center", margin: "0.5rem 0" }}>
+      Spockly Demo: Blockly in React
+    </h1>
+    <div>
+      <div id="toast"
+        style={{
+          position: "absolute",
+          fontSize: "20px",
+          color: "orange",
+          zIndex: 100,
+          float: "right",
+          overflow: "hidden",
+          right: "10px",
+          backgroundColor: "#FEFEFE",
+          boxShadow: "-1px 1px 10px #9f9f9f",
+          padding: "0 10px 0 10px",
+          borderRadius: "3px",
+          margin: "10px",
+          display: "none"
+        }}
+      >
+        <p>Loading libraries...</p>
       </div>
     </div>
-    
+    <div style={{ display: "flex", height: "90vh" }}>
+      {/* Blockly Editor }
+      <div style={{ flex: 1 }}>
+        <BlocklyComponent setCode={setCode} />
+      </div>
+
+      {/* Code Output }
+      <div
+        style={{
+          flex: 1,
+          padding: "1rem",
+          overflow: "auto",
+          background: "#f8f8f8",
+        }}
+      >
+        <h2>Generated Python Code</h2>
+        <CodeDisplay code={code} />
+        <hr />
+        <h2>Output</h2>
+        <Pyodide code={code} />
+      </div>
+    </div>
+   */
+
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyles
+        styles={{
+          html: { height: "100%" },
+          body: {
+            margin: 0,
+            padding: 0,
+            height: "100%",
+            backgroundColor: theme.palette.background.default,
+          },
+          "#root": {
+            height: "100%",
+          },
+          h1: { textTransform: "none" },
+          h2: { textTransform: "none" },
+          h3: { textTransform: "none" },
+          h4: { textTransform: "none" },
+          h5: { textTransform: "none" },
+          h6: { textTransform: "none" },
+          p: { textTransform: "none" },
+          ".blocklyTrash": {
+            opacity: "1 !important",
+          },
+          image: {
+            opacity: "1 !important",
+          },
+        }}
+      />
+      <div>
+      <div id="toast"
+        style={{
+          position: "absolute",
+          fontSize: "20px",
+          color: "orange",
+          zIndex: 1051,
+          float: "right",
+          overflow: "hidden",
+          right: "10px",
+          top: "70px",
+          backgroundColor: "#FEFEFE",
+          boxShadow: "-1px 1px 10px #9f9f9f",
+          padding: "0 10px 0 10px",
+          borderRadius: "3px",
+          margin: "10px",
+          display: "none"
+        }}
+      >
+        <p>Loading libraries...</p>
+      </div>
+    </div>
+      <Router>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Layout isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+            }
+          >
+            <Route index element={<Home isDarkMode={isDarkMode} />} />
+            <Route
+              path="spockly"
+              element={<SPOCKLY isDarkMode={isDarkMode} />}
+            />
+            <Route path="/tutorials/*" element={<Tutorials />}>
+              <Route index element={<TutorialIntroduction />} />
+              <Route path="introduction" element={<TutorialIntroduction />} />
+              <Route path="why" element={<TutorialWhy />} />
+              <Route path="who" element={<TutorialWho />} />
+              <Route path="how" element={<TutorialHow />} />
+              <Route path="example" element={<TutorialExample />} />
+            </Route>
+            <Route path="impressum" element={<Impressum />} />
+          </Route>
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 
