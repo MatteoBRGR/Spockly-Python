@@ -254,13 +254,25 @@ const BlocklyComponent = ({ setCode, isDarkMode }) => {
       console.error("Blockly workspace is not initialised.");
       return;
     }
+    var libs = "", np, pd, gpd, sns, plt;
     var pythonCode = pythonGenerator.workspaceToCode(workspaceRef.current);
-    setCode(pythonCode);
+    if(~pythonCode.indexOf('np.')) np = true;
+    if(~pythonCode.indexOf('pd.')) pd = true;
+    if(~pythonCode.indexOf('sns.')) sns = true;
+    if(~pythonCode.indexOf('plt.')) plt = true;
+    if(~pythonCode.indexOf('gpd.')) gpd = true;
+    libs += np ? "import numpy as np\n" : "";
+    libs += pd ? "import pandas as pd\n" : "";
+    libs += sns ? "import seaborn as sns\n" : ""; 
+    libs += plt ? "import matplotlib.pyplot as plt\n" : "";
+    libs += gpd ? "import geopandas as gpd\n" : "";
+
+    setCode(libs + pythonCode);
   };
 
   return (
     <Box
-      ref={blocklyDiv}
+      ref={ blocklyDiv }
       sx={{
         height: "100%",
         width: "100%",

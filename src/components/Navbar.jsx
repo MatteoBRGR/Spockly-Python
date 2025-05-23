@@ -51,7 +51,7 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
             }}
           >
             <img
-              src={SpocklyLogo}
+              src={ SpocklyLogo }
               alt="Spockly Logo"
               style={{ height: 40, width: 40, marginRight: 10 }}
             />
@@ -61,7 +61,7 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
           </Link>
         </Box>
 
-        <Stack direction="row" spacing={3} alignItems="center">
+        <Stack direction="row" spacing={ 3 } alignItems="center">
           <NavLink
             to="/spockly"
             style={({ isActive }) => ({
@@ -91,7 +91,7 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
           <Fab
             variant="extended"
             size="small"
-            onClick={toggleTheme}
+            onClick={ toggleTheme }
             sx={{
               width: "90px",
               bgcolor: theme.palette.primary.light,
@@ -104,13 +104,13 @@ const Navbar = ({ isDarkMode, toggleTheme }) => {
               fontSize: "0.75rem",
             }}
           >
-            <Box display="flex" alignItems="center" gap={0.5}>
+            <Box display="flex" alignItems="center" gap={ 0.5 }>
               {isDarkMode ? (
                 <LightMode fontSize="small" />
               ) : (
                 <Brightness3 fontSize="small" />
               )}
-              {isDarkMode ? "Light" : "Dark"}
+              { isDarkMode ? "Light" : "Dark" }
             </Box>
           </Fab>
         </Stack>

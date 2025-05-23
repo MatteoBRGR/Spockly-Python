@@ -34,10 +34,10 @@ const Footer = () => {
           },
         }}
       >
-        <Link component={RouterLink} to="/">Home</Link>
-        <Link component={RouterLink} to="/spockly">SPOCKLY</Link>
-        <Link component={RouterLink} to="/tutorials">Tutorials</Link>
-        <Link component={RouterLink} to="/impressum">Legal Notice</Link>
+        <Link component={ RouterLink } to="/">Home</Link>
+        <Link component={ RouterLink } to="/spockly">SPOCKLY</Link>
+        <Link component={ RouterLink } to="/tutorials">Tutorials</Link>
+        <Link component={ RouterLink } to="/impressum">Legal Notice</Link>
         <Link
           href="https://github.com/ifgi/spockly-demo/"
           target="_blank"

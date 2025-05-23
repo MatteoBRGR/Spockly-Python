@@ -15,7 +15,6 @@ import SPOCKLY from "./components/Spockly";
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [code, setCode] = useState("");
   const toggleTheme = () => setIsDarkMode((prev) => !prev);
   const theme = isDarkMode ? darkTheme : lightTheme;
 
@@ -24,58 +23,8 @@ function App() {
     document.getElementById('toast').style.display = 'block';
   }, []);
 
-  /** 
-   * <div style={{ height: "100vh", width: "100vw", margin: 0, padding: 0, overflow: "hidden" }}>
-    <h1 style={{ textAlign: "center", margin: "0.5rem 0" }}>
-      Spockly Demo: Blockly in React
-    </h1>
-    <div>
-      <div id="toast"
-        style={{
-          position: "absolute",
-          fontSize: "20px",
-          color: "orange",
-          zIndex: 100,
-          float: "right",
-          overflow: "hidden",
-          right: "10px",
-          backgroundColor: "#FEFEFE",
-          boxShadow: "-1px 1px 10px #9f9f9f",
-          padding: "0 10px 0 10px",
-          borderRadius: "3px",
-          margin: "10px",
-          display: "none"
-        }}
-      >
-        <p>Loading libraries...</p>
-      </div>
-    </div>
-    <div style={{ display: "flex", height: "90vh" }}>
-      {/* Blockly Editor }
-      <div style={{ flex: 1 }}>
-        <BlocklyComponent setCode={setCode} />
-      </div>
-
-      {/* Code Output }
-      <div
-        style={{
-          flex: 1,
-          padding: "1rem",
-          overflow: "auto",
-          background: "#f8f8f8",
-        }}
-      >
-        <h2>Generated Python Code</h2>
-        <CodeDisplay code={code} />
-        <hr />
-        <h2>Output</h2>
-        <Pyodide code={code} />
-      </div>
-    </div>
-   */
-
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={ theme }>
       <GlobalStyles
         styles={{
           html: { height: "100%" },
@@ -130,23 +79,23 @@ function App() {
           <Route
             path="/"
             element={
-              <Layout isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
+              <Layout isDarkMode={ isDarkMode } toggleTheme={ toggleTheme } />
             }
           >
-            <Route index element={<Home isDarkMode={isDarkMode} />} />
+            <Route index element={ <Home isDarkMode={ isDarkMode } /> } />
             <Route
               path="spockly"
-              element={<SPOCKLY isDarkMode={isDarkMode} />}
+              element={ <SPOCKLY isDarkMode={ isDarkMode } /> }
             />
-            <Route path="/tutorials/*" element={<Tutorials />}>
-              <Route index element={<TutorialIntroduction />} />
-              <Route path="introduction" element={<TutorialIntroduction />} />
-              <Route path="why" element={<TutorialWhy />} />
-              <Route path="who" element={<TutorialWho />} />
-              <Route path="how" element={<TutorialHow />} />
-              <Route path="example" element={<TutorialExample />} />
+            <Route path="/tutorials/*" element={ <Tutorials /> }>
+              <Route index element={ <TutorialIntroduction /> } />
+              <Route path="introduction" element={ <TutorialIntroduction /> } />
+              <Route path="why" element={ <TutorialWhy /> } />
+              <Route path="who" element={ <TutorialWho /> } />
+              <Route path="how" element={ <TutorialHow /> } />
+              <Route path="example" element={ <TutorialExample /> } />
             </Route>
-            <Route path="impressum" element={<Impressum />} />
+            <Route path="impressum" element={ <Impressum /> } />
           </Route>
         </Routes>
       </Router>

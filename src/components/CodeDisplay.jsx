@@ -1,9 +1,12 @@
+import { useRef } from "react";
 import { Box, Fab, Stack, Typography } from "@mui/material";
 import { darkTheme, lightTheme } from "./../appTheme";
 import { PlayArrow } from "@mui/icons-material";
+import { ContentPaste } from '@mui/icons-material';
 
 const CodeDisplay = ({ code, isDarkMode }) => {
   const theme = isDarkMode ? darkTheme : lightTheme;
+  const codeRef = useRef(null);
 
   return (
     <Box
@@ -41,11 +44,34 @@ const CodeDisplay = ({ code, isDarkMode }) => {
             },
             boxShadow: "none",
           }}
-          onClick={window.generateCode}
+          onClick={ window.generateCode }
         >
           <Box display="flex" alignItems="center" gap={0.5}>
             <PlayArrow fontSize="small" />
             <Typography fontWeight="bold">Generate</Typography>
+          </Box>
+        </Fab>
+        <Box display="flex" alignItems="center" gap={ 0.5 }>
+          <Typography sx={{ fontSize: "0.9em", marginLeft: '30px', color: "#BBB" }}>Ctrl + Alt + Enter</Typography>
+        </Box>
+        <Fab 
+          size="small"
+          variant="extended"
+          sx={{
+            right: -115,
+            width: "150px",
+            bgcolor: "#f58a42",
+            color: theme.palette.primary.light,
+            "&:hover": {
+              bgcolor: "#d77a3c",
+            },
+            boxShadow: "none",
+          }}
+          onClick={ () => navigator.clipboard.writeText(code).then(codeRef.current.innerText = 'Code Copied!').then(setTimeout(() => codeRef.current.innerText = 'Copy Code', 1500)).catch((e) => console.error('The code could not be copied; ' + e)) }
+          >
+          <Box display="flex" alignItems="center" gap={ 0.5 }>
+            <ContentPaste fontSize="small" />
+            <Typography ref={ codeRef } fontWeight="bold">Copy Code</Typography>
           </Box>
         </Fab>
       </Stack>
@@ -58,6 +84,7 @@ const CodeDisplay = ({ code, isDarkMode }) => {
           height: "75%",
           bgcolor: theme.palette.background.paper,
           zIndex: 1,
+          overflow: "scroll",
         }}
       >
         <Typography
@@ -67,13 +94,10 @@ const CodeDisplay = ({ code, isDarkMode }) => {
             paddingBottom: "10px",
             paddingTop: "5px",
             padding: "20px",
-            whiteSpace: 'pre-line',
+            whiteSpace: 'pre',
           }}
         >
-        { "import pandas as pd\n" +
-          "import numpy as np\n" +
-          // "import matplotlib.pyplot as plt\n" + 
-          "import geopandas as gpd\n\n" + code || "Generated Python code will appear here..."}
+        { code || "Generated Python code will appear here..."}
         </Typography>
       </Box>
     </Box>

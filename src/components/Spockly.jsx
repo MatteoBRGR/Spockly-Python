@@ -5,7 +5,7 @@ import {Card, Box, Grid } from "@mui/material";
 import { darkTheme, lightTheme } from "./../appTheme";
 import Pyodide from "./Pyodide";
 
-function SPOCKLY({isDarkMode}) {
+function SPOCKLY({ isDarkMode }) {
   const [code, setCode] = useState("");
   const theme = isDarkMode ? darkTheme : lightTheme;
 
@@ -18,7 +18,7 @@ function SPOCKLY({isDarkMode}) {
           height: "100vh",
         }}
       >
-        <Grid size={6} sx={{ height: "100%" }}>
+        <Grid size={ 6 } sx={{ height: "100%" }}>
           <Card
             sx={{
               m: 2,
@@ -29,15 +29,15 @@ function SPOCKLY({isDarkMode}) {
               boxShadow: 3,
             }}
           >
-            <BlocklyComponent setCode={setCode} isDarkMode={isDarkMode} />
+            <BlocklyComponent setCode={ setCode } isDarkMode={ isDarkMode } />
           </Card>
         </Grid>
 
         <Grid
-          size={6}
+          size={ 6 }
           sx={{
             height: "100%",
-            overflowY: "auto",
+            overflow: "scroll",
           }}
         >
           <Card
@@ -51,11 +51,11 @@ function SPOCKLY({isDarkMode}) {
               position: "relative",
             }}
           >
-            <Box sx={{ height: "50%", p: 2 }}>
-              <CodeDisplay code={code} isDarkMode={isDarkMode} />
+            <Box sx={{ height: "50%" }}>
+              <CodeDisplay code={ code } isDarkMode={ isDarkMode } />
             </Box>
-            <Box sx={{ height: "50%", p: 2 }}>
-              <Pyodide code={code} isDarkMode={isDarkMode} />
+            <Box sx={{ height: "50%" }}>
+              <Pyodide code={ code } isDarkMode={ isDarkMode } />
             </Box>
           </Card>
         </Grid>

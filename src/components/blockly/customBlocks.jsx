@@ -133,7 +133,7 @@ Blockly.Blocks['consts'] = {
     this.setColour(230);
   }
 }
-pythonGenerator.forBlock['consts'] = function(block,generator) {
+pythonGenerator.forBlock['consts'] = function(block) {
   const dropdown_name = block.getFieldValue('NUM');
   return [`np.${dropdown_name}`, pythonGenerator.ORDER_ATOMIC];
 }
@@ -158,7 +158,7 @@ Blockly.Blocks['load_csv'] = {
     this.setColour(200);
   },
 };
-pythonGenerator.forBlock['load_csv'] = function(block, generator) {
+pythonGenerator.forBlock['load_csv'] = function(block) {
   const dataset = block.getFieldValue('CSV') || '0';
   return [`pd.read_csv('${dataset}.csv')`, pythonGenerator.ORDER_ATOMIC];
 };
@@ -170,7 +170,7 @@ Blockly.Blocks['load_csv_from_url'] = {
   init: function(){
     this.appendDummyInput()
     .appendField('Load CSV file from URL')
-    .appendField(new Blockly.FieldTextInput('http://example.com/file.csv', (url) => url.match(/^[a-z]{4,5}:\/\/[A-Za-zÀ-ÖØ-öø-ÿ0-9.\/:_-]*?\.[a-z]{2,6}/) ? url : 'ERROR!'), 'CSV');
+    .appendField(new Blockly.FieldTextInput('http://example.com/file.csv', (url) => url.match(/^[a-z]{4,5}:\/\/[A-Za-zÀ-ÖØ-öø-ÿ0-9./:_-]*?\.[a-z]{2,6}/) ? url : 'ERROR!'), 'CSV');
     this.setTooltip('Loads a given CSV dataset from an URL. Local files can be used by prepending "file://".');
     this.appendEndRowInput();
     this.setOutput(true, 'Array');
@@ -178,7 +178,7 @@ Blockly.Blocks['load_csv_from_url'] = {
 
   },
 };
-pythonGenerator.forBlock['load_csv_from_url'] = function(block, generator) {
+pythonGenerator.forBlock['load_csv_from_url'] = function(block) {
   const dataset = block.getFieldValue('CSV') || '0';
   return [`pd.read_csv('${dataset}')\n`, pythonGenerator.ORDER_ATOMIC];
 };
@@ -451,7 +451,7 @@ Blockly.Blocks['slice'] = {
     this.setColour(200);
   }
 };
-pythonGenerator.forBlock['slice'] = function(block, generator) {
+pythonGenerator.forBlock['slice'] = function(block) {
   const Val1 = block.getFieldValue('VAL1');
   const Val2 = block.getFieldValue('VAL2');
   const varID = block.getFieldValue('VAR') || '0';
@@ -515,7 +515,6 @@ Blockly.Blocks['list_create'] = {
     .appendField('create list');
     this.setInputsInline(false);
     const appendFieldPlusIcon = new Blockly.FieldImage(
-      // eslint-disable-next-line quotes
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-plus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 5l0 14' /%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E",
       16,
       16,
@@ -576,7 +575,6 @@ Blockly.Blocks['list_create'] = {
         const appended_input = this.appendValueInput('element_' + i)
 
         var deleteArrayElementIcon = new Blockly.FieldImage(
-          // eslint-disable-next-line quotes
           `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-minus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E`,
           16,
           16,
@@ -825,7 +823,7 @@ Blockly.Blocks['input'] = {
     this.setColour(95);
   }
 };
-pythonGenerator.forBlock['input'] = function(block, generator) {
+pythonGenerator.forBlock['input'] = function(block) {
   const question = block.getFieldValue('CSV') || '0';
   return [`input('${question}')`, pythonGenerator.ORDER_ATOMIC];
 }
@@ -866,7 +864,7 @@ Blockly.Blocks['temp_var'] = {
     this.setColour(15);
   }
 };
-pythonGenerator.forBlock['temp_var'] = function(block, generator) {
+pythonGenerator.forBlock['temp_var'] = function(block) {
   const varName = block.getFieldValue('var') || '0';
   return [varName, pythonGenerator.ORDER_ATOMIC];
 };
@@ -883,8 +881,8 @@ Blockly.Blocks['import0'] = {
     this.setNextStatement(true);
   }
 };
-pythonGenerator.forBlock['import0'] = function(block, generator) {
-  const module = block.getFieldValue('IMPORT') || '0';
+pythonGenerator.forBlock['import0'] = function(block) {
+  const module = block.getFieldValue('IMPORT') || 'module';
   return `import ${module}\n`;
 }
 
@@ -901,9 +899,9 @@ Blockly.Blocks['import1'] = {
     this.setNextStatement(true);
   }
 };
-pythonGenerator.forBlock['import1'] = function(block, generator) {
-  const module = block.getFieldValue('IMPORT') || '0';
-  const alias = block.getFieldValue('ALIAS') || '0';
+pythonGenerator.forBlock['import1'] = function(block) {
+  const module = block.getFieldValue('IMPORT') || 'module';
+  const alias = block.getFieldValue('ALIAS') || 'alias';
   return `import ${module} as ${alias}\n`;
 }
 
@@ -920,9 +918,9 @@ Blockly.Blocks['import2'] = {
     this.setNextStatement(true);
   }
 };
-pythonGenerator.forBlock['import2'] = function(block, generator) {
-  const module = block.getFieldValue('IMPORT') || '0';
-  const func = block.getFieldValue('FUNCTION') || '0';
+pythonGenerator.forBlock['import2'] = function(block) {
+  const module = block.getFieldValue('IMPORT') || 'module';
+  const func = block.getFieldValue('FUNCTION') || 'function';
   return `from ${module} import ${func}\n`;
 }
 
@@ -941,10 +939,10 @@ Blockly.Blocks['import3'] = {
     this.setNextStatement(true);
   }
 };
-pythonGenerator.forBlock['import3'] = function(block, generator) {
-  const module = block.getFieldValue('IMPORT') || '0';
-  const func = block.getFieldValue('FUNCTION') || '0';
-  const alias = block.getFieldValue('ALIAS') || '0';
+pythonGenerator.forBlock['import3'] = function(block) {
+  const module = block.getFieldValue('IMPORT') || 'module';
+  const func = block.getFieldValue('FUNCTION') || 'function';
+  const alias = block.getFieldValue('ALIAS') || 'alias';
   return `from ${module} import ${func} as ${alias}\n`;
 };
 
@@ -956,9 +954,9 @@ Blockly.Blocks['create_data_and_output'] = {
   init: function() {
     this.appendDummyInput('')
         .appendField('Create')
-        .appendField(new Blockly.FieldTextInput('data', txt => txt.replace(/[\/<>:?*\\"|]/g, '')), 'DATA')
+        .appendField(new Blockly.FieldTextInput('data', txt => txt.replace(/[/<>:?*\\"|]/g, '')), 'DATA')
         .appendField('and')
-        .appendField(new Blockly.FieldTextInput('output', txt => txt.replace(/[\/<>:?*\\"|]/g, '')), 'OUTPUT')
+        .appendField(new Blockly.FieldTextInput('output', txt => txt.replace(/[/<>:?*\\"|]/g, '')), 'OUTPUT')
         .appendField('folders');
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -1013,7 +1011,7 @@ Blockly.Blocks['func_download'] = {
     this.setColour(200);
   }
 };
-pythonGenerator.forBlock['func_download'] = function(block, generator) {
+pythonGenerator.forBlock['func_download'] = function(block) {
   const url = block.getFieldValue('NAME');
   return `download('${url}')\n`
 }
@@ -1029,7 +1027,7 @@ Blockly.Blocks['read_file'] = {
     this.setColour(200);
   }
 };
-pythonGenerator.forBlock['read_file'] = function(block, generator) {
+pythonGenerator.forBlock['read_file'] = function(block) {
   const fileName = block.getFieldValue('NAME');
   return `gpd.read_file(os.path.join(data_folder, '${fileName}'))\n`
 }
@@ -1065,7 +1063,7 @@ Blockly.Blocks['listdir'] = {
     this.setColour(200); 
   }
 }
-pythonGenerator.forBlock['listdir'] = function(block, generator) {
+pythonGenerator.forBlock['listdir'] = function(block) {
   let path = block.getFieldValue('PATH');
   if (path) { path = "'" + path + "'"; }
   return [`os.listdir(${path})`, pythonGenerator.ORDER_ATOMIC];
@@ -1222,7 +1220,7 @@ Blockly.Blocks['reshape'] = {
     this.setColour(200);
   }
 };
-pythonGenerator.forBlock['reshape'] = function(block,generator) {
+pythonGenerator.forBlock['reshape'] = function(block, generator) {
   const value_array = generator.valueToCode(block, 'NAME', pythonGenerator.ORDER_COLLECTION);
   const value_rows = generator.valueToCode(block, 'rows', pythonGenerator.ORDER_ATOMIC);
   const value_columns = generator.valueToCode(block, 'columns', pythonGenerator.ORDER_ATOMIC);
@@ -1242,7 +1240,7 @@ Blockly.Blocks['load_txt'] = {
     this.setColour(200);
   },
 };
-pythonGenerator.forBlock['load_txt'] = function(block, generator) {
+pythonGenerator.forBlock['load_txt'] = function(block) {
   const dataset = block.getFieldValue('txt') || '0';
   return [`np.loadtxt('${dataset}.txt')`, pythonGenerator.ORDER_ATOMIC];
 };
@@ -1260,7 +1258,7 @@ Blockly.Blocks['load_json'] = {
     this.setColour(200);
   },
 };
-pythonGenerator.forBlock['load_json'] = function(block, generator) {
+pythonGenerator.forBlock['load_json'] = function(block) {
   const dataset = block.getFieldValue('json') || '0';
   return [`pd.read_json('${dataset}.json')`, pythonGenerator.ORDER_ATOMIC];
 };
@@ -1421,7 +1419,6 @@ Blockly.Blocks['line_segment'] = {
         .setCheck('Coords');
     this.setInputsInline(false);
     const appendFieldPlusIcon = new Blockly.FieldImage(
-      // eslint-disable-next-line quotes
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-plus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 5l0 14' /%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E",
       16,
       16,
@@ -1483,7 +1480,6 @@ Blockly.Blocks['line_segment'] = {
         const appended_input = this.appendValueInput('element_' + i).setCheck('Coords');
 
         var deleteArrayElementIcon = new Blockly.FieldImage(
-          // eslint-disable-next-line quotes
           `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-minus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E`,
           16,
           16,
@@ -1536,7 +1532,7 @@ Blockly.Blocks['coords'] = {
     this.setColour(150);
   }
 };
-pythonGenerator.forBlock["coords"] = function(block, generator) {
+pythonGenerator.forBlock["coords"] = function(block) {
   const X_Coord = block.getFieldValue('XCoord') || '0';
   const Y_Coord = block.getFieldValue('YCoord') || '0';
   return [`(${X_Coord}, ${Y_Coord})`, pythonGenerator.ORDER_ATOMIC]
@@ -1652,7 +1648,7 @@ const bounding_box = {
   }
 };
 Blockly.common.defineBlocks({bounding_box: bounding_box});             
-pythonGenerator.forBlock['bounding_box'] = function(block, generator) {
+pythonGenerator.forBlock['bounding_box'] = function(block) {
   const min_x = block.getFieldValue('min_x') || '0';
   const min_y = block.getFieldValue('min_y') || '0';
   const max_x = block.getFieldValue('max_x') || '0';
@@ -1672,7 +1668,6 @@ Blockly.Blocks['polygon'] = {
         .setCheck('Coords');
     this.setInputsInline(false);
     const appendFieldPlusIcon = new Blockly.FieldImage(
-      // eslint-disable-next-line quotes
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-plus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M12 5l0 14' /%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E",
       16,
       16,
@@ -1734,7 +1729,6 @@ Blockly.Blocks['polygon'] = {
         const appended_input = this.appendValueInput('element_' + i).setCheck('Coords');
 
         var deleteArrayElementIcon = new Blockly.FieldImage(
-          // eslint-disable-next-line quotes
           `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='icon icon-tabler icon-tabler-minus' width='60' height='60' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23ffffff' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke='none' d='M0 0h24v24H0z' fill='none'/%3E%3Cpath d='M5 12l14 0' /%3E%3C/svg%3E`,
           16,
           16,
@@ -1777,11 +1771,11 @@ pythonGenerator.forBlock["centroid"] = function(block, generator) {
 };
 
 //map
-const create_map = {
+Blockly.Blocks['create_map'] = {
   init: function() {
     this.appendValueInput('center')
-    .setCheck('Coords')
-      .appendField('Create a map centred on');
+        .setCheck('Coords')
+        .appendField('Create a map centered on');
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setTooltip('');
@@ -1789,13 +1783,12 @@ const create_map = {
     this.setColour(270);
   }
 };
-Blockly.common.defineBlocks({create_map: create_map});
-pythonGenerator.forBlock['create_map'] = function(block,generator) {
-  const value_center = generator.valueToCode(block, 'center', Order.ATOMIC);
+pythonGenerator.forBlock['create_map'] = function(block, generator) {
+  const value_center = generator.valueToCode(block, 'center', pythonGenerator.ORDER_ATOMIC) || '(0, 0)';
   return `import folium\nm = folium.Map(location=${value_center}, zoom_start=12)`;
 }
 
-const create_marker = {
+Blockly.Blocks['create_marker'] = {
   init: function() {
     this.appendDummyInput('NAME')
       .appendField('Create marker');
@@ -1814,9 +1807,8 @@ const create_marker = {
     this.setColour(270);
   }
 };
-Blockly.common.defineBlocks({create_marker: create_marker});
-pythonGenerator.forBlock['create_marker'] = function(block,generator) {
-  const value_position = generator.valueToCode(block, 'position', Order.ATOMIC);
+pythonGenerator.forBlock['create_marker'] = function(block, generator) {
+  const value_position = generator.valueToCode(block, 'position', pythonGenerator.ORDER_ATOMIC);
   const text_popup = block.getFieldValue('popup');
   const text_icon = block.getFieldValue('icon');
   return `folium.Marker(
@@ -1826,7 +1818,7 @@ pythonGenerator.forBlock['create_marker'] = function(block,generator) {
 ).add_to(m)`;
 }
 
-const create_polygon = {
+Blockly.Blocks['create_polygon'] = {
   init: function() {
     this.appendDummyInput('NAME')
       .appendField('Create polygon on map');
@@ -1848,9 +1840,8 @@ const create_polygon = {
     this.setColour(270);
   }
 };
-Blockly.common.defineBlocks({create_polygon: create_polygon});
-pythonGenerator.forBlock['create_polygon'] = function(block,generator) {
-  const polygon_shown = generator.valueToCode(block, 'position', Order.ATOMIC);
+pythonGenerator.forBlock['create_polygon'] = function(block, generator) {
+  const polygon_shown = generator.valueToCode(block, 'position', pythonGenerator.ORDER_ATOMIC);
   const text_popup = block.getFieldValue('popup');
   const color = block.getFieldValue('color');
   const fill_color = block.getFieldValue('fill_color');
@@ -1862,7 +1853,7 @@ pythonGenerator.forBlock['create_polygon'] = function(block,generator) {
 ).add_to(m)`;
 }
 
-const create_circle = {
+Blockly.Blocks['create_circle'] = {
   init: function() {
     this.appendDummyInput('NAME')
       .appendField('Create circle on map');
@@ -1887,9 +1878,8 @@ const create_circle = {
     this.setColour(270);
   }
 };
-Blockly.common.defineBlocks({create_circle: create_circle});
-pythonGenerator.forBlock['create_circle'] = function(block,generator) {
-  const polygon_shown = generator.valueToCode(block, 'position', Order.ATOMIC);
+pythonGenerator.forBlock['create_circle'] = function(block, generator) {
+  const polygon_shown = generator.valueToCode(block, 'position', pythonGenerator.ORDER_ATOMIC);
   const radius = block.getFieldValue('radius') || '1';
   const text_popup = block.getFieldValue('popup');
   const color = block.getFieldValue('color');
@@ -1903,7 +1893,7 @@ pythonGenerator.forBlock['create_circle'] = function(block,generator) {
 ).add_to(m)`;
 }
 
-const JSON_on_map = {
+Blockly.Blocks['JSON_on_map'] = {
   init: function() {
     this.appendValueInput('json')
       .appendField('Add json on map');
@@ -1914,10 +1904,9 @@ const JSON_on_map = {
     this.setColour(270);
   }
 };
-Blockly.common.defineBlocks({JSON_on_map: JSON_on_map});
-pythonGenerator.forBlock['JSON_on_map'] = function(block,generator) {
-  const value_json = generator.valueToCode(block, 'json', Order.ATOMIC);
-  return `import requests\n
+pythonGenerator.forBlock['JSON_on_map'] = function(block, generator) {
+  const value_json = generator.valueToCode(block, 'json', pythonGenerator.ORDER_ATOMIC);
+  return `\nimport requests\n
           geojson_data = requests.get(${value_json}).json()\n
           folium.GeoJson(geojson_data).add_to(m)`;
 }

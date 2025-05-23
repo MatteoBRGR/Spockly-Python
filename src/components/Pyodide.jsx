@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, KeyboardEvent, useState, useRef } from "react";
 import { Box, Fab, Stack, Typography } from "@mui/material";
 import { PlayArrow } from "@mui/icons-material";
 import { darkTheme, lightTheme } from "./../appTheme";
+import { ContentPaste } from '@mui/icons-material';
 
 const Pyodide = ({ code, isDarkMode }) => {
     const [output, setOutput] = useState("Loading Pyodide...");
@@ -9,6 +10,7 @@ const Pyodide = ({ code, isDarkMode }) => {
     const [isLoading, setIsLoading] = useState(true);
     const printProxyRef = useRef(null); 
     const theme = isDarkMode ? darkTheme : lightTheme;
+    const refCode = useRef(null);
 
     useEffect(() => {
         const loadPyodideAndPackages = async () => {
@@ -36,6 +38,8 @@ const Pyodide = ({ code, isDarkMode }) => {
                 pyodideInstance.globals.set("print", printProxyRef.current);
                 setPyodide(pyodideInstance);
                 setIsLoading(false);
+                setOutput("Pyodide loaded successfully!");
+                console.log("Pyodide loaded successfully!");
             } catch (error) {
                 console.error("Error loading Pyodide:", error);
                 setOutput("Error loading Pyodide: " + error.toString());
@@ -56,28 +60,27 @@ const Pyodide = ({ code, isDarkMode }) => {
     }, []);
 
 const firstRunRef = useRef(false);
-    // useEffect(() => {
-        const first = async () => {
-            if (pyodide && !firstRunRef.current) {
-                firstRunRef.current = true;
-                console.log('Imports are loading:');
-                // Install pandas and other core packages
-                await pyodide.loadPackage("pandas");
-                await pyodide.loadPackage("geopandas");
-                // await pyodide.loadPackage("matplotlib");
-                await pyodide.loadPackage("requests");
-                // await pyodide.loadPackage("micropip");
-                await pyodide.loadPackage("pytest");
-                // const micropip = pyodide.pyimport("micropip");
+    const first = async () => {
+        if (pyodide && !firstRunRef.current) {
+            firstRunRef.current = true;
+            console.log('Imports are loading:');
+            // Install pandas and other core packages
+            await pyodide.loadPackage("pandas");
+            await pyodide.loadPackage("geopandas");
+            // await pyodide.loadPackage("matplotlib");
+            await pyodide.loadPackage("requests");
+            // await pyodide.loadPackage("micropip");
+            await pyodide.loadPackage("pytest");
+            // const micropip = pyodide.pyimport("micropip");
 
-                var initCode =
-                    "import pandas as pd\n" +
-                    "import numpy as np\n" +
-                    "import geopandas as gpd\n" +
-                    // "import matplotlib.pyplot as plt\n" +
-                    "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n";
-                await pyodide.runPython(initCode);
-                console.info('Imports loaded!'); //Do not change this msg
+            var initCode =
+                "import pandas as pd\n" +
+                "import numpy as np\n" +
+                "import geopandas as gpd\n" +
+                // "import matplotlib.pyplot as plt\n" +
+                "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n";
+            await pyodide.runPython(initCode);
+            console.info('Imports loaded!'); //Do not change this msg
 
 //                 const patchReadCsv = `import pytest #; pytest.skip("Can't use top level await in doctests")
 // original_read_csv = pd.read_csv
@@ -91,10 +94,9 @@ const firstRunRef = useRef(false);
 //   pyodide,
 //   "https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv"
 // );
-            }
         }
-        first();
-    // }, [pyodide]);
+    }
+    first();
 
     const ensureImports = async () => {
         if (!pyodide) return false;
@@ -112,39 +114,36 @@ const firstRunRef = useRef(false);
         }
     };
 
-    // useEffect(() => {
-        const runCode = async () => {
-          if (!pyodide || !code) return;
-            const importsOK = await ensureImports();
-            if (!importsOK) {
-              console.log('Imports not OK!');
-                setIsLoading(true);
-                await first();
-              console.log('Imports loaded again!');
-                setIsLoading(false);
-            }
-            if (pyodide && code) {
-                code =  "import pandas as pd\n" +
-                        "import numpy as np\n" +
-                        "import geopandas as gpd\n" +
-                        // "import matplotlib.pyplot as plt\n" +
-                        "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n" + code;
-                console.log("%cThis code is being compiled:\n", "font-size: 2em; color: violet", "\n" + code);
-                pyodide.setDebug(true);
-                setOutput("");
-                try {
-                    const result = await pyodide.runPython(code);
-                    if (result !== undefined && result !== null) {
-                        setOutput(prev => prev + result.toString());
-                    }
-                } catch (error) {
-                    console.error("Error running Python code:", error);
-                    setOutput(`Error: ${error.message}`);
+    const runCode = async () => {
+      if (!pyodide || !code) return;
+        const importsOK = await ensureImports();
+        if (!importsOK) {
+          console.log('Imports not OK!');
+            setIsLoading(true);
+            await first();
+          console.log('Imports loaded again!');
+            setIsLoading(false);
+        }
+        if (pyodide && code) {
+            code =  "import pandas as pd\n" +
+                    "import numpy as np\n" +
+                    "import geopandas as gpd\n" +
+                    // "import matplotlib.pyplot as plt\n" +
+                    "from shapely.geometry import Polygon, LineString, Point, MultiPolygon\n\n" + code;
+            console.log("%cThis code is being compiled:\n", "font-size: 2em; color: violet", "\n" + code);
+            pyodide.setDebug(true);
+            setOutput("");
+            try {
+                const result = await pyodide.runPython(code);
+                if (result !== undefined && result !== null) {
+                    setOutput(prev => prev + result.toString());
                 }
+            } catch (error) {
+                console.error("Error running Python code:", error);
+                setOutput(`Error: ${error.message}`);
             }
-        };
-        // runCode();
-    // }, [pyodide, code]);
+        }
+    };
     
     useEffect(() => {
         const findInfo = () => {
@@ -156,16 +155,37 @@ const firstRunRef = useRef(false);
             function onInfo(message){
                 cslInfo(message);
                 if (message === 'Imports loaded!') {
-                    document.getElementById('toast').style.color = '#089d08';
-                    document.querySelector('#toast p').innerHTML = 'Libraries loaded!';
-                    document.getElementById('toast').style.animation = 'slideOut 5s ease-in-out';
-                    setTimeout(() => document.getElementById('toast').style.display = 'none', 5100);
+                  document.getElementsByClassName('Mui-disabled')[0].classList.remove('Mui-disabled');
+                  document.getElementById('toast').style.color = '#089d08';
+                  document.querySelector('#toast p').innerHTML = 'Libraries loaded!';
+                  document.getElementById('toast').style.animation = 'slideOut 5s ease-in-out';
+                  setTimeout(() => document.getElementById('toast').style.display = 'none', 4950);
                 }
             }
         };
         findInfo();
     });
-    
+
+document.addEventListener(
+  "keydown",
+  (ev) => {
+    const keyName = ev.key;
+    if (keyName === "Control") {
+      return;
+    }
+
+    if ((ev.ctrlKey || ev.metaKey) && ev.altKey && keyName === 'Enter') {
+      ev.preventDefault();
+      window.generateCode();
+    }
+    if ((ev.ctrlKey || ev.metaKey) && keyName === 'Enter' && !ev.altKey) {
+      ev.preventDefault();
+      runCode();
+    }
+  },
+  false,
+);
+
 //     const fetchAndLoadCsv = async (pyodide, url, variableName = "df") => {
 //         const response = await fetch(url);
 //         const csvText = await response.text();
@@ -176,27 +196,6 @@ const firstRunRef = useRef(false);
 // `;
 //         await pyodide.runPython(pythonCode);
 //     };
-
-    /**
-     * <div>
-            {isLoading ? (
-                <div>Loading Pyodide...</div>
-            ) : (
-                <pre style={{
-                    backgroundColor: "#f4f4f4",
-                    padding: "10px",
-                    borderRadius: "5px",
-                    textAlign: "left",
-                    whiteSpace: "pre-wrap",
-                    wordWrap: "break-word",
-                    border: "1px solid #ddd",
-                    minHeight: "50px",
-                }}>
-                    { output || 'No output' }
-                </pre>
-            )}
-        </div>
-     */
 
     return (
         <Box
@@ -226,7 +225,7 @@ const firstRunRef = useRef(false);
           variant="extended"
           sx={{
             left: 20,
-            width: "140px",
+            width: "200px",
             bgcolor: "#33bfff",
             color: theme.palette.primary.light,
             "&:hover": {
@@ -234,11 +233,35 @@ const firstRunRef = useRef(false);
             },
             boxShadow: "none",
           }}
-          onClick={runCode}
+          onClick={ runCode }
+          disabled={true}
         >
-          <Box display="flex" alignItems="center" gap={0.5}>
+          <Box display="flex" alignItems="center" gap={ 0.5 }>
             <PlayArrow fontSize="small" />
             <Typography fontWeight="bold">Run Python Code</Typography>
+          </Box>
+        </Fab>
+        <Box display="flex" alignItems="center" gap={ 0.5 }>
+          <Typography sx={{ fontSize: "0.9em", marginLeft: '30px', color: "#BBB" }}>Ctrl + Enter</Typography>  
+        </Box>
+        <Fab 
+          size="small"
+          variant="extended"
+          sx={{
+            right: -45,
+            width: "160px",
+            bgcolor: "#f58a42",
+            color: theme.palette.primary.light,
+            "&:hover": {
+              bgcolor: "#d77a3c",
+            },
+            boxShadow: "none",
+          }}
+          onClick={ () => navigator.clipboard.writeText(output).then(refCode.current.innerText = 'Output Copied!').then(setTimeout(() => refCode.current.innerText = 'Copy Output', 1500)).catch((e) => console.error('The output could not be copied. ' + e)) }
+          >
+          <Box display="flex" alignItems="center" gap={ 0.5 }>
+            <ContentPaste fontSize="small" />
+            <Typography ref={ refCode } fontWeight="bold">Copy Output</Typography>
           </Box>
         </Fab>
       </Stack>
@@ -251,6 +274,7 @@ const firstRunRef = useRef(false);
           height: "75%",
           bgcolor: theme.palette.background.paper,
           zIndex: 1,
+          overflow: "scroll",
         }}
       >
         <Typography
@@ -262,7 +286,7 @@ const firstRunRef = useRef(false);
             whiteSpace: 'pre-line',
           }}
         >
-          {output}
+          { output || 'No output' }
         </Typography>
       </Box>
     </Box>
