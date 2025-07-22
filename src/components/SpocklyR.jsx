@@ -9,7 +9,7 @@ import { MdOutlineOutput } from "react-icons/md";
 import { FaCode } from "react-icons/fa6";
 import useSpocklyTour from "./useSpocklyTour";
 import MiniPackageLoadingBar from "./MiniPackageLoadingBar";
-import BlockExplanstions from "./BlockExplanations";
+import BlockExplanations from "./BlockExplanations";
 import { FaHandsHelping } from "react-icons/fa";
 
 function TabPanel({ children, value, index }) {
