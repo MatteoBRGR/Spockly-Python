@@ -22,5 +22,6 @@ export const german = {
         "DATA_MANIPULATION": "Datenmanipulation",
         "POINTS": "Punkte und Figuren",
         "DATA_INSPECTION": "Dateninspektion",
+        "RASTER": "Raster",
     },
 }

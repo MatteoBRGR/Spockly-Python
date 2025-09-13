@@ -1198,7 +1198,7 @@ Blockly.Blocks['group_by'] = {
       }
       return (new Blockly.FieldDropdown(options));
     } catch (e) {
-      return (new Blockly.FieldTextInput('Latitude'));
+      return (new Blockly.FieldTextInput('column_name'));
     }
   }
 };

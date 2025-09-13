@@ -470,7 +470,7 @@ const BlocklyComponent = ({ setCode, isDarkMode, onUploadClick, workspaceRef }) 
             <block type="ppv_interpolation"></block>
           </category>
 
-          <category name ="${Blockly.Msg.Categories["Raster"]}" colour="#00ff80">
+          <category name ="${Blockly.Msg.Categories["RASTER"]}" colour="#00ff80">
             <block type="read_raster_data"></block>
             <block type="clip_raster_bbox"></block>
             <block type="save_raster"></block>

@@ -22,5 +22,6 @@ export const english = {
         "DATA_MANIPULATION": "Data Manipulation",
         "POINTS": "Points &amp; Figures",
         "DATA_INSPECTION": "Data Inspection",
+        "RASTER": "Raster",
     },
 }
