@@ -470,6 +470,19 @@ const BlocklyComponent = ({ setCode, isDarkMode, onUploadClick, workspaceRef }) 
             <block type="ppv_interpolation"></block>
           </category>
 
+          <category name ="${Blockly.Msg.Categories["Raster"]}" colour="#00ff80">
+            <block type="read_raster_data"></block>
+            <block type="clip_raster_bbox"></block>
+            <block type="save_raster"></block>
+            <block type="visualize_raster"></block>
+            <block type="raster_histogram"></block>
+            <block type="log_transform_raster"></block>
+            <block type="reclassify_raster"></block>
+            <block type="raster_to_point_grid"></block>
+            <block type="points_to_geodataframe"></block>
+            <block type="plot_geodataframe"></block>
+          </category>
+
           <category name="${Blockly.Msg.Categories["MAPS"]}" colour="#8803c1">
             <block type="GeoCoords"></block>
             <block type="folium_map">

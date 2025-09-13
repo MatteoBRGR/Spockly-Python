@@ -460,6 +460,354 @@ pythonGenerator.forBlock['describe'] = function(block) {
   return [`${Var}.describe(include = 'all')\n# using np`, pythonGenerator.ORDER_ATOMIC];
 };
 
+Blockly.Blocks['read_raster_data'] = {
+  init: function() {
+    this.appendValueInput("FOLDER")
+        .setCheck("String")
+        .appendField("folder");
+    this.appendValueInput("FILE")
+        .setCheck("String")
+        .appendField("file name");
+    this.setOutput(true, "RasterData");
+    this.setColour(230); // Earth/science category color
+    this.setTooltip("Read raster file (using rasterio) and return raster data as array");
+    this.setHelpUrl("");
+  }
+};
+pythonGenerator.forBlock['read_raster_data'] = function(block, generator) {
+  var folder = generator.valueToCode(block, 'FOLDER', pythonGenerator.ORDER_ATOMIC) || "''";
+  var file = generator.valueToCode(block, 'FILE', pythonGenerator.ORDER_ATOMIC) || "''";
+  var code = `
+import rasterio
+import numpy as np
+
+_raster_file = f"{${folder}}/{${file}}"
+with rasterio.open(_raster_file) as src:
+    raster_data = src.read(1)
+raster_data
+  `;
+  return [code, pythonGenerator.ORDER_ATOMIC];
+};
+
+Blockly.Blocks['clip_raster_bbox'] = {
+  init: function() {
+    this.appendValueInput("RASTER")
+        .setCheck("RasterData")
+        .appendField("clip raster");
+    this.appendValueInput("XMIN")
+        .setCheck("Number")
+        .appendField("xmin");
+    this.appendValueInput("YMIN")
+        .setCheck("Number")
+        .appendField("ymin");
+    this.appendValueInput("XMAX")
+        .setCheck("Number")
+        .appendField("xmax");
+    this.appendValueInput("YMAX")
+        .setCheck("Number")
+        .appendField("ymax");
+    this.setOutput(true, "RasterData");
+    this.setColour(200); // similar category color to raster
+    this.setTooltip("Clip a raster using a bounding box (xmin, ymin, xmax, ymax)");
+    this.setHelpUrl("");
+  }
+};
+pythonGenerator.forBlock['clip_raster_bbox'] = function(block, generator) {
+  var raster = generator.valueToCode(block, 'RASTER', pythonGenerator.ORDER_ATOMIC) || 'None';
+  var xmin = generator.valueToCode(block, 'XMIN', pythonGenerator.ORDER_ATOMIC) || '-180';
+  var ymin = generator.valueToCode(block, 'YMIN', pythonGenerator.ORDER_ATOMIC) || '-90';
+  var xmax = generator.valueToCode(block, 'XMAX', pythonGenerator.ORDER_ATOMIC) || '180';
+  var ymax = generator.valueToCode(block, 'YMAX', pythonGenerator.ORDER_ATOMIC) || '90';
+  var code = `
+from rasterio.mask import mask
+from shapely.geometry import box
+import geopandas as gpd
+
+bbox = box(${xmin}, ${ymin}, ${xmax}, ${ymax})
+gdf = gpd.GeoDataFrame({'geometry': [bbox]}, crs='EPSG:4326')
+
+with rasterio.open(_raster_file) as src:
+    out_image, out_transform = mask(src, gdf.geometry, crop=True)
+    out_meta = src.meta.copy()
+    out_meta.update({
+        "driver": "GTiff",
+        "height": out_image.shape[1],
+        "width": out_image.shape[2],
+        "transform": out_transform
+    })
+out_image
+  `;
+  return [code, pythonGenerator.ORDER_ATOMIC];
+};
+
+Blockly.Blocks['save_raster'] = {
+  init: function() {
+    this.appendValueInput("RASTER")
+        .setCheck("RasterData")
+        .appendField("save raster");
+    this.appendValueInput("FILENAME")
+        .setCheck("String")
+        .appendField("as file");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(180);
+    this.setTooltip("Save raster data to a GeoTIFF file");
+    this.setHelpUrl("");
+  }
+};
+
+pythonGenerator.forBlock['save_raster'] = function(block, generator) {
+  var raster = generator.valueToCode(block, 'RASTER', pythonGenerator.ORDER_ATOMIC) || 'None';
+  var filename = generator.valueToCode(block, 'FILENAME', pythonGenerator.ORDER_ATOMIC) || "'output.tif'";
+  var code = `
+clipped_raster_file = ${filename}
+with rasterio.open(clipped_raster_file, 'w', **out_meta) as dest:
+    dest.write(${raster})
+print(f"Clipped raster saved to {clipped_raster_file}")
+  `;
+  return code;
+};
+
+Blockly.Blocks['visualize_raster'] = {
+  init: function() {
+    this.appendValueInput("RASTER")
+        .setCheck("RasterData")
+        .appendField("visualize raster");
+    this.appendValueInput("TITLE")
+        .setCheck("String")
+        .appendField("title");
+    this.appendValueInput("CMAP")
+        .setCheck("String")
+        .appendField("colormap");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(120);
+    this.setTooltip("Visualize a raster dataset with optional title and colormap");
+    this.setHelpUrl("");
+  }
+};
+pythonGenerator.forBlock['visualize_raster'] = function(block, generator) {
+  var raster = generator.valueToCode(block, 'RASTER', pythonGenerator.ORDER_ATOMIC) || 'None';
+  var title = generator.valueToCode(block, 'TITLE', pythonGenerator.ORDER_ATOMIC) || "'Raster Data'";
+  var cmap = generator.valueToCode(block, 'CMAP', pythonGenerator.ORDER_ATOMIC) || "'viridis'";
+
+  var code = `
+from rasterio.plot import show
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(figsize=(10, 10))
+show(${raster}, ax=ax, cmap=${cmap})
+ax.set_title(${title})
+plt.show()
+  `;
+  return code;
+};
+
+Blockly.Blocks['raster_histogram'] = {
+  init: function() {
+    this.appendValueInput("RASTER")
+        .setCheck("RasterData")
+        .appendField("plot histogram of raster");
+    this.appendDummyInput()
+        .appendField("log scale")
+        .appendField(new Blockly.FieldCheckbox("FALSE"), "LOG");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(100);
+    this.setTooltip("Plot histogram of raster pixel values (optionally with log scale)");
+    this.setHelpUrl("");
+  }
+};
+pythonGenerator.forBlock['raster_histogram'] = function(block, generator) {
+  var raster = generator.valueToCode(block, 'RASTER', pythonGenerator.ORDER_ATOMIC) || 'None';
+  var logScale = block.getFieldValue('LOG') === 'TRUE';
+
+  var code = `
+import matplotlib.pyplot as plt
+plt.hist(${raster}.reshape(-1), bins=100)
+${ logScale ? "plt.yscale('log')" : "" }
+plt.xlabel('Pixel Value')
+plt.ylabel('Frequency')
+plt.title('Histogram of Raster Data')
+plt.show()
+  `;
+  return code;
+};
+
+Blockly.Blocks['log_transform_raster'] = {
+  init: function() {
+    this.appendValueInput("RASTER")
+        .setCheck("RasterData")
+        .appendField("log transform raster");
+    this.setOutput(true, "RasterData");
+    this.setColour(140);
+    this.setTooltip("Apply log(1+x) transformation to raster data");
+    this.setHelpUrl("");
+  }
+};
+pythonGenerator.forBlock['log_transform_raster'] = function(block, generator) {
+  var raster = generator.valueToCode(block, 'RASTER', pythonGenerator.ORDER_ATOMIC) || 'None';
+
+  var code = `
+import numpy as np
+np.log1p(${raster})
+  `;
+  return [code, pythonGenerator.ORDER_ATOMIC];
+};
+
+Blockly.Blocks['reclassify_raster'] = {
+  init: function() {
+    this.appendValueInput("RASTER")
+        .setCheck("RasterData")
+        .appendField("reclassify raster");
+    this.appendValueInput("THRESH1")
+        .setCheck("Number")
+        .appendField("low threshold");
+    this.appendValueInput("THRESH2")
+        .setCheck("Number")
+        .appendField("medium threshold");
+    this.setOutput(true, "RasterData");
+    this.setColour(200);
+    this.setTooltip("Reclassify raster into categories: 1=Low, 2=Medium, 3=High");
+    this.setHelpUrl("");
+  }
+};
+pythonGenerator.forBlock['reclassify_raster'] = function(block, generator) {
+  var raster = generator.valueToCode(block, 'RASTER', pythonGenerator.ORDER_ATOMIC) || 'None';
+  var thresh1 = generator.valueToCode(block, 'THRESH1', pythonGenerator.ORDER_ATOMIC) || '50';
+  var thresh2 = generator.valueToCode(block, 'THRESH2', pythonGenerator.ORDER_ATOMIC) || '200';
+
+  var code = `
+def reclassify(value):
+    if value < ${thresh1}:
+        return 1
+    elif value < ${thresh2}:
+        return 2
+    else:
+        return 3
+
+import numpy as np
+np.vectorize(reclassify)(${raster})
+  `;
+  return [code, pythonGenerator.ORDER_ATOMIC];
+};
+
+Blockly.Blocks['raster_to_point_grid'] = {
+  init: function() {
+    this.appendValueInput("RASTER")
+        .setCheck("RasterData")
+        .appendField("convert raster to point grid");
+    this.appendValueInput("STEP")
+        .setCheck("Number")
+        .appendField("step size");
+    this.setOutput(true, "VectorData");
+    this.setColour(230);
+    this.setTooltip("Convert raster grid into a vector of points with values");
+    this.setHelpUrl("");
+  }
+};
+pythonGenerator.forBlock['raster_to_point_grid'] = function(block, generator) {
+  var raster = generator.valueToCode(block, 'RASTER', pythonGenerator.ORDER_ATOMIC) || 'None';
+  var step = generator.valueToCode(block, 'STEP', pythonGenerator.ORDER_ATOMIC) || '10';
+  var code = `
+import geopandas as gpd
+from shapely.geometry import Point
+import rasterio
+
+points = []
+values = []
+rows, cols = ${raster}.shape
+for row in range(0, rows, ${step}):
+    for col in range(0, cols, ${step}):
+        value = ${raster}[row, col]
+        if value > 0:  # filter zeros
+            x, y = rasterio.transform.xy(transform, row, col)
+            points.append(Point(x, y))
+            values.append(value)
+
+gdf = gpd.GeoDataFrame({'geometry': points, 'value': values}, crs='EPSG:4326')
+gdf
+  `;
+  return [code, pythonGenerator.ORDER_ATOMIC];
+};
+
+Blockly.Blocks['points_to_geodataframe'] = {
+  init: function() {
+    this.appendValueInput("POINTS")
+        .setCheck("Array")
+        .appendField("create GeoDataFrame from points");
+    this.appendValueInput("VALUES")
+        .setCheck("Array")
+        .appendField("with values");
+    this.appendDummyInput()
+        .appendField("column name")
+        .appendField(new Blockly.FieldTextInput("population"), "COLNAME");
+    this.setOutput(true, "VectorData");
+    this.setColour(180);
+    this.setTooltip("Convert point geometries and values into a GeoDataFrame");
+    this.setHelpUrl("");
+  }
+};
+pythonGenerator.forBlock['points_to_geodataframe'] = function(block, generator) {
+  var points = generator.valueToCode(block, 'POINTS', pythonGenerator.ORDER_ATOMIC) || '[]';
+  var values = generator.valueToCode(block, 'VALUES', pythonGenerator.ORDER_ATOMIC) || '[]';
+  var colname = block.getFieldValue('COLNAME') || 'population';
+
+  var code = `
+import geopandas as gpd
+gdf = gpd.GeoDataFrame({'${colname}': ${values}, 'geometry': ${points}})
+gdf.crs = src.crs
+gdf
+  `;
+  return [code, pythonGenerator.ORDER_ATOMIC];
+};
+
+
+
+
+
+Blockly.Blocks['plot_geodataframe'] = {
+  init: function() {
+    this.appendValueInput("GDF")
+        .setCheck("VectorData")
+        .appendField("plot GeoDataFrame");
+    this.appendDummyInput()
+        .appendField("column")
+        .appendField(new Blockly.FieldTextInput("population"), "COLUMN");
+    this.appendDummyInput()
+        .appendField("colormap")
+        .appendField(new Blockly.FieldDropdown([
+          ["magma","magma"],
+          ["viridis","viridis"],
+          ["plasma","plasma"],
+          ["pink","pink"],
+          ["terrain","terrain"]
+        ]), "CMAP");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(45);
+    this.setTooltip("Visualize GeoDataFrame with a chosen column and colormap");
+    this.setHelpUrl("");
+  }
+};
+pythonGenerator.forBlock['plot_geodataframe'] = function(block, generator) {
+  var gdf = generator.valueToCode(block, 'GDF', pythonGenerator.ORDER_ATOMIC) || 'None';
+  var column = block.getFieldValue('COLUMN') || 'population';
+  var cmap = block.getFieldValue('CMAP') || 'magma';
+
+  var code = `
+from matplotlib.colors import LogNorm
+import matplotlib.pyplot as plt
+
+norm = LogNorm(vmin=${gdf}['${column}'].min(), vmax=${gdf}['${column}'].max())
+f, ax = plt.subplots(1, 1, figsize=(8,8))
+${gdf}.plot(column='${column}', ax=ax, cmap='${cmap}', markersize=1, alpha=0.7, norm=norm)
+ax.set_facecolor("black")
+plt.show()
+  `;
+  return code;
+};
+
 // Blockly.Blocks['write_file'] = {
 //   init: function() {
 //     this.appendDummyInput()
