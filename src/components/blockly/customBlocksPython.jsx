@@ -390,6 +390,76 @@ pythonGenerator.forBlock['read_file'] = function(block,generator) {
   return [`gpd.read_file('${fileName}')`, pythonGenerator.ORDER_ATOMIC];
 }
 
+Blockly.Blocks['read_file_pandas'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Read CSV file')
+        .appendField(new Blockly.FieldTextInput('file'), 'NAME')
+        .appendField('.csv');
+    this.setTooltip('Use function to read CSV file. Use read file block for all other file types.');
+    this.setOutput(true);
+    this.setHelpUrl('https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html');
+    this.setColour(210);
+  }
+};
+pythonGenerator.forBlock['read_file_pandas'] = function(block,generator) {
+  const fileName = block.getFieldValue('NAME');
+  return [`pd.read_csv('${fileName}.csv')`, pythonGenerator.ORDER_ATOMIC];
+};
+
+Blockly.Blocks['display_all'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Display all rows and columns');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setColour(210);
+  }
+};
+pythonGenerator.forBlock['display_all'] = function() {
+  return `###DISPLAYALL###\n`;
+};
+
+Blockly.Blocks['head'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Show first')
+        .appendField(new Blockly.FieldNumber(5, 1), 'N')
+        .appendField('row(s) of DataFrame')
+        .appendField(new Blockly.FieldVariable('df'), 'VAR');
+    this.setTooltip('Get the first N row(s) of a dataset (DataFrame).');
+    this.setHelpUrl('https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.head.html');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+    this.setColour(210);
+  }
+};
+pythonGenerator.forBlock['head'] = function(block) {
+  const n = block.getFieldValue('N') || 5;
+  const varID = block.getFieldValue('VAR') || '0';
+  const getVar = block.workspace.getVariableById(varID);
+  const Var = getVar ? getVar.name : 'undefined';
+  return `print(${Var}.head(${n}))\n# using np`;
+};
+
+Blockly.Blocks['describe'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Describe DataFrame')
+        .appendField(new Blockly.FieldVariable('df'), 'VAR');
+    this.setOutput(true, null);
+    this.setTooltip('Get a summary of a dataset (DataFrame).');
+    this.setHelpUrl('https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.describe.html');
+    this.setColour(210);
+  }
+};
+pythonGenerator.forBlock['describe'] = function(block) {
+  const varID = block.getFieldValue('VAR') || '0';
+  const getVar = block.workspace.getVariableById(varID);
+  const Var = getVar ? getVar.name : 'undefined';
+  return [`${Var}.describe(include = 'all')\n# using np`, pythonGenerator.ORDER_ATOMIC];
+};
+
 // Blockly.Blocks['write_file'] = {
 //   init: function() {
 //     this.appendDummyInput()
@@ -633,12 +703,12 @@ pythonGenerator.forBlock["min"] = function(block, generator) {
 Blockly.Blocks['slice'] = {
   init: function() {
     this.appendDummyInput('NAME')
-        .appendField('slice variable')
-        .appendField(new Blockly.FieldVariable("VAR_NAME"), "VAR")
-        .appendField('to values')
-        .appendField(new Blockly.FieldNumber("0"), "VAL1")
-        .appendField(':')
-        .appendField(new Blockly.FieldNumber("0"), "VAL2");
+        .appendField('Get rows')
+        .appendField(new Blockly.FieldNumber('0'), 'VAL1')
+        .appendField('to')
+        .appendField(new Blockly.FieldNumber('1'), 'VAL2')
+        .appendField('of DataFrame')
+        .appendField(new Blockly.FieldVariable('VAR_NAME'), 'VAR');
     this.setOutput(true);
     this.setTooltip('Slice a variable (list, array) according to given indexes.');
     this.setHelpUrl('https://stackoverflow.com/questions/9027862/what-does-listxy-do')
@@ -756,10 +826,10 @@ Blockly.Blocks['group_by'] = {
   init: function() {
     this.appendDummyInput()
         .appendField('Group by')
-        .appendField(new Blockly.FieldTextInput('column_name'), 'columnName');
-    this.appendValueInput("NUM")
-        .setCheck("Array")
-        .appendField("of DataFrame");
+        .appendField(this.generateOptions(), 'column_name');
+    this.appendDummyInput()
+        .appendField("of DataFrame")
+        .appendField(new Blockly.FieldVariable('df'), 'df_name');
     this.appendDummyInput()
         .appendField('with operation')
         .appendField(new Blockly.FieldDropdown([['mean', 'mean'], ['sum', 'sum'], ['count', 'count'], ['min', 'min'], ['max', 'max']]), 'operation');
@@ -769,13 +839,28 @@ Blockly.Blocks['group_by'] = {
     this.setTooltip('Group the data by one column. Choose one way to group data: mean, sum...');
     this.setHelpUrl('https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.groupby.html')
     this.setColour(200);
+  },
+
+  generateOptions: function() {
+    var options = [];
+    try {
+      console.log(globalThis.fileColumns)
+      for(var x of globalThis.fileColumns) {
+        options.push([x, x]);
+      }
+      return (new Blockly.FieldDropdown(options));
+    } catch (e) {
+      return (new Blockly.FieldTextInput('Latitude'));
+    }
   }
 };
 pythonGenerator.forBlock['group_by'] = function(block, generator) {
-  const columnName = block.getFieldValue('columnName') || 'columnName';
-  const dfName = generator.valueToCode(block, "NUM", pythonGenerator.ORDER_NONE) || "0";
+  const column_name = block.getFieldValue('column_name') || 'column_name';
+  const df_name = block.getFieldValue('df_name') || 'df';
   const operation = block.getFieldValue('operation') || 'mean';
-  return `${dfName} = ${dfName}.groupby(by = '${columnName}').${operation}()\n`;  
+  const getVar = block.workspace.getVariableById(df_name);
+  const Var = getVar ? getVar.name : 'undefined';  
+  return `${Var} = ${Var}.groupby(by = '${column_name}').${operation}()\n`;  
 }
 
 /**
@@ -841,7 +926,7 @@ pythonGenerator.forBlock['delete_axes'] = function(block, generator) {
   const varID = block.getFieldValue('DATAFRAME') || '0';
   const getVar = block.workspace.getVariableById(varID);
   const df = getVar ? getVar.name : 'df';
-  return `${df}.drop(${(delInds === '[None]') ? '' : 'index=' + delInds + ', '}${(delCols === '[None]') ? '' : 'columns=' + delCols})\n`;
+  return `${df}.drop(${(delInds === '[None]') ? '' : 'index=' + delInds}${delInds !== '[None]' && delCols !== '[None]' ? ', ' : ''}${(delCols === '[None]') ? '' : 'columns=' + delCols})\n`;
 }
 
 
@@ -891,29 +976,45 @@ pythonGenerator.forBlock['add_object'] = function(block, generator) {
 
 Blockly.Blocks['del_col'] = {
   init: function() {
-    this.appendValueInput('array')
-      .setCheck(['Array'])
-      .appendField('Delete columns');
-    this.appendValueInput('columns')
-      .appendField('Name of columns');
-    this.setOutput(true, 'Array');
-    this.setTooltip('Remove one column. Enter the column name and the corresponding dataframe.');
+    this.appendDummyInput()
+        .appendField('Delete column')
+        .appendField(this.generateOptions(), 'column_name');
+    this.appendDummyInput()
+        .appendField('In dataframe')
+        .appendField(new Blockly.FieldVariable('df'), 'df_name');
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setTooltip('Remove one column. Select the column name and the corresponding dataframe.');
     this.setHelpUrl('https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.drop.html')
     this.setColour(200);
+  },
+
+  generateOptions: function() {
+    var options = [];
+    try {
+      console.log(globalThis.fileColumns)
+      for(var x of globalThis.fileColumns) {
+        options.push([x, x]);
+      }
+      return (new Blockly.FieldDropdown(options));
+    } catch (e) {
+      return (new Blockly.FieldTextInput('column_name'));
+    }
   }
 };
 pythonGenerator.forBlock['del_col'] = function(block, generator) {
-  const array = generator.valueToCode(block, 'array', pythonGenerator.ORDER_ATOMIC);
-  const columns = generator.valueToCode(block, 'columns', pythonGenerator.ORDER_ATOMIC);
+  const columns = block.getFieldValue('column_name') || '';
+  const varID = block.getFieldValue('df_name') || '0';
+  const getVar = block.workspace.getVariableById(varID);
+  const array = getVar ? getVar.name : 'df';
   return [`${array} = ${array}.drop(columns=${columns}, axis = 1)`, pythonGenerator.ORDER_COLLECTION];
-}
-
+};
 
 Blockly.Blocks['convert_column'] = {
   init: function() {
     this.appendDummyInput()
         .appendField('Convert column')
-        .appendField(new Blockly.FieldTextInput('column_name'), 'column_name');
+        .appendField(this.generateOptions(), 'column_name');
     this.appendDummyInput()
         .appendField('of DataFrame')
         .appendField(new Blockly.FieldVariable('df'), 'df_name');
@@ -926,6 +1027,19 @@ Blockly.Blocks['convert_column'] = {
     this.setTooltip('Convert a column of a DataFrame to a different type. Use this block in case of unforseen errors e.g. in maps.');
     this.setHelpUrl('https://www.geeksforgeeks.org/python/python-pandas-dataframe-astype/')
     this.setColour(200);
+  },
+
+  generateOptions: function() {
+    var options = [];
+    try {
+      console.log(globalThis.fileColumns)
+      for(var x of globalThis.fileColumns) {
+        options.push([x, x]);
+      }
+      return (new Blockly.FieldDropdown(options));
+    } catch (e) {
+      return (new Blockly.FieldTextInput('column_name'));
+    }
   }
 }
 pythonGenerator.forBlock['convert_column'] = function(block) {
@@ -937,16 +1051,17 @@ pythonGenerator.forBlock['convert_column'] = function(block) {
   return `${Var}['${column_name}'] = ${Var}['${column_name}'].astype(${type})\n`;
 }
 
-//** converte numpy to pandas
+//** convert numpy to pandas
 Blockly.Blocks['convert_np_to_pd'] = {
   init: function() {
     this.appendValueInput('array')
-    .setCheck(['Array'])
-      .appendField('Convert to DataFrame');
+        .setCheck(['Array', 'List'])
+        .appendField('Convert to DataFrame');
     this.appendValueInput('columns')
-      .appendField('Name of columns');
+        .setCheck(['Array', 'List'])
+        .appendField('Name of columns');
     this.setOutput(true);
-    this.setTooltip('Convert to DataFrame. Write the number of columns name that corresponds to the column number of the dataframe.');
+    this.setTooltip('Convert array to DataFrame. You can also set the name of the columns as an array.');
     this.setHelpUrl('https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html')
     this.setColour(200);
   }
@@ -1130,9 +1245,9 @@ Blockly.Blocks['plot'] = {
     this.appendDummyInput()
         .appendField('Plot line');
     this.appendValueInput('valX')
-        .appendField('X-value');
+        .appendField('X values');
     this.appendValueInput('valY')
-        .appendField('Y-value');
+        .appendField('Y values');
     this.appendDummyInput('fmt')
         .appendField('Colour')
         .appendField(new Blockly.FieldTextInput('red'), 'FMT');
@@ -1142,9 +1257,9 @@ Blockly.Blocks['plot'] = {
     this.appendDummyInput('size')
         .appendField('Size:')
         .appendField('X')
-        .appendField(new Blockly.FieldNumber('1'), 'XVAL')
+        .appendField(new Blockly.FieldNumber('10'), 'XVAL')
         .appendField('Y')
-        .appendField(new Blockly.FieldNumber('1'), 'YVAL');
+        .appendField(new Blockly.FieldNumber('10'), 'YVAL');
     this.appendDummyInput()
         .appendField('X-axis label')
         .appendField(new Blockly.FieldTextInput('Label'), 'XLVAL');;
@@ -1193,9 +1308,9 @@ Blockly.Blocks['scatter'] = {
     this.appendDummyInput()
         .appendField('Plot points');
     this.appendValueInput('valX')
-        .appendField('X-value');
+        .appendField('X values');
     this.appendValueInput('valY')
-        .appendField('Y-value');
+        .appendField('Y values');
     this.appendDummyInput()
         .appendField('Colour')
         .appendField(new Blockly.FieldTextInput('red'), 'COL')
@@ -1205,9 +1320,9 @@ Blockly.Blocks['scatter'] = {
     this.appendDummyInput()
         .appendField('Size:')
         .appendField('X')
-        .appendField(new Blockly.FieldNumber('1'), 'XVAL')
+        .appendField(new Blockly.FieldNumber('10'), 'XVAL')
         .appendField('Y')
-        .appendField(new Blockly.FieldNumber('1'), 'YVAL');
+        .appendField(new Blockly.FieldNumber('10'), 'YVAL');
     this.appendDummyInput()
         .appendField('X-axis label')
         .appendField(new Blockly.FieldTextInput('Label'), 'XLabel');
@@ -2293,7 +2408,7 @@ Blockly.Blocks['Choropleth_map'] = {
         .appendField('Legend')
         .appendField(new Blockly.FieldTextInput('Legend'), 'legend_name');
     this.appendDummyInput()
-        .appendField('Match Df with GeoJSON')
+        .appendField('Match df & GeoJSON')
         .appendField(new Blockly.FieldTextInput('properties.name'), 'key_on');
     this.setInputsInline(false);
     this.setPreviousStatement(true, null);
@@ -2378,7 +2493,7 @@ Blockly.Blocks['plotly_scatter_mapbox'] = {
       }
       return (new Blockly.FieldDropdown(options));
     } catch (e) {
-      return (new Blockly.FieldTextInput('Latitude'));
+      return (new Blockly.FieldTextInput('column_name'));
     }
   }
 };
@@ -2447,7 +2562,7 @@ Blockly.Blocks['idw_interpolation'] = {
       }
       return (new Blockly.FieldDropdown(options));
     } catch (e) {
-      return (new Blockly.FieldTextInput('Latitude'));
+      return (new Blockly.FieldTextInput('column_name'));
     }
   }
 };
@@ -2519,7 +2634,7 @@ Blockly.Blocks['ppv_interpolation'] = {
       }
       return (new Blockly.FieldDropdown(options));
     } catch (e) {
-      return (new Blockly.FieldTextInput('Latitude'));
+      return (new Blockly.FieldTextInput('column_name'));
     }
   }
 };
@@ -2597,7 +2712,7 @@ pythonGenerator.forBlock["length_of_str"] = function(block, generator) {
 
 Blockly.Blocks['list_access'] = {
   init: function() {
-    this.appendDummyInput('NAME')
+    this.appendDummyInput()
         .appendField(new Blockly.FieldVariable("VAR_NAME"), "LIST")
         .appendField('[');
     this.appendValueInput('CNAME');
@@ -2615,6 +2730,27 @@ pythonGenerator.forBlock['list_access'] = function(block, generator) {
   const listName = getVar ? getVar.name : 'undefined';
   const elem = generator.valueToCode(block, 'CNAME', pythonGenerator.ORDER_ATOMIC);
   return [`${listName}[${elem}]`, pythonGenerator.ORDER_ATOMIC]
+};
+
+Blockly.Blocks['get_column'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField('Get column')
+        .appendField(new Blockly.FieldTextInput('column_name'), 'COL')
+        .appendField('of DataFrame')
+        .appendField(new Blockly.FieldVariable('VAR_NAME'), 'LIST');
+    this.setInputsInline(true);
+    this.setOutput(true, null);
+    this.setTooltip('Access a column in a given DataFrame');
+    this.setColour(200);
+  }
+};
+pythonGenerator.forBlock['get_column'] = function(block, generator) {
+  const colName = block.getFieldValue('COL') || '';
+  const varID = block.getFieldValue('LIST') || '0';
+  const getVar = block.workspace.getVariableById(varID);
+  const listName = getVar ? getVar.name : 'undefined';
+  return [`${listName}[${colName}]`, pythonGenerator.ORDER_ATOMIC]
 };
 
 /**

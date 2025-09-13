@@ -21,5 +21,6 @@ export const english = {
         "DOWNLOAD_DATA": "Download Data",
         "DATA_MANIPULATION": "Data Manipulation",
         "POINTS": "Points &amp; Figures",
+        "DATA_INSPECTION": "Data Inspection",
     },
 }

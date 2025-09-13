@@ -21,5 +21,6 @@ export const german = {
         "DOWNLOAD_DATA": "Daten herunterladen",
         "DATA_MANIPULATION": "Datenmanipulation",
         "POINTS": "Punkte und Figuren",
+        "DATA_INSPECTION": "Dateninspektion",
     },
 }
